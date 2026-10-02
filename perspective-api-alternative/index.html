@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perspective API Alternative: drop-in comments:analyze</title>
+<meta name="description" content="Google&#39;s Perspective API stops after Dec 31, 2026. Keep the same comments:analyze request and response: change the host, add a token. $1 per 1,000.">
+<meta name="keywords" content="perspective api alternative, google perspective api alternative, perspective api shutdown, comments:analyze, toxicity api, perspective api pricing">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Perspective API Alternative: drop-in comments:analyze">
+<meta property="og:description" content="Google&#39;s Perspective API stops after Dec 31, 2026. Keep the same comments:analyze request and response: change the host, add a token. $1 per 1,000.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/">
+<meta property="og:site_name" content="API Alternatives">
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Perspective API Drop-in Replacement (Toxicity Scoring)","description":"Google's Perspective API stops after Dec 31, 2026. Keep the same comments:analyze request and response: change the host, add a token. $1 per 1,000.","url":"https://alidaram99.github.io/api-alternatives/perspective-api-alternative/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Comment analyzed"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this Google?","acceptedAnswer":{"@type":"Answer","text":"No. It is an independent service that implements the public commentanalyzer v1alpha1 interface."}},{"@type":"Question","name":"Do you store comments?","acceptedAnswer":{"@type":"Answer","text":"No. Text is scored in memory and discarded."}},{"@type":"Question","name":"Latency?","acceptedAnswer":{"@type":"Answer","text":"The model takes about 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts."}},{"@type":"Question","name":"Why do I need an Apify token?","acceptedAnswer":{"@type":"Answer","text":"Apify hosts the service and bills per call. The token identifies your account. It is the only new thing your code needs."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Perspective API Alternative: drop-in comments:analyze","item":"https://alidaram99.github.io/api-alternatives/perspective-api-alternative/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" class="active" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Perspective API ends after 31 December 2026. Keep the same request.</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
+  <p class="deadline">⏳ 90 days left — the old API shuts down December 31, 2026.</p>
+  <p>Google Jigsaw&#39;s <strong>Perspective API</strong> (<code>commentanalyzer.googleapis.com</code>) is being sunset. The <a href="https://perspectiveapi.com/">official site</a> says the service ends after <strong>December 31, 2026</strong>, with no migration path. Every forum, comment section, Discord bot and research pipeline that calls <code>comments:analyze</code> will start getting errors.</p>
+<p>This page shows how to keep that code working with a <strong>wire-compatible replacement</strong>. You send the same <code>POST /v1alpha1/comments:analyze</code> body and get back the same JSON: <code>attributeScores.TOXICITY.summaryScore.value</code>, <code>spanScores</code>, <code>languages</code>, <code>clientToken</code>, and Google-style error envelopes. <strong>The scores come from open-source models, so they are close to Perspective&#39;s but not identical</strong>. See <a href="#how-the-scores-compare">How the scores compare</a> before you switch production thresholds.</p>
+<h2 id="what-breaks-on-january-1-2027">What breaks on January 1, 2027</h2>
+<ul><li>Any request to <code>https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze</code> (REST, <code>googleapiclient</code>, the <code>perspective-api-client</code> npm package, the R <code>peRspective</code> package, and so on).</li><li>Plugins that hard-code that host, such as the Discourse plugin and many Discord moderation bots.</li><li>Benchmarks and research code that use Perspective&#39;s TOXICITY score as a metric.</li></ul>
+<h2 id="the-migration">The migration</h2>
+<p>Your new endpoint is the Actor&#39;s Standby URL, <code>https://dropin-apis--perspective-compat.apify.actor</code>. You authenticate with your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, either as <code>?token=…</code> or as <code>Authorization: Bearer …</code>. The Google <code>key=</code> parameter is accepted and ignored.</p>
+<h3 id="curl-any-http-client">curl / any HTTP client</h3>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash"># Before: https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_KEY
+curl -s -X POST &quot;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze?token=$APIFY_TOKEN&quot; \
+  -H &#39;Content-Type: application/json&#39; \
+  -d &#39;{&quot;comment&quot;:{&quot;text&quot;:&quot;You are an idiot&quot;},&quot;requestedAttributes&quot;:{&quot;TOXICITY&quot;:{},&quot;INSULT&quot;:{}},&quot;languages&quot;:[&quot;en&quot;]}&#39;</code></pre></div>
+<p>Response (real output from our test run):</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;attributeScores&quot;: {
+    &quot;TOXICITY&quot;: {
+      &quot;spanScores&quot;: [{ &quot;begin&quot;: 0, &quot;end&quot;: 16, &quot;score&quot;: { &quot;value&quot;: 0.99683121, &quot;type&quot;: &quot;PROBABILITY&quot; } }],
+      &quot;summaryScore&quot;: { &quot;value&quot;: 0.99683121, &quot;type&quot;: &quot;PROBABILITY&quot; }
+    },
+    &quot;INSULT&quot;: {
+      &quot;spanScores&quot;: [{ &quot;begin&quot;: 0, &quot;end&quot;: 16, &quot;score&quot;: { &quot;value&quot;: 0.9958577, &quot;type&quot;: &quot;PROBABILITY&quot; } }],
+      &quot;summaryScore&quot;: { &quot;value&quot;: 0.9958577, &quot;type&quot;: &quot;PROBABILITY&quot; }
+    }
+  },
+  &quot;languages&quot;: [&quot;en&quot;],
+  &quot;detectedLanguages&quot;: [&quot;en&quot;]
+}</code></pre></div>
+<h3 id="python-googles-own-google-api-python-client">Python: Google&#39;s own <code>google-api-python-client</code></h3>
+<p>Keep your Perspective quickstart code. Only the <code>build()</code> call changes: point <code>discoveryServiceUrl</code> at the Actor and pass your Apify token as credentials.</p>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
+from googleapiclient import discovery
+from google.oauth2.credentials import Credentials
+
+BASE = &quot;https://dropin-apis--perspective-compat.apify.actor&quot;
+APIFY_TOKEN = os.environ[&quot;APIFY_TOKEN&quot;]
+
+client = discovery.build(
+    &quot;commentanalyzer&quot;, &quot;v1alpha1&quot;,
+    credentials=Credentials(APIFY_TOKEN),  # was: developerKey=GOOGLE_API_KEY
+    discoveryServiceUrl=BASE + &quot;/$discovery/rest?version={apiVersion}&amp;token=&quot; + APIFY_TOKEN,
+    static_discovery=False,
+)
+response = client.comments().analyze(body={
+    &quot;comment&quot;: {&quot;text&quot;: &quot;friendly greetings from python&quot;},
+    &quot;requestedAttributes&quot;: {&quot;TOXICITY&quot;: {}},
+}).execute()
+print(response[&quot;attributeScores&quot;][&quot;TOXICITY&quot;][&quot;summaryScore&quot;][&quot;value&quot;])  # 0.01015937</code></pre></div>
+<h3 id="nodejs-plain-fetch">Node.js: plain <code>fetch</code></h3>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">const BASE = &#39;https://dropin-apis--perspective-compat.apify.actor&#39;;
+const res = await fetch(`${BASE}/v1alpha1/comments:analyze`, {
+  method: &#39;POST&#39;,
+  headers: { &#39;Content-Type&#39;: &#39;application/json&#39;, Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
+  body: JSON.stringify({ comment: { text: &#39;You are an idiot&#39; }, requestedAttributes: { TOXICITY: {} } }),
+});
+const data = await res.json();
+console.log(data.attributeScores.TOXICITY.summaryScore.value); // 0.99683121</code></pre></div>
+<h3 id="nodejs-the-perspective-api-client-npm-package">Node.js: the <code>perspective-api-client</code> npm package</h3>
+<p>The package hard-codes Google&#39;s URL and <strong>bundles its own copy of axios</strong>, so an interceptor on your app&#39;s <code>axios</code> has no effect. Attach the redirect to the axios instance the library actually loads, once at startup:</p>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">const libAxios = require(require.resolve(&#39;axios&#39;, { paths: [require.resolve(&#39;perspective-api-client&#39;)] }));
+const BASE = &#39;https://dropin-apis--perspective-compat.apify.actor&#39;;
+
+libAxios.interceptors.request.use((cfg) =&gt; {
+  if (cfg.url &amp;&amp; cfg.url.startsWith(&#39;https://commentanalyzer.googleapis.com&#39;)) {
+    cfg.url = cfg.url.replace(&#39;https://commentanalyzer.googleapis.com&#39;, BASE);
+    cfg.headers.Authorization = `Bearer ${process.env.APIFY_TOKEN}`;
+  }
+  return cfg;
+});
+
+// unchanged application code:
+const Perspective = require(&#39;perspective-api-client&#39;);
+const perspective = new Perspective({ apiKey: &#39;unused-but-required-by-the-library&#39; });
+perspective.analyze(&#39;You are a complete moron&#39;, { attributes: [&#39;toxicity&#39;, &#39;insult&#39;] })
+  .then((r) =&gt; console.log(r.attributeScores.TOXICITY.summaryScore.value)); // 0.99700852</code></pre></div>
+<h3 id="discourse-discourse-perspective-api">Discourse (<code>discourse-perspective-api</code>)</h3>
+<p>The plugin keeps the API key as a site setting, but the host is the constant <code>GOOGLE_API_DOMAIN = &quot;https://commentanalyzer.googleapis.com&quot;</code> in <code>lib/discourse_perspective.rb</code>. In a fork, change that constant to your Standby URL and append <code>token=&lt;APIFY_TOKEN&gt;</code> to the request query. The plugin&#39;s models (<code>TOXICITY</code>, <code>SEVERE_TOXICITY</code>) and thresholds work as before. <em>We have not run this inside a live Discourse instance. The request and response format is what we tested.</em></p>
+<p>Other wrappers that already accept a base URL (for example GateNLP&#39;s Perspective client) only need the URL and the token.</p>
+<h2 id="supported-attributes-and-languages">Supported attributes and languages</h2>
+<div class="table-wrap"><table><thead><tr><th>Attribute</th><th>en</th><th>es fr it pt ru tr</th><th>Notes</th></tr></thead><tbody><tr><td>TOXICITY, SEVERE_TOXICITY, INSULT, THREAT, IDENTITY_ATTACK</td><td>✅</td><td>✅</td><td></td></tr><tr><td>PROFANITY</td><td>✅</td><td>✅</td><td>Approximated from the model&#39;s &quot;obscene&quot; output</td></tr><tr><td>SEXUALLY_EXPLICIT</td><td>✅</td><td>—</td><td>English only, as in Perspective</td></tr><tr><td><code>*_EXPERIMENTAL</code> aliases</td><td>✅</td><td>✅</td><td>Served by the matching base attribute and returned under the name you requested</td></tr><tr><td>FLIRTATION, the NYT models, bridging attributes</td><td>❌</td><td>❌</td><td>Returns Perspective&#39;s own <code>LANGUAGE_NOT_SUPPORTED_BY_ATTRIBUTE</code> error</td></tr></tbody></table></div>
+<p>The language is detected automatically when you leave out <code>languages</code>. Other languages get Perspective&#39;s standard &quot;does not support request languages&quot; error, so your existing fallback code keeps working. <code>spanAnnotations</code>, <code>scoreThreshold</code>, <code>clientToken</code> and snake_case field names are supported. The limit is 20 KB of text per comment.</p>
+<h2 id="how-the-scores-compare">How the scores compare</h2>
+<p>The scores come from <a href="https://github.com/unitaryai/detoxify">Detoxify</a>, open models trained on the same Jigsaw/Civil Comments data family that Perspective came from. They run as quantized ONNX on CPU inside the Actor: <code>unbiased-toxic-roberta</code> for English and <code>multilingual-toxic-xlm-roberta</code> for the other six languages.</p>
+<ul><li>Clear cases agree. In our tests, abusive text scored 0.99+ and polite text scored under 0.02.</li><li><strong>Borderline comments can differ</strong> from Perspective by a noticeable margin. We have not run a side-by-side calibration against the live Perspective API.</li><li>If you auto-hide comments at a high threshold (0.85–0.9), you will probably see similar behavior. If you act at low thresholds, run a sample of your own comments through the Actor&#39;s batch mode first and re-tune.</li></ul>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$1 per 1,000 analyzed comments</strong>, pay per event. Failed requests (4xx) are not charged. There is no subscription, and you can cap spending per run on Apify. When you reach your limit, the API answers <code>429 RESOURCE_EXHAUSTED</code>.</p>
+<h2 id="faq">FAQ</h2>
+<p><strong>Is this Google?</strong> No. It is an independent service that implements the public <code>commentanalyzer</code> v1alpha1 interface.</p>
+<p><strong>Do you store comments?</strong> No. Text is scored in memory and discarded.</p>
+<p><strong>Latency?</strong> The model takes about 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts.</p>
+<p><strong>Why do I need an Apify token?</strong> Apify hosts the service and bills per call. The token identifies your account. It is the only new thing your code needs.</p>
+<h2 id="get-started">Get started</h2>
+<p>Open the Actor on the Apify Store, then copy its Standby URL and your token: <strong><a href="https://apify.com/dropin-apis/perspective-compat">Perspective API drop-in on Apify</a></strong>.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

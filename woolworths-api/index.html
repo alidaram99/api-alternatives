@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Woolworths API: Australian grocery prices as JSON</title>
+<meta name="description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.">
+<meta name="keywords" content="woolworths api, woolworths price scraper, woolworths australia prices, grocery price data australia, woolworths specials, unit price data">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/woolworths-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Woolworths API: Australian grocery prices as JSON">
+<meta property="og:description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/woolworths-api/">
+<meta property="og:site_name" content="API Alternatives">
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Woolworths Australia Scraper – Products & Prices","description":"Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.","url":"https://alidaram99.github.io/api-alternatives/woolworths-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Woolworths API: Australian grocery prices as JSON","item":"https://alidaram99.github.io/api-alternatives/woolworths-api/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" class="active" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Woolworths Australia prices, specials and unit prices as clean data</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
+  
+  <p>Woolworths has no public product API. This Actor collects <strong>public catalog data</strong> from Woolworths Australia&#39;s own product search: shelf price, was-price and specials, and the <strong>unit price</strong> (per kg, per litre, per 100 g). You give it search terms and get one clean row per product.</p>
+<h2 id="what-you-get">What you get</h2>
+<p>Row from a real run (search term <code>milk</code>):</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;stockcode&quot;: &quot;888137&quot;,
+  &quot;name&quot;: &quot;Woolworths Full Cream Milk&quot;,
+  &quot;brand&quot;: &quot;Woolworths&quot;,
+  &quot;description&quot;: &quot;Woolworths Full Cream Milk 2L&quot;,
+  &quot;packageSize&quot;: &quot;2L&quot;,
+  &quot;price&quot;: 3.4,
+  &quot;wasPrice&quot;: 3.4,
+  &quot;isOnSpecial&quot;: false,
+  &quot;savingsAmount&quot;: 0,
+  &quot;cupPrice&quot;: 1.7,
+  &quot;cupMeasure&quot;: &quot;1L&quot;,
+  &quot;cupString&quot;: &quot;$1.70 / 1L&quot;,
+  &quot;isAvailable&quot;: true,
+  &quot;isInStock&quot;: true,
+  &quot;unit&quot;: &quot;Each&quot;,
+  &quot;imageUrl&quot;: &quot;https://cdn1.woolworths.media/content/wowproductimages/medium/888137.jpg&quot;,
+  &quot;productUrl&quot;: &quot;https://www.woolworths.com.au/shop/productdetails/888137/woolworths-full-cream-milk&quot;,
+  &quot;searchTerm&quot;: &quot;milk&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-10-02T06:14:38.625Z&quot;
+}</code></pre></div>
+<p>No customer data of any kind is collected.</p>
+<h2 id="use-cases">Use cases</h2>
+<ul><li><strong>Price monitoring:</strong> track shelf prices and specials for your own or competing products on a schedule.</li><li><strong>Inflation and basket research:</strong> collect unit prices for staples over time.</li><li><strong>Competitive pricing:</strong> compare specials and savings across brands and ranges.</li></ul>
+<h2 id="run-it-in-the-apify-console-no-code">Run it in the Apify Console (no code)</h2>
+<ol><li>Open the <strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Woolworths scraper</a></strong> and click <strong>Try for free</strong>.</li><li>Enter search terms (<code>milk</code>, <code>bread</code>, <code>eggs</code>…), a maximum number of items per term, and a sort order.</li><li>Click <strong>Start</strong>, then download CSV, Excel or JSON. Use Apify&#39;s <strong>Schedules</strong> to repeat the run daily.</li></ol>
+<h2 id="run-it-from-code">Run it from code</h2>
+<p>Replace <code>&lt;owner&gt;/woolworths-au-products</code> with the Actor id shown on its Store page.</p>
+<h3 id="python-apify-client-3">Python (<code>apify-client</code> ≥ 3)</h3>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
+from apify_client import ApifyClient
+
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+
+run = client.actor(&quot;&lt;owner&gt;/woolworths-au-products&quot;).call(
+    run_input={&quot;searchTerms&quot;: [&quot;milk&quot;], &quot;maxItemsPerSearch&quot;: 3, &quot;sortBy&quot;: &quot;priceAsc&quot;},
+)
+for item in client.dataset(run.default_dataset_id).list_items().items:
+    print(item.get(&quot;name&quot;), item.get(&quot;price&quot;), item.get(&quot;cupString&quot;))
+# Woolworths Full Cream Milk 3.4 $1.70 / 1L
+# Dairy Farmers Full Cream Milk Full Cream Milk 4.7 $2.35 / 1L
+# Woolworths Full Cream Milk 4.95 $1.65 / 1L</code></pre></div>
+<h3 id="nodejs-apify-client">Node.js (<code>apify-client</code>)</h3>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">import { ApifyClient } from &#39;apify-client&#39;;
+
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+const run = await client.actor(&#39;&lt;owner&gt;/woolworths-au-products&#39;).call({ searchTerms: [&#39;bread&#39;, &#39;eggs&#39;], maxItemsPerSearch: 50 });
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items.map((p) =&gt; `${p.name}: $${p.price} (${p.cupString})`));</code></pre></div>
+<h3 id="curl-one-call-results-in-the-response">curl (one call, results in the response)</h3>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://api.apify.com/v2/acts/&lt;owner&gt;~woolworths-au-products/run-sync-get-dataset-items?token=$APIFY_TOKEN&quot; \
+  -H &#39;Content-Type: application/json&#39; \
+  -d &#39;{&quot;searchTerms&quot;:[&quot;milk&quot;],&quot;maxItemsPerSearch&quot;:3,&quot;sortBy&quot;:&quot;priceAsc&quot;}&#39;</code></pre></div>
+<h2 id="limits">Limits</h2>
+<ul><li><strong>Search terms only.</strong> Category browsing is not implemented yet. <code>categoryUrls</code> is accepted but has no effect.</li><li>Woolworths returns at most 36 items per page. The Actor pages through results up to <code>maxItemsPerSearch</code>.</li><li><code>sortBy</code> is applied by the Actor after collection, because Woolworths&#39; own sort parameter had no effect over this interface.</li><li>Unavailable or out-of-stock items are dropped unless you set <code>includeUnavailable: true</code>.</li><li>If Woolworths starts blocking requests (403/429), enable Apify Proxy in the input.</li></ul>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$1.50 per 1,000 products</strong> ($0.0015 per row), pay per event, with no subscription.</p>
+<p><strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Open the Woolworths scraper on Apify</a></strong></p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

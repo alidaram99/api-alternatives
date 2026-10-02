@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azure Content Moderator Alternative: ProcessText/Screen</title>
+<meta name="description" content="Content Moderator retires March 15, 2027 and Content Safety is a different API. Keep your ProcessText/Screen code: same request, same JSON. $1 per 1,000.">
+<meta name="keywords" content="azure content moderator alternative, azure content moderator api, azure content moderator vs content safety, ProcessText/Screen, profanity api, pii detection api">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Azure Content Moderator Alternative: ProcessText/Screen">
+<meta property="og:description" content="Content Moderator retires March 15, 2027 and Content Safety is a different API. Keep your ProcessText/Screen code: same request, same JSON. $1 per 1,000.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">
+<meta property="og:site_name" content="API Alternatives">
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Azure Content Moderator Text API Replacement (Drop-in)","description":"Content Moderator retires March 15, 2027 and Content Safety is a different API. Keep your ProcessText/Screen code: same request, same JSON. $1 per 1,000.","url":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Text screened"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Should I just move to Content Safety?","acceptedAnswer":{"@type":"Answer","text":"If you can rewrite the integration and re-tune thresholds, yes, that is a fine path. This replacement is for teams whose code, stored results and dashboards depend on the old response format."}},{"@type":"Question","name":"Do you store text?","acceptedAnswer":{"@type":"Answer","text":"No. Nothing is written to disk or logged."}},{"@type":"Question","name":"Short non-English texts?","acceptedAnswer":{"@type":"Answer","text":"Latin-script text under 40 characters is treated as English. Pass language=spa, language=deu and so on to use the right profanity list."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Azure Content Moderator Alternative: ProcessText/Screen","item":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" class="active" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Content Moderator&#39;s text screen retires 15 March 2027. Same request, same JSON.</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
+  <p class="deadline">⏳ 164 days left — the old API shuts down March 15, 2027.</p>
+  <p>Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview">Content Moderator overview</a> says the service has been deprecated since February 2024 and <strong>retires on March 15, 2027</strong>. The product <a href="https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator">lifecycle page</a> lists April 1, 2027. The suggested successor, <strong>Azure AI Content Safety</strong>, is a different API with a different URL, request and response (severity levels for Hate/Sexual/SelfHarm/Violence). Code that reads <code>Terms</code>, <code>PII</code> and <code>Classification.Category1/2/3</code> has to be rewritten.</p>
+<p>This page shows a <strong>wire-compatible replacement for the text screen endpoint</strong>, so that code keeps working. You call the same <code>POST /contentmoderator/moderate/v1.0/ProcessText/Screen</code> with the same query string and raw-text body, and get back the same response JSON.</p>
+<h2 id="what-changes-in-your-code">What changes in your code</h2>
+<ol><li>The endpoint: <code>https://&lt;region&gt;.api.cognitive.microsoft.com</code> becomes <code>https://dropin-apis--content-moderator-compat.apify.actor</code>.</li><li>Authentication: send your <a href="https://console.apify.com/settings/integrations">Apify API token</a> as <code>Authorization: Bearer …</code> or <code>?token=…</code>. An <code>Ocp-Apim-Subscription-Key</code> header is accepted and ignored.</li></ol>
+<h3 id="curl">curl</h3>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&amp;token=$APIFY_TOKEN&quot; \
+  -H &#39;Content-Type: text/plain&#39; \
+  --data-binary &#39;Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052&#39;</code></pre></div>
+<p>That is Microsoft&#39;s own documentation example. Our response matches Microsoft&#39;s published <code>NormalizedText</code>, the <code>Terms</code> entry (<code>crap</code> at Index 10) and every PII index:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;OriginalText&quot;: &quot;Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052&quot;,
+  &quot;NormalizedText&quot;: &quot;Is this a crap email abcdef@ abcd. com, phone: 6657789887, IP: 255. 255. 255. 255, 1 Microsoft Way, Redmond, WA 98052&quot;,
+  &quot;Misrepresentation&quot;: null,
+  &quot;PII&quot;: {
+    &quot;Email&quot;: [{ &quot;Detected&quot;: &quot;abcdef@abcd.com&quot;, &quot;SubType&quot;: &quot;Regular&quot;, &quot;Text&quot;: &quot;abcdef@abcd.com&quot;, &quot;Index&quot;: 21 }],
+    &quot;SSN&quot;: [],
+    &quot;IPA&quot;: [{ &quot;SubType&quot;: &quot;IPV4&quot;, &quot;Text&quot;: &quot;255.255.255.255&quot;, &quot;Index&quot;: 61 }],
+    &quot;Phone&quot;: [{ &quot;CountryCode&quot;: &quot;US&quot;, &quot;Text&quot;: &quot;6657789887&quot;, &quot;Index&quot;: 45 }],
+    &quot;Address&quot;: [{ &quot;Text&quot;: &quot;1 Microsoft Way, Redmond, WA 98052&quot;, &quot;Index&quot;: 78 }]
+  },
+  &quot;Classification&quot;: {
+    &quot;ReviewRecommended&quot;: true,
+    &quot;Category1&quot;: { &quot;Score&quot;: 0.0023 },
+    &quot;Category2&quot;: { &quot;Score&quot;: 0.2708 },
+    &quot;Category3&quot;: { &quot;Score&quot;: 0.9562 }
+  },
+  &quot;Language&quot;: &quot;eng&quot;,
+  &quot;Terms&quot;: [{ &quot;Index&quot;: 10, &quot;OriginalIndex&quot;: 10, &quot;ListId&quot;: 0, &quot;Term&quot;: &quot;crap&quot; }],
+  &quot;Status&quot;: { &quot;Code&quot;: 3000, &quot;Description&quot;: &quot;OK&quot;, &quot;Exception&quot;: null },
+  &quot;TrackingId&quot;: &quot;…&quot;
+}</code></pre></div>
+<h3 id="c-httpclient-net-6">C# (<code>HttpClient</code>, .NET 6+)</h3>
+<div class="codeblock"><span class="code-lang">csharp</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-csharp">using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+
+var baseUrl = &quot;https://dropin-apis--content-moderator-compat.apify.actor&quot;;
+var token = Environment.GetEnvironmentVariable(&quot;APIFY_TOKEN&quot;)!;
+
+using var http = new HttpClient();
+http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(&quot;Bearer&quot;, token);
+
+var content = new StringContent(&quot;Is this a crap email abcdef@abcd.com?&quot;, Encoding.UTF8, &quot;text/plain&quot;);
+var response = await http.PostAsync(
+    $&quot;{baseUrl}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot;, content);
+response.EnsureSuccessStatusCode();
+
+using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+var root = json.RootElement;
+Console.WriteLine($&quot;Status {root.GetProperty(&quot;Status&quot;).GetProperty(&quot;Code&quot;).GetInt32()}, &quot; +
+                  $&quot;Category3 {root.GetProperty(&quot;Classification&quot;).GetProperty(&quot;Category3&quot;).GetProperty(&quot;Score&quot;).GetDouble():F3}, &quot; +
+                  $&quot;first term &#39;{root.GetProperty(&quot;Terms&quot;)[0].GetProperty(&quot;Term&quot;).GetString()}&#39;&quot;);
+// Status 3000, Category3 0.971, first term &#39;crap&#39;</code></pre></div>
+<p>If you use the old <code>Microsoft.Azure.CognitiveServices.ContentModerator</code> SDK, set <code>client.Endpoint</code> to the Standby URL and pass <code>ServiceClientCredentials</code> that add the <code>Authorization: Bearer</code> header. <em>We tested the REST path above, not that SDK.</em></p>
+<h3 id="python-requests">Python (<code>requests</code>)</h3>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
+import requests
+
+BASE = &quot;https://dropin-apis--content-moderator-compat.apify.actor&quot;
+APIFY_TOKEN = os.environ[&quot;APIFY_TOKEN&quot;]
+
+r = requests.post(
+    f&quot;{BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen&quot;,
+    params={&quot;language&quot;: &quot;eng&quot;, &quot;classify&quot;: &quot;True&quot;, &quot;PII&quot;: &quot;True&quot;},
+    headers={&quot;Content-Type&quot;: &quot;text/plain&quot;, &quot;Authorization&quot;: f&quot;Bearer {APIFY_TOKEN}&quot;},
+    data=&quot;This is crap, email me at someone@example.com&quot;.encode(&quot;utf-8&quot;),
+)
+screen = r.json()
+print(screen[&quot;Status&quot;][&quot;Code&quot;], screen[&quot;Classification&quot;][&quot;Category3&quot;][&quot;Score&quot;],
+      [t[&quot;Term&quot;] for t in screen[&quot;Terms&quot;] or []], [e[&quot;Text&quot;] for e in screen[&quot;PII&quot;][&quot;Email&quot;]])
+# 3000 0.98 [&#39;crap&#39;] [&#39;someone@example.com&#39;]</code></pre></div>
+<h3 id="nodejs-fetch">Node.js (<code>fetch</code>)</h3>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">const BASE = &#39;https://dropin-apis--content-moderator-compat.apify.actor&#39;;
+const res = await fetch(`${BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True`, {
+  method: &#39;POST&#39;,
+  headers: { &#39;Content-Type&#39;: &#39;text/plain&#39;, Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
+  body: &#39;You are a worthless idiot&#39;,
+});
+const screen = await res.json();
+console.log(screen.Status.Code, screen.Classification.ReviewRecommended, screen.Classification.Category3.Score);
+// 3000 true 0.997</code></pre></div>
+<h2 id="what-is-identical-approximate-or-unsupported">What is identical, approximate, or unsupported</h2>
+<div class="table-wrap"><table><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td>Route, method, query parameters (case-insensitive), <code>text/plain</code>/<code>html</code>/<code>xml</code>/<code>markdown</code> bodies, 1,024-character limit</td><td><strong>Identical</strong></td></tr><tr><td>Field names, casing and order; <code>Status</code> 3000; <code>Terms: null</code> when clean; <code>Misrepresentation: null</code>; <code>TrackingId</code></td><td><strong>Identical</strong></td></tr><tr><td><code>NormalizedText</code>; <code>Terms</code> <code>Index</code> and <code>OriginalIndex</code> offsets</td><td>Identical on Microsoft&#39;s documented examples. Unusual inputs may normalize differently</td></tr><tr><td><code>PII</code> (Email, IPA, Phone, Address, SSN)</td><td>Same shape. Patterns are deliberately strict: US/UK phones, US addresses with state and ZIP</td></tr><tr><td>Built-in profanity list (<code>ListId 0</code>)</td><td>Same format. The word list is open (LDNOOBW, CC-BY-4.0, 24 languages), so matches can differ from Azure&#39;s private list</td></tr><tr><td><code>Classification</code> Category1 (explicit), Category3 (offensive)</td><td><strong>Approximate.</strong> Open Detoxify model; scores differ from Azure&#39;s</td></tr><tr><td><code>Classification</code> Category2 (suggestive)</td><td><strong>Approximate proxy:</strong> <code>max(Category1, 0.3 × obscene)</code>. Flirty but clean text is not detected</td></tr><tr><td><code>ReviewRecommended</code></td><td>True when any category is ≥ 0.5. Azure&#39;s own thresholds were never published</td></tr><tr><td>Classification for non-English text</td><td>Omitted, as in Azure</td></tr><tr><td><code>autocorrect=true</code></td><td>Accepted. The field is returned, but no spelling correction is applied</td></tr><tr><td>Custom term lists (<code>listId</code>), image/video moderation, list management, review tool</td><td><strong>Not supported</strong></td></tr></tbody></table></div>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$1 per 1,000 screened texts</strong>, pay per event. Requests that fail validation are not charged. There is no subscription, and you can cap spending per run on Apify (<code>429 TooManyRequests</code> at the cap).</p>
+<h2 id="faq">FAQ</h2>
+<p><strong>Should I just move to Content Safety?</strong> If you can rewrite the integration and re-tune thresholds, yes, that is a fine path. This replacement is for teams whose code, stored results and dashboards depend on the old response format.</p>
+<p><strong>Do you store text?</strong> No. Nothing is written to disk or logged.</p>
+<p><strong>Short non-English texts?</strong> Latin-script text under 40 characters is treated as English. Pass <code>language=spa</code>, <code>language=deu</code> and so on to use the right profanity list.</p>
+<h2 id="get-started">Get started</h2>
+<p><strong><a href="https://apify.com/dropin-apis/content-moderator-compat">Azure Content Moderator drop-in on Apify</a></strong>: copy its Standby URL and your token, then change the endpoint in your code.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>App Store Reviews Scraper: any app, no Connect key</title>
+<meta name="description" content="Export Apple App Store reviews and app details for any app and country as JSON or CSV, from Apple&#39;s public feed. No Connect key. $0.20 per 1,000 rows.">
+<meta name="keywords" content="app store reviews scraper, apple app store reviews scraper, app store reviews api, ios app reviews export, app store review analysis, aso review monitoring">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="App Store Reviews Scraper: any app, no Connect key">
+<meta property="og:description" content="Export Apple App Store reviews and app details for any app and country as JSON or CSV, from Apple&#39;s public feed. No Connect key. $0.20 per 1,000 rows.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/">
+<meta property="og:site_name" content="API Alternatives">
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"App Store Reviews Scraper & App Details API","description":"Export Apple App Store reviews and app details for any app and country as JSON or CSV, from Apple's public feed. No Connect key. $0.20 per 1,000 rows.","url":"https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0002,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"App Store Reviews Scraper: any app, no Connect key","item":"https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" class="active" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Apple App Store reviews for any app, in any country, as clean JSON or CSV</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
+  
+  <p>The <strong>App Store Connect API</strong> only gives you reviews for apps your team owns, and it needs a private key. To read what users say about <strong>any</strong> app, including competitors, in any storefront, this Actor collects reviews from Apple&#39;s public customer-review feed and adds the app&#39;s public metadata. It needs no login and no Connect key.</p>
+<h2 id="what-you-get">What you get</h2>
+<p><strong>One row per review:</strong></p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Example</th></tr></thead><tbody><tr><td><code>appId</code>, <code>appName</code>, <code>country</code></td><td><code>570060128</code>, <code>Duolingo: Language Lessons</code>, <code>us</code></td></tr><tr><td><code>reviewId</code>, <code>title</code>, <code>text</code>, <code>rating</code> (1–5)</td><td><code>14612250135</code>, <code>Fun</code>, <code>Very fun and…</code>, <code>5</code></td></tr><tr><td><code>version</code>, <code>date</code>, <code>userName</code></td><td><code>7.142.0</code>, <code>2026-09-30T13:01:34-07:00</code>, <code>…</code></td></tr><tr><td><code>voteCount</code>, <code>voteSum</code></td><td>helpfulness votes</td></tr></tbody></table></div>
+<p><strong>Optionally, one app-details row per app × country:</strong> name, developer, price and currency, average rating, rating count, version, release dates, genres, content rating, size, minimum OS and description.</p>
+<p>App-details row from a real run:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;type&quot;: &quot;app&quot;,
+  &quot;appId&quot;: &quot;570060128&quot;,
+  &quot;country&quot;: &quot;us&quot;,
+  &quot;name&quot;: &quot;Duolingo: Language Lessons&quot;,
+  &quot;developer&quot;: &quot;Duolingo, Inc&quot;,
+  &quot;price&quot;: 0,
+  &quot;currency&quot;: &quot;USD&quot;,
+  &quot;averageRating&quot;: 4.72302,
+  &quot;ratingCount&quot;: 5481026,
+  &quot;version&quot;: &quot;7.142.0&quot;,
+  &quot;currentVersionReleaseDate&quot;: &quot;2026-09-28T17:42:01Z&quot;,
+  &quot;genres&quot;: [&quot;Education&quot;, &quot;Social Networking&quot;],
+  &quot;contentRating&quot;: &quot;4+&quot;,
+  &quot;url&quot;: &quot;https://apps.apple.com/us/app/duolingo-language-lessons/id570060128?uo=4&quot;
+}</code></pre></div>
+<h2 id="use-cases">Use cases</h2>
+<ul><li><strong>ASO and product feedback:</strong> pull every recent review of your app into a spreadsheet or database and track ratings by version.</li><li><strong>Competitor monitoring:</strong> watch a competitor&#39;s rating, review volume and release cadence across countries.</li><li><strong>Market research:</strong> compare what users complain about across the top apps in a category and storefront.</li></ul>
+<h2 id="run-it-in-the-apify-console-no-code">Run it in the Apify Console (no code)</h2>
+<ol><li>Open the <strong><a href="https://apify.com/dropin-apis/app-store-reviews">App Store Reviews Scraper</a></strong> and click <strong>Try for free</strong>.</li><li>Paste App Store URLs or numeric app ids, for example <code>https://apps.apple.com/us/app/duolingo-language-lessons/id570060128</code> or <code>570060128</code>.</li><li>Choose countries (<code>us</code>, <code>gb</code>, <code>de</code>…), the maximum number of reviews per app, and optionally a <code>sinceDate</code>.</li><li>Click <strong>Start</strong>, then export the dataset as CSV, Excel or JSON.</li></ol>
+<h2 id="run-it-from-code">Run it from code</h2>
+<p>Replace <code>&lt;owner&gt;/app-store-reviews</code> with the Actor id shown on its Store page.</p>
+<h3 id="nodejs-apify-client">Node.js (<code>apify-client</code>)</h3>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">import { ApifyClient } from &#39;apify-client&#39;;
+
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+
+const run = await client.actor(&#39;&lt;owner&gt;/app-store-reviews&#39;).call({
+  apps: [&#39;570060128&#39;], countries: [&#39;us&#39;], maxReviewsPerApp: 50, includeAppDetails: true,
+});
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+for (const row of items) console.log(row.type, row.type === &#39;app&#39; ? `${row.name} ★${row.averageRating}` : `${row.rating}★ ${row.title}`);</code></pre></div>
+<h3 id="python-apify-client-3">Python (<code>apify-client</code> ≥ 3)</h3>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
+from apify_client import ApifyClient
+
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+run = client.actor(&quot;&lt;owner&gt;/app-store-reviews&quot;).call(
+    run_input={&quot;apps&quot;: [&quot;570060128&quot;], &quot;countries&quot;: [&quot;us&quot;, &quot;gb&quot;], &quot;maxReviewsPerApp&quot;: 200},
+)
+for item in client.dataset(run.default_dataset_id).list_items().items:
+    print(item[&quot;type&quot;], item.get(&quot;rating&quot;), item.get(&quot;title&quot;))</code></pre></div>
+<h3 id="curl-one-call-results-in-the-response">curl (one call, results in the response)</h3>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://api.apify.com/v2/acts/&lt;owner&gt;~app-store-reviews/run-sync-get-dataset-items?token=$APIFY_TOKEN&quot; \
+  -H &#39;Content-Type: application/json&#39; \
+  -d &#39;{&quot;apps&quot;:[&quot;570060128&quot;],&quot;countries&quot;:[&quot;us&quot;],&quot;maxReviewsPerApp&quot;:50}&#39;</code></pre></div>
+<h2 id="limits">Limits</h2>
+<ul><li><strong>Up to 500 reviews per app per country.</strong> Apple&#39;s public feed stops there (10 pages × 50). To get more coverage, add more <code>countries</code>, since reviews differ by storefront.</li><li>Developer replies are not part of Apple&#39;s public feed, so <code>developerResponse</code> is always <code>null</code>.</li><li>Reviews come newest first. <code>sinceDate</code> stops paging once older reviews are reached.</li></ul>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$0.20 per 1,000 rows</strong> ($0.0002 per review or app-details row), pay per event. You pay only for rows delivered, with no subscription.</p>
+<p><strong><a href="https://apify.com/dropin-apis/app-store-reviews">Open the App Store Reviews Scraper on Apify</a></strong></p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

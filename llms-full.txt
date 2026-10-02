@@ -1,0 +1,691 @@
+# App Store Reviews Scraper: any app, no Connect key
+
+URL: https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/
+
+
+The **App Store Connect API** only gives you reviews for apps your team owns, and it needs a private key. To read what users say about **any** app, including competitors, in any storefront, this Actor collects reviews from Apple's public customer-review feed and adds the app's public metadata. It needs no login and no Connect key.
+
+## What you get
+
+**One row per review:**
+
+| Field | Example |
+|---|---|
+| `appId`, `appName`, `country` | `570060128`, `Duolingo: Language Lessons`, `us` |
+| `reviewId`, `title`, `text`, `rating` (1–5) | `14612250135`, `Fun`, `Very fun and…`, `5` |
+| `version`, `date`, `userName` | `7.142.0`, `2026-09-30T13:01:34-07:00`, `…` |
+| `voteCount`, `voteSum` | helpfulness votes |
+
+**Optionally, one app-details row per app × country:** name, developer, price and currency, average rating, rating count, version, release dates, genres, content rating, size, minimum OS and description.
+
+App-details row from a real run:
+
+```json
+{
+  "type": "app",
+  "appId": "570060128",
+  "country": "us",
+  "name": "Duolingo: Language Lessons",
+  "developer": "Duolingo, Inc",
+  "price": 0,
+  "currency": "USD",
+  "averageRating": 4.72302,
+  "ratingCount": 5481026,
+  "version": "7.142.0",
+  "currentVersionReleaseDate": "2026-09-28T17:42:01Z",
+  "genres": ["Education", "Social Networking"],
+  "contentRating": "4+",
+  "url": "https://apps.apple.com/us/app/duolingo-language-lessons/id570060128?uo=4"
+}
+```
+
+## Use cases
+
+- **ASO and product feedback:** pull every recent review of your app into a spreadsheet or database and track ratings by version.
+- **Competitor monitoring:** watch a competitor's rating, review volume and release cadence across countries.
+- **Market research:** compare what users complain about across the top apps in a category and storefront.
+
+## Run it in the Apify Console (no code)
+
+1. Open the **[App Store Reviews Scraper](https://apify.com/dropin-apis/app-store-reviews)** and click **Try for free**.
+2. Paste App Store URLs or numeric app ids, for example `https://apps.apple.com/us/app/duolingo-language-lessons/id570060128` or `570060128`.
+3. Choose countries (`us`, `gb`, `de`…), the maximum number of reviews per app, and optionally a `sinceDate`.
+4. Click **Start**, then export the dataset as CSV, Excel or JSON.
+
+## Run it from code
+
+Replace `<owner>/app-store-reviews` with the Actor id shown on its Store page.
+
+### Node.js (`apify-client`)
+
+```js
+import { ApifyClient } from 'apify-client';
+
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+
+const run = await client.actor('<owner>/app-store-reviews').call({
+  apps: ['570060128'], countries: ['us'], maxReviewsPerApp: 50, includeAppDetails: true,
+});
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+for (const row of items) console.log(row.type, row.type === 'app' ? `${row.name} ★${row.averageRating}` : `${row.rating}★ ${row.title}`);
+```
+
+### Python (`apify-client` ≥ 3)
+
+```python
+import os
+from apify_client import ApifyClient
+
+client = ApifyClient(os.environ["APIFY_TOKEN"])
+run = client.actor("<owner>/app-store-reviews").call(
+    run_input={"apps": ["570060128"], "countries": ["us", "gb"], "maxReviewsPerApp": 200},
+)
+for item in client.dataset(run.default_dataset_id).list_items().items:
+    print(item["type"], item.get("rating"), item.get("title"))
+```
+
+### curl (one call, results in the response)
+
+```bash
+curl -s -X POST "https://api.apify.com/v2/acts/<owner>~app-store-reviews/run-sync-get-dataset-items?token=$APIFY_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"apps":["570060128"],"countries":["us"],"maxReviewsPerApp":50}'
+```
+
+## Limits
+
+- **Up to 500 reviews per app per country.** Apple's public feed stops there (10 pages × 50). To get more coverage, add more `countries`, since reviews differ by storefront.
+- Developer replies are not part of Apple's public feed, so `developerResponse` is always `null`.
+- Reviews come newest first. `sinceDate` stops paging once older reviews are reached.
+
+## Pricing
+
+**$0.20 per 1,000 rows** ($0.0002 per review or app-details row), pay per event. You pay only for rows delivered, with no subscription.
+
+**[Open the App Store Reviews Scraper on Apify](https://apify.com/dropin-apis/app-store-reviews)**
+
+
+---
+
+# Azure Content Moderator Alternative: ProcessText/Screen
+
+URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/
+
+
+Microsoft's [Content Moderator overview](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview) says the service has been deprecated since February 2024 and **retires on March 15, 2027**. The product [lifecycle page](https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator) lists April 1, 2027. The suggested successor, **Azure AI Content Safety**, is a different API with a different URL, request and response (severity levels for Hate/Sexual/SelfHarm/Violence). Code that reads `Terms`, `PII` and `Classification.Category1/2/3` has to be rewritten.
+
+This page shows a **wire-compatible replacement for the text screen endpoint**, so that code keeps working. You call the same `POST /contentmoderator/moderate/v1.0/ProcessText/Screen` with the same query string and raw-text body, and get back the same response JSON.
+
+## What changes in your code
+
+1. The endpoint: `https://<region>.api.cognitive.microsoft.com` becomes `https://dropin-apis--content-moderator-compat.apify.actor`.
+2. Authentication: send your [Apify API token](https://console.apify.com/settings/integrations) as `Authorization: Bearer …` or `?token=…`. An `Ocp-Apim-Subscription-Key` header is accepted and ignored.
+
+### curl
+
+```bash
+curl -s -X POST "https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True&token=$APIFY_TOKEN" \
+  -H 'Content-Type: text/plain' \
+  --data-binary 'Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052'
+```
+
+That is Microsoft's own documentation example. Our response matches Microsoft's published `NormalizedText`, the `Terms` entry (`crap` at Index 10) and every PII index:
+
+```json
+{
+  "OriginalText": "Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052",
+  "NormalizedText": "Is this a crap email abcdef@ abcd. com, phone: 6657789887, IP: 255. 255. 255. 255, 1 Microsoft Way, Redmond, WA 98052",
+  "Misrepresentation": null,
+  "PII": {
+    "Email": [{ "Detected": "abcdef@abcd.com", "SubType": "Regular", "Text": "abcdef@abcd.com", "Index": 21 }],
+    "SSN": [],
+    "IPA": [{ "SubType": "IPV4", "Text": "255.255.255.255", "Index": 61 }],
+    "Phone": [{ "CountryCode": "US", "Text": "6657789887", "Index": 45 }],
+    "Address": [{ "Text": "1 Microsoft Way, Redmond, WA 98052", "Index": 78 }]
+  },
+  "Classification": {
+    "ReviewRecommended": true,
+    "Category1": { "Score": 0.0023 },
+    "Category2": { "Score": 0.2708 },
+    "Category3": { "Score": 0.9562 }
+  },
+  "Language": "eng",
+  "Terms": [{ "Index": 10, "OriginalIndex": 10, "ListId": 0, "Term": "crap" }],
+  "Status": { "Code": 3000, "Description": "OK", "Exception": null },
+  "TrackingId": "…"
+}
+```
+
+### C# (`HttpClient`, .NET 6+)
+
+```csharp
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+
+var baseUrl = "https://dropin-apis--content-moderator-compat.apify.actor";
+var token = Environment.GetEnvironmentVariable("APIFY_TOKEN")!;
+
+using var http = new HttpClient();
+http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+var content = new StringContent("Is this a crap email abcdef@abcd.com?", Encoding.UTF8, "text/plain");
+var response = await http.PostAsync(
+    $"{baseUrl}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True", content);
+response.EnsureSuccessStatusCode();
+
+using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+var root = json.RootElement;
+Console.WriteLine($"Status {root.GetProperty("Status").GetProperty("Code").GetInt32()}, " +
+                  $"Category3 {root.GetProperty("Classification").GetProperty("Category3").GetProperty("Score").GetDouble():F3}, " +
+                  $"first term '{root.GetProperty("Terms")[0].GetProperty("Term").GetString()}'");
+// Status 3000, Category3 0.971, first term 'crap'
+```
+
+If you use the old `Microsoft.Azure.CognitiveServices.ContentModerator` SDK, set `client.Endpoint` to the Standby URL and pass `ServiceClientCredentials` that add the `Authorization: Bearer` header. *We tested the REST path above, not that SDK.*
+
+### Python (`requests`)
+
+```python
+import os
+import requests
+
+BASE = "https://dropin-apis--content-moderator-compat.apify.actor"
+APIFY_TOKEN = os.environ["APIFY_TOKEN"]
+
+r = requests.post(
+    f"{BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen",
+    params={"language": "eng", "classify": "True", "PII": "True"},
+    headers={"Content-Type": "text/plain", "Authorization": f"Bearer {APIFY_TOKEN}"},
+    data="This is crap, email me at someone@example.com".encode("utf-8"),
+)
+screen = r.json()
+print(screen["Status"]["Code"], screen["Classification"]["Category3"]["Score"],
+      [t["Term"] for t in screen["Terms"] or []], [e["Text"] for e in screen["PII"]["Email"]])
+# 3000 0.98 ['crap'] ['someone@example.com']
+```
+
+### Node.js (`fetch`)
+
+```js
+const BASE = 'https://dropin-apis--content-moderator-compat.apify.actor';
+const res = await fetch(`${BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'text/plain', Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
+  body: 'You are a worthless idiot',
+});
+const screen = await res.json();
+console.log(screen.Status.Code, screen.Classification.ReviewRecommended, screen.Classification.Category3.Score);
+// 3000 true 0.997
+```
+
+## What is identical, approximate, or unsupported
+
+| Feature | Status |
+|---|---|
+| Route, method, query parameters (case-insensitive), `text/plain`/`html`/`xml`/`markdown` bodies, 1,024-character limit | **Identical** |
+| Field names, casing and order; `Status` 3000; `Terms: null` when clean; `Misrepresentation: null`; `TrackingId` | **Identical** |
+| `NormalizedText`; `Terms` `Index` and `OriginalIndex` offsets | Identical on Microsoft's documented examples. Unusual inputs may normalize differently |
+| `PII` (Email, IPA, Phone, Address, SSN) | Same shape. Patterns are deliberately strict: US/UK phones, US addresses with state and ZIP |
+| Built-in profanity list (`ListId 0`) | Same format. The word list is open (LDNOOBW, CC-BY-4.0, 24 languages), so matches can differ from Azure's private list |
+| `Classification` Category1 (explicit), Category3 (offensive) | **Approximate.** Open Detoxify model; scores differ from Azure's |
+| `Classification` Category2 (suggestive) | **Approximate proxy:** `max(Category1, 0.3 × obscene)`. Flirty but clean text is not detected |
+| `ReviewRecommended` | True when any category is ≥ 0.5. Azure's own thresholds were never published |
+| Classification for non-English text | Omitted, as in Azure |
+| `autocorrect=true` | Accepted. The field is returned, but no spelling correction is applied |
+| Custom term lists (`listId`), image/video moderation, list management, review tool | **Not supported** |
+
+## Pricing
+
+**$1 per 1,000 screened texts**, pay per event. Requests that fail validation are not charged. There is no subscription, and you can cap spending per run on Apify (`429 TooManyRequests` at the cap).
+
+## FAQ
+
+**Should I just move to Content Safety?** If you can rewrite the integration and re-tune thresholds, yes, that is a fine path. This replacement is for teams whose code, stored results and dashboards depend on the old response format.
+
+**Do you store text?** No. Nothing is written to disk or logged.
+
+**Short non-English texts?** Latin-script text under 40 characters is treated as English. Pass `language=spa`, `language=deu` and so on to use the right profanity list.
+
+## Get started
+
+**[Azure Content Moderator drop-in on Apify](https://apify.com/dropin-apis/content-moderator-compat)**: copy its Standby URL and your token, then change the endpoint in your code.
+
+
+---
+
+# Drop-in replacements for retiring APIs, plus data tools
+
+URL: https://alidaram99.github.io/api-alternatives/
+
+
+Three widely used APIs are being switched off between December 2026 and March 2027. Their official successors use **different requests and responses**, so every integration has to be rewritten. The tools below accept **the same request and return the same response shape** as the API you already call. You change the host, add an Apify token, and keep your code.
+
+They run on [Apify](https://apify.com) and are billed per use, with no subscription. Each one says clearly what is identical, what is approximate and what is not supported.
+
+## Drop-in replacements
+
+### Google Perspective API (ends after 31 Dec 2026)
+`POST /v1alpha1/comments:analyze`, with TOXICITY, INSULT, THREAT, PROFANITY, IDENTITY_ATTACK, SEXUALLY_EXPLICIT and SEVERE_TOXICITY, in 7 languages. Google's own Python client works with only the discovery URL changed. Scores come from open models: close to Perspective's, not identical.
+**$1 per 1,000 comments** · [Migration guide](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) · [Apify Store](https://apify.com/dropin-apis/perspective-compat)
+
+### Azure Content Moderator, text screen (retires 15 Mar 2027)
+`POST /contentmoderator/moderate/v1.0/ProcessText/Screen`, with the same `Terms`, `PII`, `Classification` and `Status` JSON. It matches Microsoft's own documented example field for field. Category scores are approximate, and custom term lists are not supported.
+**$1 per 1,000 texts** · [Migration guide](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) · [Apify Store](https://apify.com/dropin-apis/content-moderator-compat)
+
+### OpenAI whisper-1 (removed 26 Feb 2027)
+`/v1/audio/transcriptions` and `/translations`, with SRT, VTT, and word and segment timestamps. It works with the official OpenAI Python and Node SDKs by changing `base_url` and `api_key`. It uses the smaller open Whisper model (about 4% word error on clear English), with up to 10 minutes per file.
+**$0.006 per minute** · [Migration guide](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) · [Apify Store](https://apify.com/dropin-apis/whisper-compat)
+
+## Data tools
+
+### App Store reviews
+Reviews and app details for any app in any country, from Apple's public feed, with no App Store Connect key. Up to 500 reviews per app per country.
+**$0.20 per 1,000 rows** · [Guide](https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/) · [Apify Store](https://apify.com/dropin-apis/app-store-reviews)
+
+### Woolworths Australia prices
+Shelf price, specials and unit price per kg or litre, by search term, from public catalog data.
+**$1.50 per 1,000 products** · [Guide](https://alidaram99.github.io/api-alternatives/woolworths-api/) · [Apify Store](https://apify.com/dropin-apis/woolworths-au-products)
+
+## How it works
+
+1. Create a free Apify account and copy your API token.
+2. Open the tool on the Apify Store. For the API replacements, copy its **Standby URL**.
+3. Point your existing code at that URL and send the token. Pay only for what you use, and set a spending cap if you like.
+
+Nothing you send is stored: comments, texts and audio are processed in memory and discarded.
+
+
+---
+
+# Perspective API Alternative: drop-in comments:analyze
+
+URL: https://alidaram99.github.io/api-alternatives/perspective-api-alternative/
+
+
+Google Jigsaw's **Perspective API** (`commentanalyzer.googleapis.com`) is being sunset. The [official site](https://perspectiveapi.com/) says the service ends after **December 31, 2026**, with no migration path. Every forum, comment section, Discord bot and research pipeline that calls `comments:analyze` will start getting errors.
+
+This page shows how to keep that code working with a **wire-compatible replacement**. You send the same `POST /v1alpha1/comments:analyze` body and get back the same JSON: `attributeScores.TOXICITY.summaryScore.value`, `spanScores`, `languages`, `clientToken`, and Google-style error envelopes. **The scores come from open-source models, so they are close to Perspective's but not identical**. See [How the scores compare](#how-the-scores-compare) before you switch production thresholds.
+
+## What breaks on January 1, 2027
+
+- Any request to `https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze` (REST, `googleapiclient`, the `perspective-api-client` npm package, the R `peRspective` package, and so on).
+- Plugins that hard-code that host, such as the Discourse plugin and many Discord moderation bots.
+- Benchmarks and research code that use Perspective's TOXICITY score as a metric.
+
+## The migration
+
+Your new endpoint is the Actor's Standby URL, `https://dropin-apis--perspective-compat.apify.actor`. You authenticate with your [Apify API token](https://console.apify.com/settings/integrations), either as `?token=…` or as `Authorization: Bearer …`. The Google `key=` parameter is accepted and ignored.
+
+### curl / any HTTP client
+
+```bash
+# Before: https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_KEY
+curl -s -X POST "https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze?token=$APIFY_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"comment":{"text":"You are an idiot"},"requestedAttributes":{"TOXICITY":{},"INSULT":{}},"languages":["en"]}'
+```
+
+Response (real output from our test run):
+
+```json
+{
+  "attributeScores": {
+    "TOXICITY": {
+      "spanScores": [{ "begin": 0, "end": 16, "score": { "value": 0.99683121, "type": "PROBABILITY" } }],
+      "summaryScore": { "value": 0.99683121, "type": "PROBABILITY" }
+    },
+    "INSULT": {
+      "spanScores": [{ "begin": 0, "end": 16, "score": { "value": 0.9958577, "type": "PROBABILITY" } }],
+      "summaryScore": { "value": 0.9958577, "type": "PROBABILITY" }
+    }
+  },
+  "languages": ["en"],
+  "detectedLanguages": ["en"]
+}
+```
+
+### Python: Google's own `google-api-python-client`
+
+Keep your Perspective quickstart code. Only the `build()` call changes: point `discoveryServiceUrl` at the Actor and pass your Apify token as credentials.
+
+```python
+import os
+from googleapiclient import discovery
+from google.oauth2.credentials import Credentials
+
+BASE = "https://dropin-apis--perspective-compat.apify.actor"
+APIFY_TOKEN = os.environ["APIFY_TOKEN"]
+
+client = discovery.build(
+    "commentanalyzer", "v1alpha1",
+    credentials=Credentials(APIFY_TOKEN),  # was: developerKey=GOOGLE_API_KEY
+    discoveryServiceUrl=BASE + "/$discovery/rest?version={apiVersion}&token=" + APIFY_TOKEN,
+    static_discovery=False,
+)
+response = client.comments().analyze(body={
+    "comment": {"text": "friendly greetings from python"},
+    "requestedAttributes": {"TOXICITY": {}},
+}).execute()
+print(response["attributeScores"]["TOXICITY"]["summaryScore"]["value"])  # 0.01015937
+```
+
+### Node.js: plain `fetch`
+
+```js
+const BASE = 'https://dropin-apis--perspective-compat.apify.actor';
+const res = await fetch(`${BASE}/v1alpha1/comments:analyze`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
+  body: JSON.stringify({ comment: { text: 'You are an idiot' }, requestedAttributes: { TOXICITY: {} } }),
+});
+const data = await res.json();
+console.log(data.attributeScores.TOXICITY.summaryScore.value); // 0.99683121
+```
+
+### Node.js: the `perspective-api-client` npm package
+
+The package hard-codes Google's URL and **bundles its own copy of axios**, so an interceptor on your app's `axios` has no effect. Attach the redirect to the axios instance the library actually loads, once at startup:
+
+```js
+const libAxios = require(require.resolve('axios', { paths: [require.resolve('perspective-api-client')] }));
+const BASE = 'https://dropin-apis--perspective-compat.apify.actor';
+
+libAxios.interceptors.request.use((cfg) => {
+  if (cfg.url && cfg.url.startsWith('https://commentanalyzer.googleapis.com')) {
+    cfg.url = cfg.url.replace('https://commentanalyzer.googleapis.com', BASE);
+    cfg.headers.Authorization = `Bearer ${process.env.APIFY_TOKEN}`;
+  }
+  return cfg;
+});
+
+// unchanged application code:
+const Perspective = require('perspective-api-client');
+const perspective = new Perspective({ apiKey: 'unused-but-required-by-the-library' });
+perspective.analyze('You are a complete moron', { attributes: ['toxicity', 'insult'] })
+  .then((r) => console.log(r.attributeScores.TOXICITY.summaryScore.value)); // 0.99700852
+```
+
+### Discourse (`discourse-perspective-api`)
+
+The plugin keeps the API key as a site setting, but the host is the constant `GOOGLE_API_DOMAIN = "https://commentanalyzer.googleapis.com"` in `lib/discourse_perspective.rb`. In a fork, change that constant to your Standby URL and append `token=<APIFY_TOKEN>` to the request query. The plugin's models (`TOXICITY`, `SEVERE_TOXICITY`) and thresholds work as before. *We have not run this inside a live Discourse instance. The request and response format is what we tested.*
+
+Other wrappers that already accept a base URL (for example GateNLP's Perspective client) only need the URL and the token.
+
+## Supported attributes and languages
+
+| Attribute | en | es fr it pt ru tr | Notes |
+|---|---|---|---|
+| TOXICITY, SEVERE_TOXICITY, INSULT, THREAT, IDENTITY_ATTACK | ✅ | ✅ | |
+| PROFANITY | ✅ | ✅ | Approximated from the model's "obscene" output |
+| SEXUALLY_EXPLICIT | ✅ | — | English only, as in Perspective |
+| `*_EXPERIMENTAL` aliases | ✅ | ✅ | Served by the matching base attribute and returned under the name you requested |
+| FLIRTATION, the NYT models, bridging attributes | ❌ | ❌ | Returns Perspective's own `LANGUAGE_NOT_SUPPORTED_BY_ATTRIBUTE` error |
+
+The language is detected automatically when you leave out `languages`. Other languages get Perspective's standard "does not support request languages" error, so your existing fallback code keeps working. `spanAnnotations`, `scoreThreshold`, `clientToken` and snake_case field names are supported. The limit is 20 KB of text per comment.
+
+## How the scores compare
+
+The scores come from [Detoxify](https://github.com/unitaryai/detoxify), open models trained on the same Jigsaw/Civil Comments data family that Perspective came from. They run as quantized ONNX on CPU inside the Actor: `unbiased-toxic-roberta` for English and `multilingual-toxic-xlm-roberta` for the other six languages.
+
+- Clear cases agree. In our tests, abusive text scored 0.99+ and polite text scored under 0.02.
+- **Borderline comments can differ** from Perspective by a noticeable margin. We have not run a side-by-side calibration against the live Perspective API.
+- If you auto-hide comments at a high threshold (0.85–0.9), you will probably see similar behavior. If you act at low thresholds, run a sample of your own comments through the Actor's batch mode first and re-tune.
+
+## Pricing
+
+**$1 per 1,000 analyzed comments**, pay per event. Failed requests (4xx) are not charged. There is no subscription, and you can cap spending per run on Apify. When you reach your limit, the API answers `429 RESOURCE_EXHAUSTED`.
+
+## FAQ
+
+**Is this Google?** No. It is an independent service that implements the public `commentanalyzer` v1alpha1 interface.
+
+**Do you store comments?** No. Text is scored in memory and discarded.
+
+**Latency?** The model takes about 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts.
+
+**Why do I need an Apify token?** Apify hosts the service and bills per call. The token identifies your account. It is the only new thing your code needs.
+
+## Get started
+
+Open the Actor on the Apify Store, then copy its Standby URL and your token: **[Perspective API drop-in on Apify](https://apify.com/dropin-apis/perspective-compat)**.
+
+
+---
+
+# whisper-1 alternative with SRT, VTT and word timestamps
+
+URL: https://alidaram99.github.io/api-alternatives/whisper-1-alternative/
+
+
+OpenAI's [deprecations page](https://developers.openai.com/api/docs/deprecations) schedules **`whisper-1` for removal on February 26, 2027**. Its successors are not drop-in. Apps built on whisper-1 features have to change: subtitles through `response_format=srt` or `vtt`, `timestamp_granularities[]=word` and `segment`, and `/v1/audio/translations`.
+
+This page shows how to keep exactly that API: `POST /v1/audio/transcriptions` and `/v1/audio/translations`, the same multipart fields, and the same `json`, `text`, `srt`, `vtt` and `verbose_json` responses. It works with the **official OpenAI SDKs**. You change `base_url` and `api_key`, and nothing else.
+
+## Python: official `openai` SDK
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://dropin-apis--whisper-compat.apify.actor/v1",   # was: default api.openai.com
+    api_key=os.environ["APIFY_TOKEN"],           # your Apify token, sent as Authorization: Bearer
+)
+
+with open("armstrong.ogg", "rb") as f:
+    srt = client.audio.transcriptions.create(model="whisper-1", file=f, response_format="srt")
+print(srt)
+
+with open("armstrong.ogg", "rb") as f:
+    verbose = client.audio.transcriptions.create(
+        model="whisper-1", file=f, response_format="verbose_json",
+        timestamp_granularities=["word", "segment"],
+    )
+for w in verbose.words[:5]:
+    print(f"{w.start:6.2f}-{w.end:6.2f}  {w.word}")
+print(len(verbose.segments), "segments,", verbose.duration, "seconds")
+```
+
+Real output on NASA's public-domain Apollo 11 clip ("one small step"):
+
+```text
+1
+00:00:00,000 --> 00:00:05,000
+I'm going to step off the limb now.
+
+2
+00:00:15,000 --> 00:00:18,000
+That's one small step for man.
+
+3
+00:00:20,000 --> 00:00:24,000
+One giant leap for mankind.
+
+  3.22-  3.96  I'm
+  3.96-  4.06  going
+  4.06-  4.18  to
+  4.18-  4.34  step
+  4.34-  4.58  off
+3 segments, 24.11 seconds
+```
+
+(Armstrong said "the LEM". The small model heard "limb", which is the kind of error to expect, see Limits below.)
+
+> Pass the token only as `api_key`. If you append `?token=…` to `base_url`, the SDK adds the route after the query string and the request goes to the wrong URL.
+
+## Node.js: official `openai` SDK
+
+```js
+import fs from 'node:fs';
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  baseURL: 'https://dropin-apis--whisper-compat.apify.actor/v1',
+  apiKey: process.env.APIFY_TOKEN,
+});
+
+const vtt = await client.audio.transcriptions.create({
+  model: 'whisper-1',
+  file: fs.createReadStream('armstrong.ogg'),
+  response_format: 'vtt',
+});
+console.log(vtt); // WEBVTT ... 00:00:15.000 --> 00:00:18.000  That's one small step for man.
+```
+
+## curl: word timestamps
+
+```bash
+curl -s "https://dropin-apis--whisper-compat.apify.actor/v1/audio/transcriptions" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -F model=whisper-1 \
+  -F response_format=verbose_json \
+  -F 'timestamp_granularities[]=word' \
+  -F file=@armstrong.ogg
+```
+
+The response is OpenAI's `verbose_json` shape: `task`, `language` (`"english"`), `duration`, `text`, `words[]` (`word`, `start`, `end`) and `usage` (`{"type":"duration","seconds":25}`). `segments[]` is included when you request `segment` granularity, which is the default.
+
+## Compatibility
+
+| Feature | Status |
+|---|---|
+| `/v1/audio/transcriptions`, `/v1/audio/translations`, `GET /v1/models` | ✅ |
+| Fields `file`, `model` (`whisper-1`), `language`, `prompt`, `response_format`, `temperature`, `timestamp_granularities[]` | ✅ Same names, defaults and validation |
+| `json` (+ `usage`), `text`, `srt`, `vtt`, `verbose_json` with segments and words | ✅ |
+| OpenAI error envelope (`{"error":{"message","type","param","code"}}`) | ✅ |
+| `stream`, `include`, `chunking_strategy`, `diarized_json`, gpt-4o / gpt-transcribe models | ❌ (whisper-1 didn't support them either) |
+
+## Limits: read before switching
+
+- **Model:** Whisper **small** (multilingual) running with faster-whisper/CTranslate2 int8 on CPU, beam size 5. OpenAI's whisper-1 is the much larger Whisper V2. On clean English (LibriSpeech) we measured **about 4% word error rate**. Expect more errors on noisy audio, heavy accents and less common languages.
+- **Length:** up to **10 minutes and 25 MB per request**. Longer files get `400 audio_too_long`, so split them first, for example `ffmpeg -i in.mp3 -f segment -segment_time 540 out%03d.mp3`.
+- **Speed:** about 4 seconds of audio per second of compute. A 1-minute file takes about 12 s and a 10-minute file about 2.5 min. Each instance handles one file at a time. A busy instance answers `429 rate_limit_exceeded`, which the OpenAI SDKs retry automatically.
+- **Cold start:** after about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds extra.
+
+## Pricing
+
+**$0.006 per minute, billed per started 15 seconds** ($0.0015 per 15 s). OpenAI billed whisper-1 at $0.006 per minute rounded to the second, so the two prices match on whole 15-second blocks. A clip under 15 seconds costs $0.0015 here instead of about $0.001. Failed requests are not charged. If you set a spending cap, a file the remaining budget can't cover is refused *before* it is transcribed (`429 insufficient_quota`).
+
+## FAQ
+
+**Is this OpenAI?** No. It is an independent service that runs OpenAI's open-source Whisper model (MIT license) behind the same API shape.
+
+**Do you keep my audio?** No. Audio is decoded in memory, transcribed and discarded.
+
+**Languages?** All 99 Whisper languages, with auto-detection. Passing `language` (ISO-639-1) improves speed and accuracy.
+
+## Get started
+
+**[whisper-1 drop-in on Apify](https://apify.com/dropin-apis/whisper-compat)**: copy the Standby URL into `base_url` and use your Apify token as `api_key`.
+
+
+---
+
+# Woolworths API: Australian grocery prices as JSON
+
+URL: https://alidaram99.github.io/api-alternatives/woolworths-api/
+
+
+Woolworths has no public product API. This Actor collects **public catalog data** from Woolworths Australia's own product search: shelf price, was-price and specials, and the **unit price** (per kg, per litre, per 100 g). You give it search terms and get one clean row per product.
+
+## What you get
+
+Row from a real run (search term `milk`):
+
+```json
+{
+  "stockcode": "888137",
+  "name": "Woolworths Full Cream Milk",
+  "brand": "Woolworths",
+  "description": "Woolworths Full Cream Milk 2L",
+  "packageSize": "2L",
+  "price": 3.4,
+  "wasPrice": 3.4,
+  "isOnSpecial": false,
+  "savingsAmount": 0,
+  "cupPrice": 1.7,
+  "cupMeasure": "1L",
+  "cupString": "$1.70 / 1L",
+  "isAvailable": true,
+  "isInStock": true,
+  "unit": "Each",
+  "imageUrl": "https://cdn1.woolworths.media/content/wowproductimages/medium/888137.jpg",
+  "productUrl": "https://www.woolworths.com.au/shop/productdetails/888137/woolworths-full-cream-milk",
+  "searchTerm": "milk",
+  "scrapedAt": "2026-10-02T06:14:38.625Z"
+}
+```
+
+No customer data of any kind is collected.
+
+## Use cases
+
+- **Price monitoring:** track shelf prices and specials for your own or competing products on a schedule.
+- **Inflation and basket research:** collect unit prices for staples over time.
+- **Competitive pricing:** compare specials and savings across brands and ranges.
+
+## Run it in the Apify Console (no code)
+
+1. Open the **[Woolworths scraper](https://apify.com/dropin-apis/woolworths-au-products)** and click **Try for free**.
+2. Enter search terms (`milk`, `bread`, `eggs`…), a maximum number of items per term, and a sort order.
+3. Click **Start**, then download CSV, Excel or JSON. Use Apify's **Schedules** to repeat the run daily.
+
+## Run it from code
+
+Replace `<owner>/woolworths-au-products` with the Actor id shown on its Store page.
+
+### Python (`apify-client` ≥ 3)
+
+```python
+import os
+from apify_client import ApifyClient
+
+client = ApifyClient(os.environ["APIFY_TOKEN"])
+
+run = client.actor("<owner>/woolworths-au-products").call(
+    run_input={"searchTerms": ["milk"], "maxItemsPerSearch": 3, "sortBy": "priceAsc"},
+)
+for item in client.dataset(run.default_dataset_id).list_items().items:
+    print(item.get("name"), item.get("price"), item.get("cupString"))
+# Woolworths Full Cream Milk 3.4 $1.70 / 1L
+# Dairy Farmers Full Cream Milk Full Cream Milk 4.7 $2.35 / 1L
+# Woolworths Full Cream Milk 4.95 $1.65 / 1L
+```
+
+### Node.js (`apify-client`)
+
+```js
+import { ApifyClient } from 'apify-client';
+
+const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
+const run = await client.actor('<owner>/woolworths-au-products').call({ searchTerms: ['bread', 'eggs'], maxItemsPerSearch: 50 });
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+console.log(items.map((p) => `${p.name}: $${p.price} (${p.cupString})`));
+```
+
+### curl (one call, results in the response)
+
+```bash
+curl -s -X POST "https://api.apify.com/v2/acts/<owner>~woolworths-au-products/run-sync-get-dataset-items?token=$APIFY_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"searchTerms":["milk"],"maxItemsPerSearch":3,"sortBy":"priceAsc"}'
+```
+
+## Limits
+
+- **Search terms only.** Category browsing is not implemented yet. `categoryUrls` is accepted but has no effect.
+- Woolworths returns at most 36 items per page. The Actor pages through results up to `maxItemsPerSearch`.
+- `sortBy` is applied by the Actor after collection, because Woolworths' own sort parameter had no effect over this interface.
+- Unavailable or out-of-stock items are dropped unless you set `includeUnavailable: true`.
+- If Woolworths starts blocking requests (403/429), enable Apify Proxy in the input.
+
+## Pricing
+
+**$1.50 per 1,000 products** ($0.0015 per row), pay per event, with no subscription.
+
+**[Open the Woolworths scraper on Apify](https://apify.com/dropin-apis/woolworths-au-products)**
+
+
+---
+

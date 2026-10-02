@@ -1,0 +1,17 @@
+# Drop-in replacements for retiring APIs, plus data tools
+
+> Keep code working after Perspective, Azure Content Moderator and whisper-1 shut down: same requests, same JSON. Plus App Store reviews and Woolworths data.
+
+## Pages
+
+- [App Store Reviews Scraper: any app, no Connect key](https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/): Export Apple App Store reviews and app details for any app and country as JSON or CSV, from Apple's public feed. No Connect key. $0.20 per 1,000 rows.
+- [Azure Content Moderator Alternative: ProcessText/Screen](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/): Content Moderator retires March 15, 2027 and Content Safety is a different API. Keep your ProcessText/Screen code: same request, same JSON. $1 per 1,000.
+- [Drop-in replacements for retiring APIs, plus data tools](https://alidaram99.github.io/api-alternatives/): Keep code working after Perspective, Azure Content Moderator and whisper-1 shut down: same requests, same JSON. Plus App Store reviews and Woolworths data.
+- [Perspective API Alternative: drop-in comments:analyze](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/): Google's Perspective API stops after Dec 31, 2026. Keep the same comments:analyze request and response: change the host, add a token. $1 per 1,000.
+- [whisper-1 alternative with SRT, VTT and word timestamps](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/): OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps using the official OpenAI SDK. $0.006 per minute.
+- [Woolworths API: Australian grocery prices as JSON](https://alidaram99.github.io/api-alternatives/woolworths-api/): Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.
+
+## Organization
+
+Drop-in APIs — https://apify.com/dropin-apis
+
