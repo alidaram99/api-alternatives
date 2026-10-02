@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Woolworths API: Australian grocery prices as JSON</title>
-<meta name="description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.">
+<meta name="description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1 per 1,000 items.">
 <meta name="keywords" content="woolworths api, woolworths price scraper, woolworths australia prices, grocery price data australia, woolworths specials, unit price data">
 <link rel="canonical" href="https://alidaram99.github.io/api-alternatives/woolworths-api/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Woolworths API: Australian grocery prices as JSON">
-<meta property="og:description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.">
+<meta property="og:description" content="Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1 per 1,000 items.">
 <meta property="og:url" content="https://alidaram99.github.io/api-alternatives/woolworths-api/">
 <meta property="og:site_name" content="API Alternatives">
 <link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Woolworths Australia Scraper – Products & Prices","description":"Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1.50 per 1,000 items.","url":"https://alidaram99.github.io/api-alternatives/woolworths-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Woolworths Australia price scraper — specials, unit price","description":"Woolworths Australia product prices, specials and unit prices (per kg or litre) by search term, as JSON or CSV. Public catalog data. $1 per 1,000 items.","url":"https://alidaram99.github.io/api-alternatives/woolworths-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Woolworths API: Australian grocery prices as JSON","item":"https://alidaram99.github.io/api-alternatives/woolworths-api/"}]}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
 </head>
@@ -94,7 +94,7 @@ console.log(items.map((p) =&gt; `${p.name}: $${p.price} (${p.cupString})`));</co
 <h2 id="limits">Limits</h2>
 <ul><li><strong>Search terms only.</strong> Category browsing is not implemented yet. <code>categoryUrls</code> is accepted but has no effect.</li><li>Woolworths returns at most 36 items per page. The Actor pages through results up to <code>maxItemsPerSearch</code>.</li><li><code>sortBy</code> is applied by the Actor after collection, because Woolworths&#39; own sort parameter had no effect over this interface.</li><li>Unavailable or out-of-stock items are dropped unless you set <code>includeUnavailable: true</code>.</li><li>If Woolworths starts blocking requests (403/429), enable Apify Proxy in the input.</li></ul>
 <h2 id="pricing">Pricing</h2>
-<p><strong>$1.50 per 1,000 products</strong> ($0.0015 per row), pay per event, with no subscription.</p>
+<p><strong>$1 per 1,000 products</strong> ($0.001 per row), pay per event, with no subscription.</p>
 <p><strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Open the Woolworths scraper on Apify</a></strong></p>
 </main>
 <footer class="site-footer">
