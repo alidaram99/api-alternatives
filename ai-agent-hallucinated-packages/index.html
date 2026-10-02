@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stop AI coding agents installing hallucinated packages</title>
+<meta name="description" content="Block npm and PyPI installs of packages that do not exist (slopsquatting) in Claude Code, Codex, Gemini CLI and Cursor, and check APIs against the exact version.">
+<meta name="keywords" content="slopsquatting, hallucinated packages, ai package hallucination, claude code hook, codex hook, cursor hook, npm typosquatting, pypi typosquatting, mcp server">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stop AI coding agents installing hallucinated packages">
+<meta property="og:description" content="Block npm and PyPI installs of packages that do not exist (slopsquatting) in Claude Code, Codex, Gemini CLI and Cursor, and check APIs against the exact version.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/">
+<meta property="og:site_name" content="API Alternatives">
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ExactGround — does this API exist in this package version?","description":"Block npm and PyPI installs of packages that do not exist (slopsquatting) in Claude Code, Codex, Gemini CLI and Cursor, and check APIs against the exact version.","url":"https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.002,"priceCurrency":"USD","description":"Billed per event: Symbol checked"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Stop AI coding agents installing hallucinated packages","item":"https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" class="active" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Stop AI coding agents from installing packages that do not exist</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
+  
+  <p><strong>ExactGround is a free, open-source guard for AI coding agents.</strong> It runs as a hook in Claude Code, Codex, Gemini CLI and Cursor. Before an <code>npm</code>, <code>pnpm</code>, <code>yarn</code>, <code>bun</code>, <code>npx</code>, <code>pip</code>, <code>uv</code>, <code>poetry</code> or <code>pdm</code> install runs, it checks each package name against the public npm registry and PyPI. Names that do not exist, versions that were never published, and young look-alikes of popular packages are blocked. Source and install: <a href="https://github.com/alidaram99/exactground">github.com/alidaram99/exactground</a>.</p>
+<h2 id="why-agents-need-this">Why agents need this</h2>
+<p>A USENIX Security 2025 study generated 2.23 million code samples with 16 models. <strong>19.7% referenced at least one package that does not exist</strong>, and 43% of the invented names came back on every rerun of the same prompt (<a href="https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen">paper</a>). Because the names are predictable, attackers can register them with malware. This is called <em>slopsquatting</em>.</p>
+<p>A rule in <code>CLAUDE.md</code> or <code>AGENTS.md</code> saying &quot;never invent packages&quot; is text the model may ignore. A hook is code that runs on every install.</p>
+<h2 id="try-it-in-one-line">Try it in one line</h2>
+<div class="codeblock"><span class="code-lang">console</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-console">$ npx -y github:alidaram99/exactground check pypi:requests pypi:reqeusts react@99.0.0
+OK      pypi:requests
+BLOCK   pypi:reqeusts — &quot;reqeusts&quot; does not exist on PyPI; did you mean &quot;requests&quot;? (it is 1 edit away)
+BLOCK   react@99.0.0 — version 99.0.0 of &quot;react&quot; was never published (latest is 19.3.0)</code></pre></div>
+<h2 id="install-it-in-your-agent">Install it in your agent</h2>
+<ul><li><strong>Claude Code:</strong> <code>claude plugin marketplace add alidaram99/exactground</code>, then <code>claude plugin install exactground@exactground-marketplace</code>.</li><li><strong>Codex:</strong> <code>codex plugin marketplace add alidaram99/exactground --ref v0.1.0</code>, then trust the hook in <code>/hooks</code>.</li><li><strong>Gemini CLI and Cursor:</strong> <code>exactground init gemini --write</code> or <code>exactground init cursor --write</code> in your project.</li></ul>
+<p>Bare installs such as <code>npm install</code>, <code>uv sync</code> and <code>poetry install</code> are checked against the lockfile, so a dependency the agent wrote into <code>package.json</code> or <code>pyproject.toml</code> is caught too.</p>
+<h2 id="check-that-an-api-exists-in-your-exact-version">Check that an API exists in your exact version</h2>
+<p>Many hallucinations are real packages used wrongly. <code>useActionState</code> does not exist in React 18, and <code>numpy.asfarray</code> was removed in NumPy 2.0. The hosted ExactGround API answers these questions from the published package itself:</p>
+<ul><li>npm: <code>.d.ts</code> declarations, read with the TypeScript compiler.</li><li>Python: wheels, parsed statically and never executed.</li></ul>
+<p>It is an MCP server billed per check:</p>
+<ul><li><code>check_symbols</code>: $0.002 per symbol.</li><li><code>check_packages</code>: $0.0005 per package.</li><li><code>check_diff</code>: $0.01 per diff.</li></ul>
+<div class="codeblock"><span class="code-lang">sh</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-sh">claude mcp add --transport http exactground https://dropin-apis--exactground-api.apify.actor/mcp --header &quot;Authorization: Bearer $APIFY_TOKEN&quot;</code></pre></div>
+<p><strong><a href="https://apify.com/dropin-apis/exactground-api">Open ExactGround on Apify</a></strong> · <a href="https://github.com/alidaram99/exactground">Source on GitHub</a></p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

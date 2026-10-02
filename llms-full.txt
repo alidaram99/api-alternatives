@@ -1,3 +1,53 @@
+# Stop AI coding agents installing hallucinated packages
+
+URL: https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/
+
+
+**ExactGround is a free, open-source guard for AI coding agents.** It runs as a hook in Claude Code, Codex, Gemini CLI and Cursor. Before an `npm`, `pnpm`, `yarn`, `bun`, `npx`, `pip`, `uv`, `poetry` or `pdm` install runs, it checks each package name against the public npm registry and PyPI. Names that do not exist, versions that were never published, and young look-alikes of popular packages are blocked. Source and install: [github.com/alidaram99/exactground](https://github.com/alidaram99/exactground).
+
+## Why agents need this
+
+A USENIX Security 2025 study generated 2.23 million code samples with 16 models. **19.7% referenced at least one package that does not exist**, and 43% of the invented names came back on every rerun of the same prompt ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)). Because the names are predictable, attackers can register them with malware. This is called *slopsquatting*.
+
+A rule in `CLAUDE.md` or `AGENTS.md` saying "never invent packages" is text the model may ignore. A hook is code that runs on every install.
+
+## Try it in one line
+
+```console
+$ npx -y github:alidaram99/exactground check pypi:requests pypi:reqeusts react@99.0.0
+OK      pypi:requests
+BLOCK   pypi:reqeusts — "reqeusts" does not exist on PyPI; did you mean "requests"? (it is 1 edit away)
+BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest is 19.3.0)
+```
+
+## Install it in your agent
+
+- **Claude Code:** `claude plugin marketplace add alidaram99/exactground`, then `claude plugin install exactground@exactground-marketplace`.
+- **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.0`, then trust the hook in `/hooks`.
+- **Gemini CLI and Cursor:** `exactground init gemini --write` or `exactground init cursor --write` in your project.
+
+Bare installs such as `npm install`, `uv sync` and `poetry install` are checked against the lockfile, so a dependency the agent wrote into `package.json` or `pyproject.toml` is caught too.
+
+## Check that an API exists in your exact version
+
+Many hallucinations are real packages used wrongly. `useActionState` does not exist in React 18, and `numpy.asfarray` was removed in NumPy 2.0. The hosted ExactGround API answers these questions from the published package itself:
+- npm: `.d.ts` declarations, read with the TypeScript compiler.
+- Python: wheels, parsed statically and never executed.
+
+It is an MCP server billed per check:
+- `check_symbols`: $0.002 per symbol.
+- `check_packages`: $0.0005 per package.
+- `check_diff`: $0.01 per diff.
+
+```sh
+claude mcp add --transport http exactground https://dropin-apis--exactground-api.apify.actor/mcp --header "Authorization: Bearer $APIFY_TOKEN"
+```
+
+**[Open ExactGround on Apify](https://apify.com/dropin-apis/exactground-api)** · [Source on GitHub](https://github.com/alidaram99/exactground)
+
+
+---
+
 # App Store Reviews Scraper: any app, no Connect key
 
 URL: https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/

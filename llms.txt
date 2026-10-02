@@ -4,6 +4,7 @@
 
 ## Pages
 
+- [Stop AI coding agents installing hallucinated packages](https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/): Block npm and PyPI installs of packages that do not exist (slopsquatting) in Claude Code, Codex, Gemini CLI and Cursor, and check APIs against the exact version.
 - [App Store Reviews Scraper: any app, no Connect key](https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/): Export Apple App Store reviews and app details for any app and country as JSON or CSV, from Apple's public feed. No Connect key. $0.20 per 1,000 rows.
 - [Azure Content Moderator Alternative: ProcessText/Screen](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/): Content Moderator retires March 15, 2027 and Content Safety is a different API. Keep your ProcessText/Screen code: same request, same JSON. $1 per 1,000.
 - [Drop-in replacements for retiring APIs, plus data tools](https://alidaram99.github.io/api-alternatives/): Keep code working after Perspective, Azure Content Moderator and whisper-1 shut down: same requests, same JSON. Plus App Store reviews and Woolworths data.
