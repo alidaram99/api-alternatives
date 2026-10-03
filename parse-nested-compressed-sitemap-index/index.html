@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parse Nested, Compressed Sitemap Indexes (gzip)</title>
+<meta name="description" content="Sitemap indexes can nest children and ship gzip-compressed, up to 50,000 URLs and 50MB per file by spec. This Actor recurses, unzips in memory, dedupes URLs.">
+<meta name="keywords" content="parse nested sitemap index, extract urls from sitemap.gz, sitemap to json api, sitemap index recursion, gzip sitemap parser, large sitemap index crawler">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Parse Nested, Compressed Sitemap Indexes (gzip)">
+<meta property="og:description" content="Sitemap indexes can nest children and ship gzip-compressed, up to 50,000 URLs and 50MB per file by spec. This Actor recurses, unzips in memory, dedupes URLs.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Sitemap URL Extractor & Scraper — indexes, gzip, robots.txt","description":"Sitemap indexes can nest children and ship gzip-compressed, up to 50,000 URLs and 50MB per file by spec. This Actor recurses, unzips in memory, dedupes URLs.","url":"https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0004,"priceCurrency":"USD","description":"Billed per event: URL extracted"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Parsing a nested, compressed sitemap index completely — not just the first file","description":"Sitemap indexes can nest children and ship gzip-compressed, up to 50,000 URLs and 50MB per file by spec. This Actor recurses, unzips in memory, dedupes URLs.","url":"https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will this follow a sitemap index recursively, or only read the top-level file?","acceptedAnswer":{"@type":"Answer","text":"Recursively. An index's child files are queued and fetched one at a time (up to 50 files per run) until maxUrls is reached or the queue empties, not stopped after the first file."}},{"@type":"Question","name":"Does it download a gzip sitemap to disk to unzip it?","acceptedAnswer":{"@type":"Answer","text":"No. A response starting with the gzip magic bytes is decompressed directly in memory with Node's built-in zlib, never written to a temporary file."}},{"@type":"Question","name":"What happens if the same child sitemap is listed twice in an index?","acceptedAnswer":{"@type":"Answer","text":"It's fetched once. An internal set of already-seen sitemap-file URLs skips a repeat, so a redundant or even cyclical index reference can't double work or loop forever."}},{"@type":"Question","name":"What if the same page URL appears in two different sitemap files?","acceptedAnswer":{"@type":"Answer","text":"It's emitted as one output row, not two — a separate internal set of already-emitted page URLs deduplicates across every sitemap file in the run, not just within one file."}},{"@type":"Question","name":"Why does the sitemaps.org spec matter here?","acceptedAnswer":{"@type":"Answer","text":"It's the reason sitemap indexes exist at all: the protocol caps a single sitemap file at 50,000 URLs and 50MB uncompressed, so any site with more pages than that must split across multiple files behind an index — which is exactly the structure this Actor is built to recurse into."}},{"@type":"Question","name":"How is this different from the main Sitemap URL Extractor page?","acceptedAnswer":{"@type":"Answer","text":"That page covers the full Actor end to end — every input field, the complete output schema, and code samples. This page goes deeper on the specific mechanics of nested indexes and gzip decompression for anyone whose sitemap isn't a single flat file. See also Extract Structured Data from a URL for turning the pages a sitemap lists into validated data once you have the URL list."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Parse Nested, Compressed Sitemap Indexes (gzip)","item":"https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" class="active" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Parsing a nested, compressed sitemap index completely — not just the first file</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p>*<em>A single <code>sitemap.xml</code> fetch is often not the whole site map: the <a href="https://www.sitemaps.org/protocol.html">Sitemaps protocol</a> itself caps one sitemap file at 50,000 URLs and 50MB uncompressed, so any larger site publishes a </em>sitemap index<em> — a file that lists other sitemap files instead of URLs — and that index can itself be large, nested, and gzip-compressed.</em>* Getting every URL means recursing into every child file the index points to, unzipping the compressed ones, and stopping at sane limits — not just reading the first file and calling it done.</p>
+<h2 id="why-a-naive-sitemap-fetch-misses-urls">Why a naive sitemap fetch misses URLs</h2>
+<p>Two real, separate failure modes show up here. First, large sites&#39; sitemap indexes can list hundreds of child sitemap files — one developer&#39;s reported case needed to fetch over 400 individual child sitemaps from a single index with <code>curl</code> and <code>xargs</code> by hand (<a href="https://stackoverflow.com/questions/68512944/using-curl-and-xargs-to-get-individual-sitemaps">Stack Overflow</a>), which doesn&#39;t scale as a manual or ad hoc script. Second, sitemap files are commonly served gzip-compressed (<code>.xml.gz</code>) to save bandwidth, and parsing that without writing a temp file to disk first is its own real implementation question developers have asked about directly (<a href="https://stackoverflow.com/questions/26564348/how-to-parse-compressed-sitemap-using-python-without-downloading-it-to-disk">Stack Overflow</a>). A script that only handles a flat, uncompressed <code>sitemap.xml</code> silently stops short on both counts.</p>
+<h2 id="how-this-actor-actually-does-it">How this Actor actually does it</h2>
+<p>Verified against this Actor&#39;s own source, not just described from the README: the crawl keeps two separate <code>Set</code>s — one of sitemap-file URLs it has already queued or fetched, one of page URLs it has already emitted — so a child file referenced twice by a sloppy index (or, in a pathological index, a cycle) is only ever fetched once, and a page URL that appears in two different sitemap files is only emitted as <strong>one</strong> output row, not two. Gzip files are detected by their magic bytes and decompressed with Node&#39;s <code>zlib.gunzipSync</code> directly <strong>in memory</strong> — no temp file ever touches disk, answering the &quot;without downloading it to disk&quot; question directly. Files are fetched one at a time into the active batch specifically so <code>maxUrls</code> can stop the run precisely, without needlessly downloading one extra child file past the point you actually needed.</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;startUrls&quot;: [{ &quot;url&quot;: &quot;https://www.gnu.org&quot; }],
+  &quot;maxUrls&quot;: 500
+}</code></pre></div>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;url&quot;: &quot;https://www.gnu.org/software/libc/index.html&quot;,
+  &quot;lastmod&quot;: &quot;2026-08-14&quot;,
+  &quot;sourceSitemap&quot;: &quot;https://www.gnu.org/sitemap0.xml.gz&quot;,
+  &quot;domain&quot;: &quot;www.gnu.org&quot;
+}</code></pre></div>
+<p>Both halves of this were checked against real, live sites during development, not only synthetic fixtures: a real sitemap index (<code>apify.com</code>) for recursion, and a real gzip-compressed child sitemap (<code>gnu.org</code>&#39;s <code>sitemap0.xml.gz</code>) for the decompression path — <code>sourceSitemap</code> above shows that exact <code>.gz</code> child file as the row&#39;s origin.</p>
+<h2 id="the-caps-and-why-they-exist">The caps, and why they exist</h2>
+<p><strong>At most 50 sitemap files per run</strong>, and <strong>20MB per file after unpacking</strong> — generous relative to the protocol&#39;s own 50,000-URL/50MB-per-file ceiling, but a real, enforced stop so a misconfigured or hostile index can&#39;t turn one run into an unbounded crawl. <code>maxUrls</code> itself is clamped to a top of 50,000, matching the protocol&#39;s own per-file limit rather than an arbitrary round number. Fetches run at <strong>5 concurrent requests</strong>, with up to 4 attempts and exponential backoff on HTTP 429 or any 5xx, and a per-host <code>Crawl-delay</code> from <code>robots.txt</code> is honored (up to 5 seconds) rather than ignored.</p>
+<h2 id="limits">Limits</h2>
+<p>Public <code>http</code>/<code>https</code> sitemaps only — private hosts (<code>localhost</code>, <code>10.x</code>, <code>192.168.x</code>) are refused outright. A path disallowed for <code>User-agent: *</code> in <code>robots.txt</code> is never fetched, index or not. The run <strong>fails</strong> (not a silent empty success) if every input produces zero URLs across every candidate sitemap tried.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per event — the primary event is <strong>$0.0004 per URL</strong> ($0.40 per 1,000), charged when a row is saved. No monthly fee, and no separate charge for the sitemap-file fetches themselves, only for the page-URL rows that result.</p>
+<p><strong><a href="https://apify.com/dropin-apis/sitemap-url-extractor">Open Sitemap URL Extractor &amp; Scraper on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="will-this-follow-a-sitemap-index-recursively-or-only-read-the-top-level-file">Will this follow a sitemap index recursively, or only read the top-level file?</h3>
+<p>Recursively. An index&#39;s child files are queued and fetched one at a time (up to 50 files per run) until <code>maxUrls</code> is reached or the queue empties, not stopped after the first file.</p>
+<h3 id="does-it-download-a-gzip-sitemap-to-disk-to-unzip-it">Does it download a gzip sitemap to disk to unzip it?</h3>
+<p>No. A response starting with the gzip magic bytes is decompressed directly in memory with Node&#39;s built-in <code>zlib</code>, never written to a temporary file.</p>
+<h3 id="what-happens-if-the-same-child-sitemap-is-listed-twice-in-an-index">What happens if the same child sitemap is listed twice in an index?</h3>
+<p>It&#39;s fetched once. An internal set of already-seen sitemap-file URLs skips a repeat, so a redundant or even cyclical index reference can&#39;t double work or loop forever.</p>
+<h3 id="what-if-the-same-page-url-appears-in-two-different-sitemap-files">What if the same page URL appears in two different sitemap files?</h3>
+<p>It&#39;s emitted as one output row, not two — a separate internal set of already-emitted page URLs deduplicates across every sitemap file in the run, not just within one file.</p>
+<h3 id="why-does-the-sitemapsorg-spec-matter-here">Why does the sitemaps.org spec matter here?</h3>
+<p>It&#39;s the reason sitemap indexes exist at all: the <a href="https://www.sitemaps.org/protocol.html">protocol</a> caps a single sitemap file at 50,000 URLs and 50MB uncompressed, so any site with more pages than that must split across multiple files behind an index — which is exactly the structure this Actor is built to recurse into.</p>
+<h3 id="how-is-this-different-from-the-main-sitemap-url-extractor-page">How is this different from the main Sitemap URL Extractor page?</h3>
+<p>That page covers the full Actor end to end — every input field, the complete output schema, and code samples. This page goes deeper on the specific mechanics of nested indexes and gzip decompression for anyone whose sitemap isn&#39;t a single flat file. See also <a href="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/">Extract Structured Data from a URL</a> for turning the pages a sitemap lists into validated data once you have the URL list.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

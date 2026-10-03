@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Woolworths Scraper Returns Empty with requests/BS4</title>
+<meta name="description" content="Woolworths product pages load data dynamically, so requests and BeautifulSoup see an empty shell. Use the public catalog API path this Actor already handles.">
+<meta name="keywords" content="scrape woolworths prices python, woolworths requests empty html, woolworths product api australia, woolworths beautifulsoup no products, woolworths dynamic data scraper">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Woolworths Scraper Returns Empty with requests/BS4">
+<meta property="og:description" content="Woolworths product pages load data dynamically, so requests and BeautifulSoup see an empty shell. Use the public catalog API path this Actor already handles.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Woolworths Australia price scraper — specials, unit price","description":"Woolworths product pages load data dynamically, so requests and BeautifulSoup see an empty shell. Use the public catalog API path this Actor already handles.","url":"https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Why a Woolworths product page comes back empty with requests + BeautifulSoup","description":"Woolworths product pages load data dynamically, so requests and BeautifulSoup see an empty shell. Use the public catalog API path this Actor already handles.","url":"https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is there an official Woolworths API?","acceptedAnswer":{"@type":"Answer","text":"No public product/pricing API exists for this. This Actor calls Woolworths' own public product-search data endpoint — the same one the website's frontend uses — and returns the response as clean, structured rows."}},{"@type":"Question","name":"Why does my own requests + BeautifulSoup script get an empty product list?","acceptedAnswer":{"@type":"Answer","text":"Because the page's initial HTML doesn't contain the product data — it loads products through a separate request after the page itself loads. A plain HTTP client that only fetches the page's HTML never makes that second request, so it never sees the products, regardless of how correct your parsing code is."}},{"@type":"Question","name":"Would Selenium or Playwright fix it?","acceptedAnswer":{"@type":"Answer","text":"Yes, driving a real browser would let those follow-up requests fire and the data would appear in the rendered DOM — but that's slower and heavier than calling the same data endpoint directly, which is what this Actor does instead."}},{"@type":"Question","name":"Do I need my own proxy?","acceptedAnswer":{"@type":"Answer","text":"No. Apify Residential AU proxy is the default and is already included in the Actor's price. If you turn it off, the Actor detects the resulting HTTP 403 and switches back to it automatically, rather than returning an empty result."}},{"@type":"Question","name":"Can I scrape a specific Woolworths category page instead of a search term?","acceptedAnswer":{"@type":"Answer","text":"Not in this version. Woolworths' category-browsing endpoint requires a request shape (CategoryId/Url/FormatObject) that this Actor doesn't yet construct — use searchTerms instead, which covers the same products from the search side."}},{"@type":"Question","name":"Where do I find the full input/output reference?","acceptedAnswer":{"@type":"Answer","text":"See the main Woolworths AU Products page for every input field, the complete output schema, and code samples."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Woolworths Scraper Returns Empty with requests/BS4","item":"https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" class="active" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Why a Woolworths product page comes back empty with requests + BeautifulSoup</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>If <code>requests.get()</code> plus BeautifulSoup on a Woolworths product or search page returns an empty product list, that&#39;s not a bug in your selectors — the page&#39;s HTML genuinely doesn&#39;t contain the product data.</strong> Woolworths loads products through separate data requests after the initial page loads, so a plain HTML fetch only ever sees the empty shell the page starts with, no matter how the CSS selectors are written.</p>
+<h2 id="why-your-scraper-sees-nothing">Why your scraper sees nothing</h2>
+<p>This is a real, reported problem, not an edge case: developers hit the same wall scraping other dynamically-loaded retail sites, where a direct <code>GET</code> returns a near-empty document and the actual listings arrive afterward via requests a plain HTTP client never makes (<a href="https://stackoverflow.com/questions/57810118/crawling-a-webpage-empty-list-always-return">Stack Overflow</a>, <a href="https://stackoverflow.com/questions/72560795/requests-html-doesnt-get-full-html">a second, independent report of the same class of problem</a>). <code>requests</code> and <code>BeautifulSoup</code> only ever see whatever HTML the server returns for that one request — if the real product data arrives through a second, separate call the browser makes afterward, a plain HTTP client never makes that second call and never sees that data.</p>
+<p>There are two common fixes: drive a real browser (Selenium/Playwright) so those follow-up requests actually fire, or call the same data endpoint the page itself calls, directly. This Actor takes the second path — it talks to Woolworths&#39; public product-search data endpoint directly, the same one the website&#39;s own frontend calls, and returns clean, structured rows without needing a browser at all.</p>
+<h2 id="what-you-get-instead">What you get instead</h2>
+<p>One normalized row per product — price, was-price, special flag, unit price, stock status — with no browser automation needed:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;stockcode&quot;: &quot;888140&quot;,
+  &quot;name&quot;: &quot;Woolworths Full Cream Milk&quot;,
+  &quot;brand&quot;: &quot;Woolworths&quot;,
+  &quot;packageSize&quot;: &quot;3L&quot;,
+  &quot;price&quot;: 4.95,
+  &quot;wasPrice&quot;: 4.95,
+  &quot;isOnSpecial&quot;: false,
+  &quot;cupPrice&quot;: 1.65,
+  &quot;cupMeasure&quot;: &quot;1L&quot;,
+  &quot;cupString&quot;: &quot;$1.65 / 1L&quot;,
+  &quot;isAvailable&quot;: true,
+  &quot;isInStock&quot;: true,
+  &quot;searchTerm&quot;: &quot;milk&quot;,
+  &quot;scrapedAt&quot;: &quot;2026-10-02T00:14:46.726Z&quot;
+}</code></pre></div>
+<h2 id="the-second-obstacle-datacenter-ips">The second obstacle: datacenter IPs</h2>
+<p>Getting past the dynamic-loading problem isn&#39;t the whole story. On Apify&#39;s own infrastructure, Woolworths returns <strong>HTTP 403 to requests from Apify&#39;s datacenter IP ranges</strong> — confirmed with a real live run, not assumed — even when the data-endpoint call itself is otherwise correct. This Actor defaults to <strong>Apify&#39;s Residential proxy in Australia</strong>, the one option confirmed to actually work on the platform it runs on, and automatically switches to it the first time it sees an HTTP 403 with no proxy configured. You don&#39;t pay extra for this: proxy bandwidth is covered by the Actor&#39;s own pay-per-event price, not billed separately.</p>
+<h2 id="limits">Limits</h2>
+<p><strong>Category browsing isn&#39;t implemented in this version</strong> — <code>categoryUrls</code> is accepted but has no effect; use <code>searchTerms</code>. Up to <strong>36 items per page</strong>, Woolworths&#39; own hard limit (confirmed live: requesting a larger page size returns an explicit <code>&quot;Page size should not be greater than the limit: 36&quot;</code> error from Woolworths itself). Only public catalog/pricing data — no customer accounts, no checkout, no personal data of any kind.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per event — <strong>$0.001 per product</strong> ($1 per 1,000), no subscription, proxy cost included in that price.</p>
+<p><strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Open Woolworths AU Products on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-there-an-official-woolworths-api">Is there an official Woolworths API?</h3>
+<p>No public product/pricing API exists for this. This Actor calls Woolworths&#39; own public product-search data endpoint — the same one the website&#39;s frontend uses — and returns the response as clean, structured rows.</p>
+<h3 id="why-does-my-own-requests-beautifulsoup-script-get-an-empty-product-list">Why does my own <code>requests</code> + <code>BeautifulSoup</code> script get an empty product list?</h3>
+<p>Because the page&#39;s initial HTML doesn&#39;t contain the product data — it loads products through a separate request after the page itself loads. A plain HTTP client that only fetches the page&#39;s HTML never makes that second request, so it never sees the products, regardless of how correct your parsing code is.</p>
+<h3 id="would-selenium-or-playwright-fix-it">Would Selenium or Playwright fix it?</h3>
+<p>Yes, driving a real browser would let those follow-up requests fire and the data would appear in the rendered DOM — but that&#39;s slower and heavier than calling the same data endpoint directly, which is what this Actor does instead.</p>
+<h3 id="do-i-need-my-own-proxy">Do I need my own proxy?</h3>
+<p>No. Apify Residential AU proxy is the default and is already included in the Actor&#39;s price. If you turn it off, the Actor detects the resulting HTTP 403 and switches back to it automatically, rather than returning an empty result.</p>
+<h3 id="can-i-scrape-a-specific-woolworths-category-page-instead-of-a-search-term">Can I scrape a specific Woolworths category page instead of a search term?</h3>
+<p>Not in this version. Woolworths&#39; category-browsing endpoint requires a request shape (<code>CategoryId</code>/<code>Url</code>/<code>FormatObject</code>) that this Actor doesn&#39;t yet construct — use <code>searchTerms</code> instead, which covers the same products from the search side.</p>
+<h3 id="where-do-i-find-the-full-inputoutput-reference">Where do I find the full input/output reference?</h3>
+<p>See the main <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/">Woolworths AU Products</a> page for every input field, the complete output schema, and code samples.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

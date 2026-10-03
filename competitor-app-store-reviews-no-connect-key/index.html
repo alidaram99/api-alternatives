@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get Competitor App Store Reviews, No Connect Key</title>
+<meta name="description" content="Scrape any iOS app&#39;s App Store reviews, including competitors, without a Connect key or login. Up to 500 per app per country, from Apple&#39;s public feed.">
+<meta name="keywords" content="scrape competitor app store reviews api, app store reviews without api key, download ios reviews by country, competitor app review monitoring, app store review scraper no login">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Get Competitor App Store Reviews, No Connect Key">
+<meta property="og:description" content="Scrape any iOS app&#39;s App Store reviews, including competitors, without a Connect key or login. Up to 500 per app per country, from Apple&#39;s public feed.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Apple App Store Reviews Scraper — any iOS app, no login","description":"Scrape any iOS app's App Store reviews, including competitors, without a Connect key or login. Up to 500 per app per country, from Apple's public feed.","url":"https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0002,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Get competitor App Store reviews without an App Store Connect key","description":"Scrape any iOS app's App Store reviews, including competitors, without a Connect key or login. Up to 500 per app per country, from Apple's public feed.","url":"https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I get a competitor's App Store reviews without their cooperation?","acceptedAnswer":{"@type":"Answer","text":"Yes, for public reviews. App Store Connect needs the app owner's own account; this Actor instead reads Apple's public customer-review feed, which is readable for any published app without authentication. It does not access anything private, unpublished, or owner-only (like developer-reply text, which isn't in the public feed for any app, including your own)."}},{"@type":"Question","name":"Do I need an Apple developer account at all?","acceptedAnswer":{"@type":"Answer","text":"No developer account, Connect key, or Apple login of any kind. You need an Apify account and token to run the Actor."}},{"@type":"Question","name":"Why would two runs of the same app return slightly different review counts?","acceptedAnswer":{"@type":"Answer","text":"New reviews post continuously, and Apple's own feed pagination can shift slightly between requests. Treat a run as a snapshot at that time, not an immutable historical record — rerun on a schedule if you're tracking trends."}},{"@type":"Question","name":"Is this allowed under Apple's terms?","acceptedAnswer":{"@type":"Answer","text":"The Actor only reads Apple's own public, unauthenticated endpoints — the same ones the App Store's web and app clients use — and does not bypass any login, CAPTCHA, or rate limit designed to block it. It does not use Apple's authenticated web API (which needs a session token and returns HTTP 401 without one). Review your own use against Apple's terms for your specific case; this page isn't legal advice."}},{"@type":"Question","name":"What's the difference between this page and the main App Store Reviews Scraper page?","acceptedAnswer":{"@type":"Answer","text":"That page covers the full Actor: inputs, output shapes, pricing, and the general use cases. This page answers the specific question of collecting a competitor's reviews without owning their Connect account — see also why review counts differ by country if your counts look incomplete."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Get Competitor App Store Reviews, No Connect Key","item":"https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" class="active" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Get competitor App Store reviews without an App Store Connect key</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Apple&#39;s App Store Connect API is built for apps your own team owns</strong> — authenticating into it to read a competitor&#39;s reviews isn&#39;t an option, because Apple&#39;s Customer Reviews endpoint only serves reviews for apps linked to your own developer account. <strong>This Actor instead reads Apple&#39;s public, unauthenticated customer-review feed</strong> (JSON, with an automatic XML fallback), which works for any app on the App Store, yours or a competitor&#39;s, with no login, no Connect key, and no CAPTCHA bypass.</p>
+<h2 id="why-app-store-connect-doesnt-work-for-this">Why App Store Connect doesn&#39;t work for this</h2>
+<p>Apple&#39;s own <a href="https://developer.apple.com/documentation/appstoreconnectapi/customer-reviews">Customer Reviews documentation</a> frames the endpoint around an app the authenticated developer account owns — there&#39;s no parameter that lets you query someone else&#39;s app by id. That&#39;s a deliberate scope limit, not a bug to route around: this Actor doesn&#39;t attempt to defeat it. It uses a separate, genuinely public surface — the same review feed the App Store&#39;s own web and app clients read from — which Apple exposes without authentication for every published app.</p>
+<h2 id="what-you-get">What you get</h2>
+<p>One row per review (<code>rating</code> 1–5, <code>title</code>, <code>text</code>, <code>version</code>, <code>date</code>, helpfulness <code>voteCount</code>/<code>voteSum</code>), plus an optional app-details row per app × country with name, developer, price, average rating and rating count. Real review row:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;type&quot;: &quot;review&quot;,
+  &quot;appId&quot;: &quot;570060128&quot;,
+  &quot;appName&quot;: &quot;Duolingo: Language Lessons&quot;,
+  &quot;country&quot;: &quot;us&quot;,
+  &quot;reviewId&quot;: &quot;14612250135&quot;,
+  &quot;title&quot;: &quot;Fun&quot;,
+  &quot;text&quot;: &quot;Very fun and get one month free for unlimited power&quot;,
+  &quot;rating&quot;: 5,
+  &quot;version&quot;: &quot;7.142.0&quot;,
+  &quot;date&quot;: &quot;2026-09-30T13:01:34-07:00&quot;,
+  &quot;voteCount&quot;: 0,
+  &quot;voteSum&quot;: 0,
+  &quot;developerResponse&quot;: null,
+  &quot;source&quot;: &quot;rss-json&quot;
+}</code></pre></div>
+<h2 id="run-it">Run it</h2>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://api.apify.com/v2/acts/dropin-apis~app-store-reviews/run-sync-get-dataset-items?token=$APIFY_TOKEN&quot; \
+  -H &#39;Content-Type: application/json&#39; \
+  -d &#39;{&quot;apps&quot;:[&quot;&lt;competitor app id or apps.apple.com URL&gt;&quot;],&quot;countries&quot;:[&quot;us&quot;,&quot;gb&quot;],&quot;maxReviewsPerApp&quot;:200}&#39;</code></pre></div>
+<p>Pass a numeric app id or a full <code>apps.apple.com</code> URL — both work. Add every country storefront you care about: reviews, ratings and even pricing genuinely differ by storefront (see the companion page on why totals differ by country, linked below).</p>
+<h2 id="honest-boundary">Honest boundary</h2>
+<p>This is public-feed data, not every review that has ever existed for an app. <code>developerResponse</code> is always <code>null</code> — developer replies aren&#39;t part of Apple&#39;s public feed at all, so there&#39;s no reply text to scrape for a competitor or for yourself. Apple&#39;s feed is occasionally empty for a run; the Actor retries and falls back from JSON to XML before giving up, and only adds a <code>type:&quot;warning&quot;</code> row (never a silent empty success) if both stay empty for an app known to have ratings.</p>
+<h2 id="limits">Limits</h2>
+<p>Up to <strong>500 reviews per app per country</strong> — Apple&#39;s own public feed stops at 10 pages of 50, not an Actor-side cap. Query more countries for more coverage, since each storefront has its own review pool. No developer-response text. Review language follows the storefront&#39;s dominant language.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per event — <strong>$0.0002 per row</strong> ($0.20 per 1,000), review rows and app-details rows both counted, no subscription.</p>
+<p><strong><a href="https://apify.com/dropin-apis/app-store-reviews">Open App Store Reviews Scraper on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-get-a-competitors-app-store-reviews-without-their-cooperation">Can I get a competitor&#39;s App Store reviews without their cooperation?</h3>
+<p>Yes, for public reviews. App Store Connect needs the app owner&#39;s own account; this Actor instead reads Apple&#39;s public customer-review feed, which is readable for any published app without authentication. It does not access anything private, unpublished, or owner-only (like developer-reply text, which isn&#39;t in the public feed for any app, including your own).</p>
+<h3 id="do-i-need-an-apple-developer-account-at-all">Do I need an Apple developer account at all?</h3>
+<p>No developer account, Connect key, or Apple login of any kind. You need an <a href="https://apify.com">Apify account</a> and token to run the Actor.</p>
+<h3 id="why-would-two-runs-of-the-same-app-return-slightly-different-review-counts">Why would two runs of the same app return slightly different review counts?</h3>
+<p>New reviews post continuously, and Apple&#39;s own feed pagination can shift slightly between requests. Treat a run as a snapshot at that time, not an immutable historical record — rerun on a schedule if you&#39;re tracking trends.</p>
+<h3 id="is-this-allowed-under-apples-terms">Is this allowed under Apple&#39;s terms?</h3>
+<p>The Actor only reads Apple&#39;s own public, unauthenticated endpoints — the same ones the App Store&#39;s web and app clients use — and does not bypass any login, CAPTCHA, or rate limit designed to block it. It does not use Apple&#39;s authenticated web API (which needs a session token and returns HTTP 401 without one). Review your own use against Apple&#39;s terms for your specific case; this page isn&#39;t legal advice.</p>
+<h3 id="whats-the-difference-between-this-page-and-the-main-app-store-reviews-scraper-page">What&#39;s the difference between this page and the main App Store Reviews Scraper page?</h3>
+<p>That page covers the full Actor: inputs, output shapes, pricing, and the general use cases. This page answers the specific question of collecting a <strong>competitor&#39;s</strong> reviews without owning their Connect account — see also <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/">why review counts differ by country</a> if your counts look incomplete.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

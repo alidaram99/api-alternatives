@@ -177,6 +177,80 @@ Yes, if it runs as your user and sets out to evade the check. Treat the hook as 
 
 ---
 
+# Why App Store Review Counts Differ by Country
+
+URL: https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/
+
+
+**Apple's App Store doesn't have one global pool of reviews — ratings and reviews belong to the country storefront where they were left**, so querying only `us` and expecting "all" of an app's reviews will always undercount it. There's no single endpoint that returns a worldwide total: a defensible collection has to query every storefront you actually care about and record which one each review came from.
+
+## Why this happens
+
+Apple's own [ratings-and-reviews help page](https://developer.apple.com/help/app-store-connect/monitor-ratings-and-reviews/view-ratings-and-reviews/) states plainly that reviews and ratings vary by App Store country or region — a user in Germany reviews the `de` storefront, a user in Japan reviews the `jp` storefront, and those pools don't merge anywhere Apple exposes publicly. An app with 2 million US ratings can simultaneously have a few hundred in a smaller market, and both numbers are real, scoped totals — not a partial view of one true number.
+
+This Actor's `countries` input makes that explicit rather than hiding it: each app is fetched **once per country you list**, and every review and app-details row carries its own `country` field, so you can tell at a glance which storefront a number came from instead of assuming it's global.
+
+```json
+{
+  "type": "app",
+  "appId": "570060128",
+  "country": "gb",
+  "name": "Duolingo: Language Lessons",
+  "averageRating": 4.72,
+  "ratingCount": 5480861,
+  "version": "7.142.0"
+}
+```
+
+Run the same `appId` with `"countries": ["us"]` and you'll get a different `ratingCount` on the matching `app`-type row for `us` — both are correct, for their own storefront.
+
+## What "get all App Store reviews" actually means
+
+There's no API parameter, on this Actor or Apple's own endpoints, that returns a true cross-country total — because that total doesn't exist as a single number anywhere in Apple's systems; the App Store itself only ever shows country-scoped ratings to users. The practical approach:
+
+1. Pick every storefront that matters for your use case (your top markets, or every country you ship in).
+2. Pass them all in `countries`, e.g. `["us", "gb", "de", "au", "jp"]`.
+3. Treat each `app`-type row's `ratingCount`/`averageRating` as that country's number, and sum review **rows** (not ratings) across countries yourself if you need a combined review count.
+
+## Pagination and rate-limit boundary
+
+Within one country, Apple's own public feed caps out at **500 reviews per app** (10 pages of 50) — a separate, additional limit on top of the per-country scoping above, confirmed against the live feed, not assumed. Older unauthenticated review-feed access has also been reported throttled under heavy unauthenticated load; this Actor's retry-and-fallback behavior (JSON feed first, XML feed second) exists partly because of that real-world flakiness, not just for robustness on paper.
+
+## Limits
+
+Up to 500 reviews per app **per country** — add more countries for more coverage, not a higher per-country cap (there isn't one to ask for). No developer-response text in any country's feed. A rating count you see here can differ from what a dashboard shows if that dashboard is already summing countries differently, or looking at a different moment in time.
+
+## Pricing
+
+Pay per event — **$0.0002 per row** ($0.20 per 1,000), no subscription. Querying 5 countries for one app costs the same per-row rate as 1 country; you simply get up to 5× the rows.
+
+**[Open App Store Reviews Scraper on Apify](https://apify.com/dropin-apis/app-store-reviews)**
+
+## FAQ
+
+### Is there a way to get a true worldwide App Store review total?
+
+No — Apple doesn't expose one, on this Actor or anywhere else publicly, because ratings and reviews are stored and shown per storefront. The closest equivalent is summing review rows across every country storefront you query yourself.
+
+### Why did my review count drop between two runs?
+
+It's unlikely review counts actually dropped; more likely a different set of `countries` was passed, or Apple's feed paginated slightly differently between requests. Compare the exact `countries` list and `maxReviewsPerApp` used in both runs before assuming data loss.
+
+### How many countries should I query?
+
+As many as are relevant to your use case. For competitor monitoring, your top 3–5 markets by install base usually capture most of the signal; for completeness, the App Store is distributed across [175 countries and regions](https://developer.apple.com/app-store/), though most apps have meaningful review volume in only a fraction of them.
+
+### Does `sinceDate` work per country or globally?
+
+Per country, within each app × country pairing being fetched — the Actor stops paging for that specific app/country combination once it reaches a review older than `sinceDate`, independently of how other countries for the same app are progressing.
+
+### Where do I actually run this?
+
+See the [App Store Reviews Scraper](https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/) page for inputs, output shapes and code samples, or the [competitor-reviews guide](https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/) if you're specifically monitoring an app you don't own.
+
+
+---
+
 # App Store Reviews Scraper: any app, no Connect key
 
 URL: https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/
@@ -788,6 +862,89 @@ No. It is an independent tool.
 
 ---
 
+# Get Competitor App Store Reviews, No Connect Key
+
+URL: https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/
+
+
+**Apple's App Store Connect API is built for apps your own team owns** — authenticating into it to read a competitor's reviews isn't an option, because Apple's Customer Reviews endpoint only serves reviews for apps linked to your own developer account. **This Actor instead reads Apple's public, unauthenticated customer-review feed** (JSON, with an automatic XML fallback), which works for any app on the App Store, yours or a competitor's, with no login, no Connect key, and no CAPTCHA bypass.
+
+## Why App Store Connect doesn't work for this
+
+Apple's own [Customer Reviews documentation](https://developer.apple.com/documentation/appstoreconnectapi/customer-reviews) frames the endpoint around an app the authenticated developer account owns — there's no parameter that lets you query someone else's app by id. That's a deliberate scope limit, not a bug to route around: this Actor doesn't attempt to defeat it. It uses a separate, genuinely public surface — the same review feed the App Store's own web and app clients read from — which Apple exposes without authentication for every published app.
+
+## What you get
+
+One row per review (`rating` 1–5, `title`, `text`, `version`, `date`, helpfulness `voteCount`/`voteSum`), plus an optional app-details row per app × country with name, developer, price, average rating and rating count. Real review row:
+
+```json
+{
+  "type": "review",
+  "appId": "570060128",
+  "appName": "Duolingo: Language Lessons",
+  "country": "us",
+  "reviewId": "14612250135",
+  "title": "Fun",
+  "text": "Very fun and get one month free for unlimited power",
+  "rating": 5,
+  "version": "7.142.0",
+  "date": "2026-09-30T13:01:34-07:00",
+  "voteCount": 0,
+  "voteSum": 0,
+  "developerResponse": null,
+  "source": "rss-json"
+}
+```
+
+## Run it
+
+```bash
+curl -s -X POST "https://api.apify.com/v2/acts/dropin-apis~app-store-reviews/run-sync-get-dataset-items?token=$APIFY_TOKEN" \
+  -H 'Content-Type: application/json' \
+  -d '{"apps":["<competitor app id or apps.apple.com URL>"],"countries":["us","gb"],"maxReviewsPerApp":200}'
+```
+
+Pass a numeric app id or a full `apps.apple.com` URL — both work. Add every country storefront you care about: reviews, ratings and even pricing genuinely differ by storefront (see the companion page on why totals differ by country, linked below).
+
+## Honest boundary
+
+This is public-feed data, not every review that has ever existed for an app. `developerResponse` is always `null` — developer replies aren't part of Apple's public feed at all, so there's no reply text to scrape for a competitor or for yourself. Apple's feed is occasionally empty for a run; the Actor retries and falls back from JSON to XML before giving up, and only adds a `type:"warning"` row (never a silent empty success) if both stay empty for an app known to have ratings.
+
+## Limits
+
+Up to **500 reviews per app per country** — Apple's own public feed stops at 10 pages of 50, not an Actor-side cap. Query more countries for more coverage, since each storefront has its own review pool. No developer-response text. Review language follows the storefront's dominant language.
+
+## Pricing
+
+Pay per event — **$0.0002 per row** ($0.20 per 1,000), review rows and app-details rows both counted, no subscription.
+
+**[Open App Store Reviews Scraper on Apify](https://apify.com/dropin-apis/app-store-reviews)**
+
+## FAQ
+
+### Can I get a competitor's App Store reviews without their cooperation?
+
+Yes, for public reviews. App Store Connect needs the app owner's own account; this Actor instead reads Apple's public customer-review feed, which is readable for any published app without authentication. It does not access anything private, unpublished, or owner-only (like developer-reply text, which isn't in the public feed for any app, including your own).
+
+### Do I need an Apple developer account at all?
+
+No developer account, Connect key, or Apple login of any kind. You need an [Apify account](https://apify.com) and token to run the Actor.
+
+### Why would two runs of the same app return slightly different review counts?
+
+New reviews post continuously, and Apple's own feed pagination can shift slightly between requests. Treat a run as a snapshot at that time, not an immutable historical record — rerun on a schedule if you're tracking trends.
+
+### Is this allowed under Apple's terms?
+
+The Actor only reads Apple's own public, unauthenticated endpoints — the same ones the App Store's web and app clients use — and does not bypass any login, CAPTCHA, or rate limit designed to block it. It does not use Apple's authenticated web API (which needs a session token and returns HTTP 401 without one). Review your own use against Apple's terms for your specific case; this page isn't legal advice.
+
+### What's the difference between this page and the main App Store Reviews Scraper page?
+
+That page covers the full Actor: inputs, output shapes, pricing, and the general use cases. This page answers the specific question of collecting a **competitor's** reviews without owning their Connect account — see also [why review counts differ by country](https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/) if your counts look incomplete.
+
+
+---
+
 # Extract All URLs From a Sitemap — indexes, gzip, robots.txt
 
 URL: https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/
@@ -1077,6 +1234,82 @@ OpenAI's speech-to-text guide documents `timestamp_granularities[]` and the tran
 ### Is gpt-transcribe cheaper than whisper-1?
 
 Yes, on OpenAI's October 2026 price list: $0.0045 per minute versus $0.006 per minute for whisper-1.
+
+
+---
+
+# Parse Nested, Compressed Sitemap Indexes (gzip)
+
+URL: https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/
+
+
+**A single `sitemap.xml` fetch is often not the whole site map: the [Sitemaps protocol](https://www.sitemaps.org/protocol.html) itself caps one sitemap file at 50,000 URLs and 50MB uncompressed, so any larger site publishes a *sitemap index* — a file that lists other sitemap files instead of URLs — and that index can itself be large, nested, and gzip-compressed.** Getting every URL means recursing into every child file the index points to, unzipping the compressed ones, and stopping at sane limits — not just reading the first file and calling it done.
+
+## Why a naive sitemap fetch misses URLs
+
+Two real, separate failure modes show up here. First, large sites' sitemap indexes can list hundreds of child sitemap files — one developer's reported case needed to fetch over 400 individual child sitemaps from a single index with `curl` and `xargs` by hand ([Stack Overflow](https://stackoverflow.com/questions/68512944/using-curl-and-xargs-to-get-individual-sitemaps)), which doesn't scale as a manual or ad hoc script. Second, sitemap files are commonly served gzip-compressed (`.xml.gz`) to save bandwidth, and parsing that without writing a temp file to disk first is its own real implementation question developers have asked about directly ([Stack Overflow](https://stackoverflow.com/questions/26564348/how-to-parse-compressed-sitemap-using-python-without-downloading-it-to-disk)). A script that only handles a flat, uncompressed `sitemap.xml` silently stops short on both counts.
+
+## How this Actor actually does it
+
+Verified against this Actor's own source, not just described from the README: the crawl keeps two separate `Set`s — one of sitemap-file URLs it has already queued or fetched, one of page URLs it has already emitted — so a child file referenced twice by a sloppy index (or, in a pathological index, a cycle) is only ever fetched once, and a page URL that appears in two different sitemap files is only emitted as **one** output row, not two. Gzip files are detected by their magic bytes and decompressed with Node's `zlib.gunzipSync` directly **in memory** — no temp file ever touches disk, answering the "without downloading it to disk" question directly. Files are fetched one at a time into the active batch specifically so `maxUrls` can stop the run precisely, without needlessly downloading one extra child file past the point you actually needed.
+
+```json
+{
+  "startUrls": [{ "url": "https://www.gnu.org" }],
+  "maxUrls": 500
+}
+```
+
+```json
+{
+  "url": "https://www.gnu.org/software/libc/index.html",
+  "lastmod": "2026-08-14",
+  "sourceSitemap": "https://www.gnu.org/sitemap0.xml.gz",
+  "domain": "www.gnu.org"
+}
+```
+
+Both halves of this were checked against real, live sites during development, not only synthetic fixtures: a real sitemap index (`apify.com`) for recursion, and a real gzip-compressed child sitemap (`gnu.org`'s `sitemap0.xml.gz`) for the decompression path — `sourceSitemap` above shows that exact `.gz` child file as the row's origin.
+
+## The caps, and why they exist
+
+**At most 50 sitemap files per run**, and **20MB per file after unpacking** — generous relative to the protocol's own 50,000-URL/50MB-per-file ceiling, but a real, enforced stop so a misconfigured or hostile index can't turn one run into an unbounded crawl. `maxUrls` itself is clamped to a top of 50,000, matching the protocol's own per-file limit rather than an arbitrary round number. Fetches run at **5 concurrent requests**, with up to 4 attempts and exponential backoff on HTTP 429 or any 5xx, and a per-host `Crawl-delay` from `robots.txt` is honored (up to 5 seconds) rather than ignored.
+
+## Limits
+
+Public `http`/`https` sitemaps only — private hosts (`localhost`, `10.x`, `192.168.x`) are refused outright. A path disallowed for `User-agent: *` in `robots.txt` is never fetched, index or not. The run **fails** (not a silent empty success) if every input produces zero URLs across every candidate sitemap tried.
+
+## Pricing
+
+Pay per event — the primary event is **$0.0004 per URL** ($0.40 per 1,000), charged when a row is saved. No monthly fee, and no separate charge for the sitemap-file fetches themselves, only for the page-URL rows that result.
+
+**[Open Sitemap URL Extractor & Scraper on Apify](https://apify.com/dropin-apis/sitemap-url-extractor)**
+
+## FAQ
+
+### Will this follow a sitemap index recursively, or only read the top-level file?
+
+Recursively. An index's child files are queued and fetched one at a time (up to 50 files per run) until `maxUrls` is reached or the queue empties, not stopped after the first file.
+
+### Does it download a gzip sitemap to disk to unzip it?
+
+No. A response starting with the gzip magic bytes is decompressed directly in memory with Node's built-in `zlib`, never written to a temporary file.
+
+### What happens if the same child sitemap is listed twice in an index?
+
+It's fetched once. An internal set of already-seen sitemap-file URLs skips a repeat, so a redundant or even cyclical index reference can't double work or loop forever.
+
+### What if the same page URL appears in two different sitemap files?
+
+It's emitted as one output row, not two — a separate internal set of already-emitted page URLs deduplicates across every sitemap file in the run, not just within one file.
+
+### Why does the sitemaps.org spec matter here?
+
+It's the reason sitemap indexes exist at all: the [protocol](https://www.sitemaps.org/protocol.html) caps a single sitemap file at 50,000 URLs and 50MB uncompressed, so any site with more pages than that must split across multiple files behind an index — which is exactly the structure this Actor is built to recurse into.
+
+### How is this different from the main Sitemap URL Extractor page?
+
+That page covers the full Actor end to end — every input field, the complete output schema, and code samples. This page goes deeper on the specific mechanics of nested indexes and gzip decompression for anyone whose sitemap isn't a single flat file. See also [Extract Structured Data from a URL](https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/) for turning the pages a sitemap lists into validated data once you have the URL list.
 
 
 ---
@@ -2506,6 +2739,85 @@ curl -s -X POST "https://api.apify.com/v2/acts/<owner>~woolworths-au-products/ru
 **$1 per 1,000 products** ($0.001 per row), pay per event, with no subscription.
 
 **[Open the Woolworths scraper on Apify](https://apify.com/dropin-apis/woolworths-au-products)**
+
+
+---
+
+# Woolworths Scraper Returns Empty with requests/BS4
+
+URL: https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/
+
+
+**If `requests.get()` plus BeautifulSoup on a Woolworths product or search page returns an empty product list, that's not a bug in your selectors — the page's HTML genuinely doesn't contain the product data.** Woolworths loads products through separate data requests after the initial page loads, so a plain HTML fetch only ever sees the empty shell the page starts with, no matter how the CSS selectors are written.
+
+## Why your scraper sees nothing
+
+This is a real, reported problem, not an edge case: developers hit the same wall scraping other dynamically-loaded retail sites, where a direct `GET` returns a near-empty document and the actual listings arrive afterward via requests a plain HTTP client never makes ([Stack Overflow](https://stackoverflow.com/questions/57810118/crawling-a-webpage-empty-list-always-return), [a second, independent report of the same class of problem](https://stackoverflow.com/questions/72560795/requests-html-doesnt-get-full-html)). `requests` and `BeautifulSoup` only ever see whatever HTML the server returns for that one request — if the real product data arrives through a second, separate call the browser makes afterward, a plain HTTP client never makes that second call and never sees that data.
+
+There are two common fixes: drive a real browser (Selenium/Playwright) so those follow-up requests actually fire, or call the same data endpoint the page itself calls, directly. This Actor takes the second path — it talks to Woolworths' public product-search data endpoint directly, the same one the website's own frontend calls, and returns clean, structured rows without needing a browser at all.
+
+## What you get instead
+
+One normalized row per product — price, was-price, special flag, unit price, stock status — with no browser automation needed:
+
+```json
+{
+  "stockcode": "888140",
+  "name": "Woolworths Full Cream Milk",
+  "brand": "Woolworths",
+  "packageSize": "3L",
+  "price": 4.95,
+  "wasPrice": 4.95,
+  "isOnSpecial": false,
+  "cupPrice": 1.65,
+  "cupMeasure": "1L",
+  "cupString": "$1.65 / 1L",
+  "isAvailable": true,
+  "isInStock": true,
+  "searchTerm": "milk",
+  "scrapedAt": "2026-10-02T00:14:46.726Z"
+}
+```
+
+## The second obstacle: datacenter IPs
+
+Getting past the dynamic-loading problem isn't the whole story. On Apify's own infrastructure, Woolworths returns **HTTP 403 to requests from Apify's datacenter IP ranges** — confirmed with a real live run, not assumed — even when the data-endpoint call itself is otherwise correct. This Actor defaults to **Apify's Residential proxy in Australia**, the one option confirmed to actually work on the platform it runs on, and automatically switches to it the first time it sees an HTTP 403 with no proxy configured. You don't pay extra for this: proxy bandwidth is covered by the Actor's own pay-per-event price, not billed separately.
+
+## Limits
+
+**Category browsing isn't implemented in this version** — `categoryUrls` is accepted but has no effect; use `searchTerms`. Up to **36 items per page**, Woolworths' own hard limit (confirmed live: requesting a larger page size returns an explicit `"Page size should not be greater than the limit: 36"` error from Woolworths itself). Only public catalog/pricing data — no customer accounts, no checkout, no personal data of any kind.
+
+## Pricing
+
+Pay per event — **$0.001 per product** ($1 per 1,000), no subscription, proxy cost included in that price.
+
+**[Open Woolworths AU Products on Apify](https://apify.com/dropin-apis/woolworths-au-products)**
+
+## FAQ
+
+### Is there an official Woolworths API?
+
+No public product/pricing API exists for this. This Actor calls Woolworths' own public product-search data endpoint — the same one the website's frontend uses — and returns the response as clean, structured rows.
+
+### Why does my own `requests` + `BeautifulSoup` script get an empty product list?
+
+Because the page's initial HTML doesn't contain the product data — it loads products through a separate request after the page itself loads. A plain HTTP client that only fetches the page's HTML never makes that second request, so it never sees the products, regardless of how correct your parsing code is.
+
+### Would Selenium or Playwright fix it?
+
+Yes, driving a real browser would let those follow-up requests fire and the data would appear in the rendered DOM — but that's slower and heavier than calling the same data endpoint directly, which is what this Actor does instead.
+
+### Do I need my own proxy?
+
+No. Apify Residential AU proxy is the default and is already included in the Actor's price. If you turn it off, the Actor detects the resulting HTTP 403 and switches back to it automatically, rather than returning an empty result.
+
+### Can I scrape a specific Woolworths category page instead of a search term?
+
+Not in this version. Woolworths' category-browsing endpoint requires a request shape (`CategoryId`/`Url`/`FormatObject`) that this Actor doesn't yet construct — use `searchTerms` instead, which covers the same products from the search side.
+
+### Where do I find the full input/output reference?
+
+See the main [Woolworths AU Products](https://alidaram99.github.io/api-alternatives/woolworths-api/) page for every input field, the complete output schema, and code samples.
 
 
 ---

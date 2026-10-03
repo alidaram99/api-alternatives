@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why App Store Review Counts Differ by Country</title>
+<meta name="description" content="App Store ratings and reviews belong to each country storefront, not one global total. Collect every storefront you need, or totals will look incomplete.">
+<meta name="keywords" content="app store reviews different country, itunes reviews country parameter, get all app store reviews, app store review count wrong, app store country storefront reviews">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Why App Store Review Counts Differ by Country">
+<meta property="og:description" content="App Store ratings and reviews belong to each country storefront, not one global total. Collect every storefront you need, or totals will look incomplete.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Apple App Store Reviews Scraper — any iOS app, no login","description":"App Store ratings and reviews belong to each country storefront, not one global total. Collect every storefront you need, or totals will look incomplete.","url":"https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0002,"priceCurrency":"USD","description":"Billed per event: Item scraped"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Why your App Store review count looks wrong — and how to actually get \"all\" of them","description":"App Store ratings and reviews belong to each country storefront, not one global total. Collect every storefront you need, or totals will look incomplete.","url":"https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is there a way to get a true worldwide App Store review total?","acceptedAnswer":{"@type":"Answer","text":"No — Apple doesn't expose one, on this Actor or anywhere else publicly, because ratings and reviews are stored and shown per storefront. The closest equivalent is summing review rows across every country storefront you query yourself."}},{"@type":"Question","name":"Why did my review count drop between two runs?","acceptedAnswer":{"@type":"Answer","text":"It's unlikely review counts actually dropped; more likely a different set of countries was passed, or Apple's feed paginated slightly differently between requests. Compare the exact countries list and maxReviewsPerApp used in both runs before assuming data loss."}},{"@type":"Question","name":"How many countries should I query?","acceptedAnswer":{"@type":"Answer","text":"As many as are relevant to your use case. For competitor monitoring, your top 3–5 markets by install base usually capture most of the signal; for completeness, the App Store is distributed across 175 countries and regions, though most apps have meaningful review volume in only a fraction of them."}},{"@type":"Question","name":"Does sinceDate work per country or globally?","acceptedAnswer":{"@type":"Answer","text":"Per country, within each app × country pairing being fetched — the Actor stops paging for that specific app/country combination once it reaches a review older than sinceDate, independently of how other countries for the same app are progressing."}},{"@type":"Question","name":"Where do I actually run this?","acceptedAnswer":{"@type":"Answer","text":"See the App Store Reviews Scraper page for inputs, output shapes and code samples, or the competitor-reviews guide if you're specifically monitoring an app you don't own."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Why App Store Review Counts Differ by Country","item":"https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" class="active" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Why your App Store review count looks wrong — and how to actually get &quot;all&quot; of them</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Apple&#39;s App Store doesn&#39;t have one global pool of reviews — ratings and reviews belong to the country storefront where they were left</strong>, so querying only <code>us</code> and expecting &quot;all&quot; of an app&#39;s reviews will always undercount it. There&#39;s no single endpoint that returns a worldwide total: a defensible collection has to query every storefront you actually care about and record which one each review came from.</p>
+<h2 id="why-this-happens">Why this happens</h2>
+<p>Apple&#39;s own <a href="https://developer.apple.com/help/app-store-connect/monitor-ratings-and-reviews/view-ratings-and-reviews/">ratings-and-reviews help page</a> states plainly that reviews and ratings vary by App Store country or region — a user in Germany reviews the <code>de</code> storefront, a user in Japan reviews the <code>jp</code> storefront, and those pools don&#39;t merge anywhere Apple exposes publicly. An app with 2 million US ratings can simultaneously have a few hundred in a smaller market, and both numbers are real, scoped totals — not a partial view of one true number.</p>
+<p>This Actor&#39;s <code>countries</code> input makes that explicit rather than hiding it: each app is fetched <strong>once per country you list</strong>, and every review and app-details row carries its own <code>country</code> field, so you can tell at a glance which storefront a number came from instead of assuming it&#39;s global.</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;type&quot;: &quot;app&quot;,
+  &quot;appId&quot;: &quot;570060128&quot;,
+  &quot;country&quot;: &quot;gb&quot;,
+  &quot;name&quot;: &quot;Duolingo: Language Lessons&quot;,
+  &quot;averageRating&quot;: 4.72,
+  &quot;ratingCount&quot;: 5480861,
+  &quot;version&quot;: &quot;7.142.0&quot;
+}</code></pre></div>
+<p>Run the same <code>appId</code> with <code>&quot;countries&quot;: [&quot;us&quot;]</code> and you&#39;ll get a different <code>ratingCount</code> on the matching <code>app</code>-type row for <code>us</code> — both are correct, for their own storefront.</p>
+<h2 id="what-get-all-app-store-reviews-actually-means">What &quot;get all App Store reviews&quot; actually means</h2>
+<p>There&#39;s no API parameter, on this Actor or Apple&#39;s own endpoints, that returns a true cross-country total — because that total doesn&#39;t exist as a single number anywhere in Apple&#39;s systems; the App Store itself only ever shows country-scoped ratings to users. The practical approach:</p>
+<ol><li>Pick every storefront that matters for your use case (your top markets, or every country you ship in).</li><li>Pass them all in <code>countries</code>, e.g. <code>[&quot;us&quot;, &quot;gb&quot;, &quot;de&quot;, &quot;au&quot;, &quot;jp&quot;]</code>.</li><li>Treat each <code>app</code>-type row&#39;s <code>ratingCount</code>/<code>averageRating</code> as that country&#39;s number, and sum review <strong>rows</strong> (not ratings) across countries yourself if you need a combined review count.</li></ol>
+<h2 id="pagination-and-rate-limit-boundary">Pagination and rate-limit boundary</h2>
+<p>Within one country, Apple&#39;s own public feed caps out at <strong>500 reviews per app</strong> (10 pages of 50) — a separate, additional limit on top of the per-country scoping above, confirmed against the live feed, not assumed. Older unauthenticated review-feed access has also been reported throttled under heavy unauthenticated load; this Actor&#39;s retry-and-fallback behavior (JSON feed first, XML feed second) exists partly because of that real-world flakiness, not just for robustness on paper.</p>
+<h2 id="limits">Limits</h2>
+<p>Up to 500 reviews per app <strong>per country</strong> — add more countries for more coverage, not a higher per-country cap (there isn&#39;t one to ask for). No developer-response text in any country&#39;s feed. A rating count you see here can differ from what a dashboard shows if that dashboard is already summing countries differently, or looking at a different moment in time.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per event — <strong>$0.0002 per row</strong> ($0.20 per 1,000), no subscription. Querying 5 countries for one app costs the same per-row rate as 1 country; you simply get up to 5× the rows.</p>
+<p><strong><a href="https://apify.com/dropin-apis/app-store-reviews">Open App Store Reviews Scraper on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-there-a-way-to-get-a-true-worldwide-app-store-review-total">Is there a way to get a true worldwide App Store review total?</h3>
+<p>No — Apple doesn&#39;t expose one, on this Actor or anywhere else publicly, because ratings and reviews are stored and shown per storefront. The closest equivalent is summing review rows across every country storefront you query yourself.</p>
+<h3 id="why-did-my-review-count-drop-between-two-runs">Why did my review count drop between two runs?</h3>
+<p>It&#39;s unlikely review counts actually dropped; more likely a different set of <code>countries</code> was passed, or Apple&#39;s feed paginated slightly differently between requests. Compare the exact <code>countries</code> list and <code>maxReviewsPerApp</code> used in both runs before assuming data loss.</p>
+<h3 id="how-many-countries-should-i-query">How many countries should I query?</h3>
+<p>As many as are relevant to your use case. For competitor monitoring, your top 3–5 markets by install base usually capture most of the signal; for completeness, the App Store is distributed across <a href="https://developer.apple.com/app-store/">175 countries and regions</a>, though most apps have meaningful review volume in only a fraction of them.</p>
+<h3 id="does-sincedate-work-per-country-or-globally">Does <code>sinceDate</code> work per country or globally?</h3>
+<p>Per country, within each app × country pairing being fetched — the Actor stops paging for that specific app/country combination once it reaches a review older than <code>sinceDate</code>, independently of how other countries for the same app are progressing.</p>
+<h3 id="where-do-i-actually-run-this">Where do I actually run this?</h3>
+<p>See the <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/">App Store Reviews Scraper</a> page for inputs, output shapes and code samples, or the <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/">competitor-reviews guide</a> if you&#39;re specifically monitoring an app you don&#39;t own.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
