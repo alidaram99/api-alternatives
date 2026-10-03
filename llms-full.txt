@@ -911,7 +911,7 @@ Check CanaryIndex's `recommendations.json`. If the list for your category is emp
 
 ---
 
-# OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027
+# whisper-1 and gpt-4o-transcribe removed Feb 26, 2027
 
 URL: https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/
 
