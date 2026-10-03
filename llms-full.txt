@@ -536,98 +536,6 @@ No. It is an independent tool.
 
 ---
 
-# Extract All URLs From a Sitemap — indexes, gzip, robots.txt
-
-URL: https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/
-
-
-**Give this Actor a domain or sitemap URL, and it returns one row per page URL from the site's public sitemap** — it does not open or crawl those pages, only the sitemap files themselves. It follows sitemap indexes, unpacks `.xml.gz`, and checks `robots.txt` for `Sitemap:` lines.
-
-## What it looks up
-
-Given a domain, it checks (in order): `robots.txt` (every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if not already listed. A start URL that already ends in `.xml` or `.xml.gz` is fetched directly. An index is followed one child file at a time until `maxUrls` is reached; a file starting with the gzip magic bytes is unpacked automatically.
-
-## Example input
-
-```json
-{
-  "startUrls": [{ "url": "https://www.sitemaps.org" }],
-  "maxUrls": 10
-}
-```
-
-| Field | Type | Description |
-|---|---|---|
-| `startUrls` | required | A domain or a sitemap URL (`.xml` or `.xml.gz`) |
-| `includeRegex` / `excludeRegex` | optional | Case-insensitive regex to keep or drop matching URLs |
-| `lastmodSince` | optional | ISO date — URLs with an older `lastmod` are dropped; URLs with no `lastmod` are kept |
-| `maxUrls` | integer, default 1000 | Stop after this many unique URLs |
-
-## Example output
-
-```json
-{
-  "url": "https://www.sitemaps.org/",
-  "lastmod": "2016-11-21",
-  "changefreq": null,
-  "priority": null,
-  "sourceSitemap": "https://www.sitemaps.org/sitemap.xml",
-  "domain": "www.sitemaps.org"
-}
-```
-
-Both a real sitemap index (`https://apify.com`) and a gzip child sitemap (`https://www.gnu.org`'s `sitemap0.xml.gz`) were checked against live sites during development.
-
-## Use cases
-
-- **A URL list for another Actor or crawler** that only needs the links, not a fresh crawl of the whole site.
-- **Change detection** — keep rows whose `lastmod` is after a date you pass in.
-- **A scoped export** — keep or drop URLs with a regular expression (`/blog/`, a locale, a file type).
-
-## Limits
-
-Public `http`/`https` sitemaps only, no login; private hosts are refused. At most 50 sitemap files per run and 20 MB per file after unpacking. At most 5 fetches in flight, with retries on HTTP 429/5xx, and `Crawl-delay` in robots.txt honored up to 5 seconds. A path disallowed for `User-agent: *` is not fetched. The run **fails** if every input produces zero URLs, so an empty success is never silently reported as a finished dataset.
-
-## Run it from code
-
-```bash
-curl -X POST "https://api.apify.com/v2/acts/dropin-apis~sitemap-url-extractor/run-sync-get-dataset-items" \
-  -H "Authorization: Bearer $APIFY_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"startUrls":[{"url":"https://www.sitemaps.org"}],"maxUrls":10}'
-```
-
-## Pricing
-
-Pay per event — the primary event is `apify-default-dataset-item` at **$0.0004 per URL ($0.40 per 1,000)**, charged when a row is saved. No monthly fee.
-
-**[Open Sitemap URL Extractor & Scraper on Apify](https://apify.com/dropin-apis/sitemap-url-extractor)**
-
-## FAQ
-
-### Does this crawl the pages listed in the sitemap?
-
-No. It only downloads sitemap files and returns the URLs listed inside them — it never fetches the pages those URLs point to.
-
-### What if the site publishes a sitemap index or a `.gz` file?
-
-A sitemap index is followed one child file at a time until `maxUrls` is reached. A file that starts with the gzip magic bytes is unpacked automatically — both paths were checked against real live sites, not only synthetic fixtures.
-
-### What does a plain domain input actually fetch?
-
-`/robots.txt` first (reading every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if those weren't already listed there. A start URL ending in `.xml` or `.xml.gz` is fetched directly, skipping the robots.txt step.
-
-### Why did the run fail with "0 URL(s)"?
-
-None of the inputs had a readable public sitemap. A missing `/sitemap_index.xml` on its own is normal and not a failure — the failure only triggers when every candidate sitemap was missing or wasn't valid sitemap XML.
-
-### What does it cost?
-
-$0.0004 per extracted URL ($0.40 per 1,000 rows), pay per event, with no subscription.
-
-
----
-
 # Drop-in replacements for retiring APIs, plus data tools
 
 URL: https://alidaram99.github.io/api-alternatives/
@@ -1264,6 +1172,97 @@ No. Each file is downloaded to a temporary file inside the run, transcribed, and
 ### I need an OpenAI whisper-1 compatible endpoint instead
 
 Use the sister Actor, the [whisper-1 alternative](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) — the same engine behind OpenAI's `/v1/audio/transcriptions` request and response format, for apps already built on the OpenAI SDK.
+
+
+---
+
+# tts-1 deprecated (Jan 6, 2027): a compatible /v1/audio/speech endpoint
+
+URL: https://alidaram99.github.io/api-alternatives/tts-1-alternative/
+
+
+**OpenAI is removing `tts-1`, `tts-1-hd` and both `gpt-4o-mini-tts` snapshots from the API on 6 January 2027.** This Actor accepts the same `POST /v1/audio/speech` request shape — you change the base URL and the API key, nothing else in your request body — and returns synthesized audio from independent local voices, from **$0.009 per 1,000 input characters**.
+
+## What changes on 2027-01-06
+
+OpenAI's own [deprecations page](https://developers.openai.com/api/docs/deprecations) states: *"The following text-to-speech models are deprecated and will be removed from the API on January 6, 2027, with at least three months' notice."* Announced 1 October 2026, the four models removed are `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` and `gpt-4o-mini-tts-2025-12-15`. OpenAI's recommended replacement is `gpt-realtime-2.1-mini` — but that model prices audio by the **token** ($20 per 1M audio output tokens), not by the simple per-character rate `tts-1` had, so it is not a drop-in price comparison, only a drop-in *capability* successor aimed more at realtime voice agents than one-shot text-to-speech calls. After 6 January 2027, any code still calling `tts-1`/`tts-1-hd`/`gpt-4o-mini-tts` will fail outright, not degrade gracefully.
+
+## Minimal migration diff
+
+Only the base URL and the auth header change — model, voice, format and other parameters stay in the same place in the request body:
+
+```diff
+  client = OpenAI(
+-     api_key=os.environ["OPENAI_API_KEY"],
++     api_key=os.environ["APIFY_TOKEN"],
++     base_url="https://dropin-apis--tts-compat.apify.actor/v1",
+  )
+  with client.audio.speech.with_streaming_response.create(
+      model="tts-1", input="Hello, world.", voice="amber", response_format="wav"
+  ) as response:
+      response.stream_to_file("speech.wav")
+```
+
+Or plain HTTP:
+
+```bash
+curl --fail-with-body \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H 'Content-Type: application/json' \
+  --data '{"model":"tts-1","input":"Hello, world.","voice":"amber","response_format":"mp3"}' \
+  'https://dropin-apis--tts-compat.apify.actor/v1/audio/speech' \
+  --output speech.mp3
+```
+
+Confirm the real deployed hostname on the Actor's **Endpoints** tab before going live. `model` is accepted as a compatibility identifier only — `tts-1`, `tts-1-hd` and `gpt-4o-mini-tts` all select the **same** local model underneath, with no HD/quality tier. `voice` accepts the same parameter *values* (`alloy`, `echo`, `nova`, and so on) mapped to distinct independent local voices — re-test pronunciation and voice choice, since the acoustic output is different. Remove any nonempty `instructions` or SSE `stream_format` options: both return HTTP 400 here.
+
+## How it compares
+
+| Option | Price | Notes |
+|---|---|---|
+| **This Actor (Standby)** | $0.009 per 1,000 characters | Independent local Kokoro voices, English only, compatible request/response shape, no voice cloning |
+| **This Actor (Store/MCP batch run)** | $0.12 per 1,000 characters | Same voices; use for longer inputs — see the latency note below |
+| OpenAI's recommended replacement (`gpt-realtime-2.1-mini`) | $20 per 1M audio output tokens | Token-priced realtime-voice-agent model, not a simple per-character TTS rate — needs its own cost modeling, not a straight swap |
+| [Kokoro Text to Speech on Apify](https://apify.com/conserving_celerytop/kokoro-text-to-speech) | $0.08 per 1,000 characters (per its own Store listing) | Also Kokoro-based; 54 voices across 9 languages advertised, vs. this Actor's 13 English-only voices |
+| Self-hosting Kokoro or Piper yourself | Your compute, no per-call fee | No managed endpoint, no OpenAI-compatible request shape out of the box, you run and scale it |
+
+**This is an independent speech service, not an OpenAI product.** Compatibility covers the request shape and the audio response format — not identical voices, pronunciation, prosody or model quality, and there is no affiliation with OpenAI or any other provider. Every successful response carries `X-Voice-Provider` and `X-Local-Voice` disclosure headers naming the actual local voice used. The `voice` parameter values above (`alloy`, `echo`, etc.) are accepted **only as compatibility identifiers** so existing request bodies keep working — they are not a claim that you get OpenAI's own voices.
+
+## Honest latency note
+
+Real measured runs, not estimates: a live 1,000-character normal (batch) run on Apify took **151.192 seconds** total; a 4,096-character run took **760.015 seconds**, both at the default 4 GB. Locally (excluding cloud platform/container startup), cold synthesis at 4 GB measured 49.893s for 1,000 characters and 199.511s for 4,096. **Use the Standby endpoint only for short inputs** — a long buffered HTTP call can exceed its ~270-second synthesis deadline and the platform's five-minute first-response budget, returning HTTP 503 with no audio and no character charge. For longer text, use a normal Store or MCP run instead (up to 4,096 characters, 1,200-second timeout) — it costs more per character ($0.12 vs $0.009) specifically because it's built for exactly this case. There is no real-time guarantee either way; full measurements are in the Actor's own `VERIFY.md`.
+
+## Pricing
+
+Pay per event, no subscription. Standby `characters-1k`: **$0.009** per started 1,000 Unicode characters (spaces count), e.g. 250 or 1,000 characters cost $0.009, 1,001 cost $0.018, 4,096 cost $0.045. Normal Store/MCP `batch-characters-1k`: **$0.12** per started 1,000 characters — 4,096 characters cost $0.60. Validation and synthesis errors are never charged; a billing failure returns HTTP 503 with no audio delivered, and an exhausted spending cap returns HTTP 402.
+
+**[Open Text-to-Speech API on Apify](https://apify.com/dropin-apis/tts-compat)**
+
+## FAQ
+
+### Is this the same model as OpenAI's tts-1?
+
+No. It runs Kokoro-82M, an independent open local model, through quantized ONNX on CPU. The request and response shape are compatible so your existing client code keeps working; the voices, pronunciation and audio quality are not identical to OpenAI's.
+
+### What happens to my code after January 6, 2027?
+
+Any request to OpenAI's API naming `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` or `gpt-4o-mini-tts-2025-12-15` will fail outright once OpenAI removes them — there is no quiet fallback. Point `base_url` at this Actor's endpoint and keep the rest of your request body unchanged to keep the same code path working.
+
+### Does this support Arabic or other languages?
+
+No — English only in this version. An unsupported script returns HTTP 400 rather than silently mangled audio.
+
+### Why would a short, ordinary piece of text return an error?
+
+The no-espeak English pronunciation lexicon doesn't cover every spelling, so an unrecognized name or acronym is rejected (HTTP 400) rather than silently mispronounced or dropped. Rephrase or spell it out.
+
+### Can an AI agent call this through Apify MCP?
+
+Yes — a normal `call-actor` run synthesizes the text and returns one dataset row with a downloadable audio URL, billed at the batch rate ($0.12 per 1,000 characters). An HTTP-capable agent can call the cheaper Standby endpoint ($0.009) directly instead.
+
+### What audio formats are supported?
+
+MP3 (default), Opus, AAC, FLAC, WAV and headerless PCM (signed 16-bit little-endian, mono, 24 kHz) — decode PCM with explicit parameters; it is not a WAV file.
 
 
 ---
