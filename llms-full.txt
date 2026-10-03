@@ -1270,12 +1270,12 @@ Use the sister Actor, the [whisper-1 alternative](https://alidaram99.github.io/a
 
 ---
 
-# tts-1 deprecated (Jan 6, 2027): a compatible /v1/audio/speech endpoint
+# tts-1 alternative: migrate before January 6, 2027
 
 URL: https://alidaram99.github.io/api-alternatives/tts-1-alternative/
 
 
-**OpenAI is removing `tts-1`, `tts-1-hd` and both `gpt-4o-mini-tts` snapshots from the API on 6 January 2027.** This Actor accepts the same `POST /v1/audio/speech` request shape — you change the base URL and the API key, nothing else in your request body — and returns synthesized audio from independent local voices, from **$0.009 per 1,000 input characters**.
+**OpenAI is removing `tts-1`, `tts-1-hd` and both `gpt-4o-mini-tts` snapshots from the API on 6 January 2027.** This Actor provides a compatible `POST /v1/audio/speech` endpoint with independent English voices from **$0.009 per started 1,000 input characters**: change the base URL and API key, keep `model`, `input`, `voice`, `response_format` and `speed`, and remove nonempty `instructions` and SSE `stream_format`.
 
 ## What changes on 2027-01-06
 
@@ -1283,7 +1283,7 @@ OpenAI's own [deprecations page](https://developers.openai.com/api/docs/deprecat
 
 ## Minimal migration diff
 
-Only the base URL and the auth header change — model, voice, format and other parameters stay in the same place in the request body:
+Change the base URL and API key. Keep `model`, `input`, `voice`, `response_format` and `speed`; remove nonempty `instructions` and SSE `stream_format`. Standby streams MP3, Opus, AAC and PCM up to 4,096 characters; WAV and FLAC are buffered and must be 500 characters or fewer. For example:
 
 ```diff
   client = OpenAI(
@@ -1292,9 +1292,9 @@ Only the base URL and the auth header change — model, voice, format and other 
 +     base_url="https://dropin-apis--tts-compat.apify.actor/v1",
   )
   with client.audio.speech.with_streaming_response.create(
-      model="tts-1", input="Hello, world.", voice="amber", response_format="wav"
+      model="tts-1", input="Hello, world.", voice="amber", response_format="mp3"
   ) as response:
-      response.stream_to_file("speech.wav")
+      response.stream_to_file("speech.mp3")
 ```
 
 Or plain HTTP:
@@ -1315,7 +1315,7 @@ Confirm the real deployed hostname on the Actor's **Endpoints** tab before going
 | Option | Price | Notes |
 |---|---|---|
 | **This Actor (Standby)** | $0.009 per 1,000 characters | Independent local Kokoro voices, English only, compatible request/response shape, no voice cloning |
-| **This Actor (Store/MCP batch run)** | $0.12 per 1,000 characters | Same voices; use for longer inputs — see the latency note below |
+| **This Actor (Store/MCP batch run)** | $0.12 per 1,000 characters | Same voices; all six formats up to 4,096 characters, downloadable stored audio |
 | OpenAI's recommended replacement (`gpt-realtime-2.1-mini`) | $20 per 1M audio output tokens | Token-priced realtime-voice-agent model, not a simple per-character TTS rate — needs its own cost modeling, not a straight swap |
 | [Kokoro Text to Speech on Apify](https://apify.com/conserving_celerytop/kokoro-text-to-speech) | $0.08 per 1,000 characters (per its own Store listing) | Also Kokoro-based; 54 voices across 9 languages advertised, vs. this Actor's 13 English-only voices |
 | Self-hosting Kokoro or Piper yourself | Your compute, no per-call fee | No managed endpoint, no OpenAI-compatible request shape out of the box, you run and scale it |
@@ -1324,11 +1324,17 @@ Confirm the real deployed hostname on the Actor's **Endpoints** tab before going
 
 ## Honest latency note
 
-Real measured runs, not estimates: a live 1,000-character normal (batch) run on Apify took **151.192 seconds** total; a 4,096-character run took **760.015 seconds**, both at the default 4 GB. Locally (excluding cloud platform/container startup), cold synthesis at 4 GB measured 49.893s for 1,000 characters and 199.511s for 4,096. **Use the Standby endpoint only for short inputs** — a long buffered HTTP call can exceed its ~270-second synthesis deadline and the platform's five-minute first-response budget, returning HTTP 503 with no audio and no character charge. For longer text, use a normal Store or MCP run instead (up to 4,096 characters, 1,200-second timeout) — it costs more per character ($0.12 vs $0.009) specifically because it's built for exactly this case. There is no real-time guarantee either way; full measurements are in the Actor's own `VERIFY.md`.
+Authenticated live Standby measurements on Apify at 8 GB/two ONNX threads delivered the first MP3 bytes after **8.52 seconds for 1,000 characters** and **7.31 seconds for 4,096 characters**; complete bodies took **119.34** and **503.00 seconds**, respectively, and both fully decoded. These 3 October 2026 measurements precede the incremental-billing update and include a readiness GET; they are observations, not a latency or cold-start guarantee. Streaming allows a long body to continue after the platform's five-minute first-response window, with a 270-second application first-byte deadline and a further 1,200-second stream deadline.
+
+Use streamed **MP3, Opus, AAC or PCM for up to 4,096 characters**. HTTP **WAV and FLAC are buffered and capped at 500 characters**; longer input returns **413 `use_batch_mode` before synthesis or any character charge**. A normal Store/MCP batch run supports all six formats up to 4,096 characters with a 1,200-second run timeout and returns stored audio. Generation runs on CPU and has no real-time guarantee; detailed measurements and conditions are in the Actor's `VERIFY.md`.
 
 ## Pricing
 
-Pay per event, no subscription. Standby `characters-1k`: **$0.009** per started 1,000 Unicode characters (spaces count), e.g. 250 or 1,000 characters cost $0.009, 1,001 cost $0.018, 4,096 cost $0.045. Normal Store/MCP `batch-characters-1k`: **$0.12** per started 1,000 characters — 4,096 characters cost $0.60. Validation and synthesis errors are never charged; a billing failure returns HTTP 503 with no audio delivered, and an exhausted spending cap returns HTTP 402.
+Pay per event, no subscription. A completed Standby request charges `characters-1k` at **$0.009** per started 1,000 Unicode characters (spaces count): 250 or 1,000 characters cost $0.009, 1,001 cost $0.018, 4,096 cost $0.045. Before synthesis, a **full-input budget precheck** rejects an insufficient cap with **402 and no work or audio**. Streaming then charges one event before the first audio byte and each further event before releasing audio that can cross the next original-input 1,000-character boundary. Whole-input pronunciation validation and each new unit's first synthesis/encoding preflight happen before its charge; synthesis or encoding failure before a new unit starts does not charge that unit.
+
+First-window validation, synthesis, encoding-preflight and deadline failures are **free of character charges**. If billing fails before audio starts, the response is **503 with no audio**, or **402** when a cap is reached. A later synthesis, encoding or billing failure **truncates the HTTP stream** without appended JSON or a clean successful EOF: already-started units remain charged, later units do not. Clients must reject incomplete streams. A word spanning a billing boundary is kept whole and requires the next unit before its audio; trailing spaces count with the last audio window.
+
+Normal Store/MCP `batch-characters-1k` remains **$0.12** per started 1,000 characters, billed **only after complete encoding**; 4,096 characters cost $0.60. Apify's separate instance-start event can still apply to failed requests. Billing and network delivery are not atomic, so a connection loss after a successful charge can still prevent receipt of that window; there is no automatic refund or idempotency key, and a retry is a new chargeable request. `X-Billed-Units` is the full-input count for a completed response, not a final charge report for an interrupted stream; `X-Billing-Mode: incremental` identifies the streamed billing path.
 
 **[Open Text-to-Speech API on Apify](https://apify.com/dropin-apis/tts-compat)**
 
@@ -1340,7 +1346,7 @@ No. It runs Kokoro-82M, an independent open local model, through quantized ONNX 
 
 ### What happens to my code after January 6, 2027?
 
-Any request to OpenAI's API naming `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` or `gpt-4o-mini-tts-2025-12-15` will fail outright once OpenAI removes them — there is no quiet fallback. Point `base_url` at this Actor's endpoint and keep the rest of your request body unchanged to keep the same code path working.
+Any request to OpenAI's API naming `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` or `gpt-4o-mini-tts-2025-12-15` will fail once OpenAI removes them. Point `base_url` at this Actor, use an Apify token, keep the five supported speech fields and remove nonempty instructions and SSE options; re-test the independent voices and observe the format/input limits above.
 
 ### Does this support Arabic or other languages?
 
