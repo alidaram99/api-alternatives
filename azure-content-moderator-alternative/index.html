@@ -35,8 +35,8 @@
 </header>
 <main class="wrap">
   <h1>Content Moderator&#39;s text screen retires 15 March 2027. Same request, same JSON.</h1>
-  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
-  <p class="deadline">⏳ 164 days left — the old API shuts down March 15, 2027.</p>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  <p class="deadline">⏳ 163 days left — the old API shuts down March 15, 2027.</p>
   <p>Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview">Content Moderator overview</a> says the service has been deprecated since February 2024 and <strong>retires on March 15, 2027</strong>. The product <a href="https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator">lifecycle page</a> lists April 1, 2027. The suggested successor, <strong>Azure AI Content Safety</strong>, is a different API with a different URL, request and response (severity levels for Hate/Sexual/SelfHarm/Violence). Code that reads <code>Terms</code>, <code>PII</code> and <code>Classification.Category1/2/3</code> has to be rewritten.</p>
 <p>This page shows a <strong>wire-compatible replacement for the text screen endpoint</strong>, so that code keeps working. You call the same <code>POST /contentmoderator/moderate/v1.0/ProcessText/Screen</code> with the same query string and raw-text body, and get back the same response JSON.</p>
 <h2 id="what-changes-in-your-code">What changes in your code</h2>

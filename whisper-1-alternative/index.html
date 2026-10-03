@@ -35,8 +35,8 @@
 </header>
 <main class="wrap">
   <h1>whisper-1 is removed on 26 February 2027. Keep SRT, VTT and word timestamps.</h1>
-  <p class="updated">Last updated: <time datetime="2026-10-02">October 2, 2026</time></p>
-  <p class="deadline">⏳ 147 days left — the old API shuts down February 26, 2027.</p>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  <p class="deadline">⏳ 146 days left — the old API shuts down February 26, 2027.</p>
   <p>OpenAI&#39;s <a href="https://developers.openai.com/api/docs/deprecations">deprecations page</a> schedules <strong><code>whisper-1</code> for removal on February 26, 2027</strong>. Its successors are not drop-in. Apps built on whisper-1 features have to change: subtitles through <code>response_format=srt</code> or <code>vtt</code>, <code>timestamp_granularities[]=word</code> and <code>segment</code>, and <code>/v1/audio/translations</code>.</p>
 <p>This page shows how to keep exactly that API: <code>POST /v1/audio/transcriptions</code> and <code>/v1/audio/translations</code>, the same multipart fields, and the same <code>json</code>, <code>text</code>, <code>srt</code>, <code>vtt</code> and <code>verbose_json</code> responses. It works with the <strong>official OpenAI SDKs</strong>. You change <code>base_url</code> and <code>api_key</code>, and nothing else.</p>
 <h2 id="python-official-openai-sdk">Python: official <code>openai</code> SDK</h2>
