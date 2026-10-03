@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Passing Tests Need a Negative Control</title>
+<meta name="description" content="A green test proves little if it also passes with the feature broken. Add one bounded fault and require the intended assertion—not a crash—to catch it.">
+<meta name="keywords" content="verify tests can catch bug, negative control software test, mutation test coding agent, ai agent test evidence, check the checks">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Passing Tests Need a Negative Control">
+<meta property="og:description" content="A green test proves little if it also passes with the feature broken. Add one bounded fault and require the intended assertion—not a crash—to catch it.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Passing tests are not enough: add a negative control","description":"A green test proves little if it also passes with the feature broken. Add one bounded fault and require the intended assertion—not a crash—to catch it.","url":"https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is ordinary code coverage a negative control?","acceptedAnswer":{"@type":"Answer","text":"No. Coverage shows that code was executed, not that an assertion would fail if the behavior changed. A negative control makes a deliberate change and observes whether the intended check detects it."}},{"@type":"Question","name":"Can any test failure count as detecting the fault?","acceptedAnswer":{"@type":"Answer","text":"No. DoneLatch requires the configured marker and allowed assertion exit code. Parser errors, timeouts, missing commands and truncated output are inconclusive."}},{"@type":"Question","name":"Does faultcheck edit my working tree?","acceptedAnswer":{"@type":"Answer","text":"No. It injects each fault into an independent temporary copy and checks that the watched original state stayed unchanged."}},{"@type":"Question","name":"Does one negative control prove the whole test suite is strong?","acceptedAnswer":{"@type":"Answer","text":"No. It proves sensitivity only to the fault you selected. Use broader mutation testing and review when you need wider evidence."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Passing Tests Need a Negative Control","item":"https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/" title="Does This Function Exist in This Package Version?">Does This Function</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/" title="MCP Registry vs Live Reliability Scorecards">MCP Registry vs Live</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/" class="active" title="Passing Tests Need a Negative Control">Passing Tests Need a</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Passing tests are not enough: add a negative control</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>A passing test shows that the current code passed that command; it does not show the command would notice the failure you claim to have fixed. Add one bounded negative control: deliberately break the required behavior in a temporary copy and accept the evidence only when the intended assertion—not a parser error, timeout or crash—detects it.</strong></p>
+<p><em>Facts and commands on this page were checked against DoneLatch v0.1.2 source, tests and documentation, plus the linked Stryker mutation-testing explanation, on October 4, 2026.</em></p>
+<h2 id="the-smallest-useful-negative-control">The smallest useful negative control</h2>
+<p>Mutation testing changes production code and runs the tests against that change. A mutant is “killed” when a test fails and “survives” when all tests still pass (<a href="https://stryker-mutator.io/docs/">Stryker&#39;s explanation</a>). DoneLatch applies the same idea narrowly to an agent completion gate: you choose one representative fault for the outcome that matters, and it records whether your approved check detects it.</p>
+<p>For a “settings are persisted” claim, this is weak evidence:</p>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">assert.equal(saveSettings(value), true);</code></pre></div>
+<p>It can stay green even if the actual file write is removed. A useful check starts a fresh reader and asserts the saved bytes; the negative control then removes that write in a disposable copy.</p>
+<h2 id="define-the-check-and-the-fault">Define the check and the fault</h2>
+<div class="codeblock"><span class="code-lang">yaml</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-yaml">version: 1
+checks:
+  - id: persist
+    command: node
+    args: [checks/persist.mjs]
+    timeoutMs: 3000
+    failureExitCodes: [1]
+    failureMarker: ASSERT_PERSISTENCE
+faults:
+  - id: skip-write
+    file: src/store.mjs
+    find: &#39;writeFileSync(target, JSON.stringify(value));&#39;
+    replace: &#39;// deliberately skip the persisted write&#39;
+    checkIds: [persist]
+exclude: [runtime]</code></pre></div>
+<p>The <code>find</code> and <code>replace</code> values are literal strings, not regular expressions, and the target text must occur exactly once. DoneLatch supports 1–16 checks and 1–16 faults. The human must inspect this exact configuration and run <code>donelatch trust</code>; changing it requires approval again.</p>
+<h2 id="what-a-valid-result-requires">What a valid result requires</h2>
+<p>DoneLatch&#39;s <code>faultcheck</code> does all of these before the negative control counts:</p>
+<ol><li>Copies the project into a new temporary directory; the original source is not mutated.</li><li>Runs the selected check on a healthy baseline and requires it to pass without the failure marker.</li><li>Restores a clean temporary copy, applies the one literal replacement and runs only the selected check.</li><li>Requires the declared nonzero exit code and the declared failure marker.</li><li>Rejects a missing executable, generic parser error, timeout or truncated output as inconclusive rather than calling it detection.</li><li>Verifies the watched original project state did not change during the operation and removes the bounded temporary copy.</li></ol>
+<p>Each configured fault gets an independent copy. A test that merely crashes after injection has not demonstrated that it understood the outcome you care about.</p>
+<h2 id="run-it-after-the-final-edit">Run it after the final edit</h2>
+<div class="codeblock"><span class="code-lang">sh</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-sh">npx --yes github:alidaram99/donelatch#v0.1.2 run
+npx --yes github:alidaram99/donelatch#v0.1.2 faultcheck
+npx --yes github:alidaram99/donelatch#v0.1.2 verify-done</code></pre></div>
+<p><code>run</code> records the healthy checks. <code>faultcheck</code> records the negative control. <code>verify-done</code> accepts only when the latest passing records match the current watched files, Git HEAD and approved configuration; another edit makes the old evidence stale.</p>
+<p>The receipts are locally signed and hash-chained, but they are not independent attestation. A process with the same OS permissions can rewrite the local tool or key. Use a separately controlled CI acceptance step, container or separate OS user when the agent is adversarial.</p>
+<h2 id="when-to-use-donelatch-versus-a-mutation-framework">When to use DoneLatch versus a mutation framework</h2>
+<div class="table-wrap"><table><thead><tr><th>Need</th><th>Better fit</th></tr></thead><tbody><tr><td>One or a few human-chosen outcome failures tied to an agent&#39;s current “done” claim</td><td>DoneLatch <code>faultcheck</code></td></tr><tr><td>Broad automatic mutation across a codebase, mutation scores and language-specific operators</td><td>Stryker or another full mutation-testing framework</td></tr><tr><td>Production availability after deployment</td><td>Synthetic or production monitoring</td></tr><tr><td>Independent security or correctness judgment</td><td>Human/independent review plus isolated CI</td></tr></tbody></table></div>
+<p>DoneLatch is a free MIT local tool. It does not invent the correct fault, replace code review, or prove that every possible bug would be caught.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-ordinary-code-coverage-a-negative-control">Is ordinary code coverage a negative control?</h3>
+<p>No. Coverage shows that code was executed, not that an assertion would fail if the behavior changed. A negative control makes a deliberate change and observes whether the intended check detects it.</p>
+<h3 id="can-any-test-failure-count-as-detecting-the-fault">Can any test failure count as detecting the fault?</h3>
+<p>No. DoneLatch requires the configured marker and allowed assertion exit code. Parser errors, timeouts, missing commands and truncated output are inconclusive.</p>
+<h3 id="does-faultcheck-edit-my-working-tree">Does faultcheck edit my working tree?</h3>
+<p>No. It injects each fault into an independent temporary copy and checks that the watched original state stayed unchanged.</p>
+<h3 id="does-one-negative-control-prove-the-whole-test-suite-is-strong">Does one negative control prove the whole test suite is strong?</h3>
+<p>No. It proves sensitivity only to the fault you selected. Use broader mutation testing and review when you need wider evidence.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">stop coding agents claiming “done” without evidence</a></li><li>Before coding: <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/">check an API against the exact package version</a></li><li>After deployment: <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/">check whether an agent tool works today</a></li><li><strong><a href="https://github.com/alidaram99/donelatch">Get DoneLatch free</a></strong> · <a href="https://github.com/alidaram99/donelatch#define-an-outcome-contract">negative-control documentation</a></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

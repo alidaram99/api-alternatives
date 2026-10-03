@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MCP Registry vs Live Reliability Scorecards</title>
+<meta name="description" content="The official MCP Registry supports discovery, not live reliability certification. Pair its metadata with dated task evidence and a separate security review.">
+<meta name="keywords" content="mcp registry quality, verify mcp server before install, mcp server health check, mcp reliability scorecard, official mcp registry moderation">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MCP Registry vs Live Reliability Scorecards">
+<meta property="og:description" content="The official MCP Registry supports discovery, not live reliability certification. Pair its metadata with dated task evidence and a separate security review.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Official MCP Registry versus a live reliability scorecard","description":"The official MCP Registry supports discovery, not live reliability certification. Pair its metadata with dated task evidence and a separate security review.","url":"https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does an official MCP Registry listing certify reliability?","acceptedAnswer":{"@type":"Answer","text":"No. The official policy is permissive and does not promise continuous task testing. Treat the listing as discovery metadata."}},{"@type":"Question","name":"Does a passing live canary prove an MCP server is secure?","acceptedAnswer":{"@type":"Answer","text":"No. A canary reports one task observation. Permissions, credentials, code execution and data handling need a separate security review."}},{"@type":"Question","name":"Why keep “failed” separate from “failed to observe”?","acceptedAnswer":{"@type":"Answer","text":"A failed result means the task ran and did not meet its contract. Failed to observe means the checker could not establish a result because of its own account, credentials, network or other measurement limit."}},{"@type":"Question","name":"Does CanaryIndex test every MCP server?","acceptedAnswer":{"@type":"Answer","text":"No. Version 0.1 covers comparable Apify Actors in two narrow categories and calls their Actor runs directly. It publishes the limitation instead of generalizing those observations to the whole MCP ecosystem."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"MCP Registry vs Live Reliability Scorecards","item":"https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/" title="Does This Function Exist in This Package Version?">Does This Function</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/" class="active" title="MCP Registry vs Live Reliability Scorecards">MCP Registry vs Live</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/" title="Passing Tests Need a Negative Control">Passing Tests Need a</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Official MCP Registry versus a live reliability scorecard</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Use the official MCP Registry to discover published server metadata, not as proof that a server connects and completes your task today. Add a dated canary result for operational evidence, then review permissions and security separately; none of those layers replaces the others.</strong></p>
+<p><em>The registry policy, MCP trust model and CanaryIndex v0.1 method on this page were checked against their linked sources on October 4, 2026.</em></p>
+<h2 id="discovery-and-reliability-answer-different-questions">Discovery and reliability answer different questions</h2>
+<p>The official Registry&#39;s moderation policy calls the service permissive and tells consumers to assume minimal-to-no moderation. It removes illegal content, malware, spam and non-functioning servers when identified, but explicitly does not remove every low-quality, buggy or vulnerable server (<a href="https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/moderation-policy.mdx">official moderation policy</a>).</p>
+<p>MCP&#39;s security policy separately says users and administrators choose which servers to trust. A local stdio server runs with the process privileges it is given, and the protocol is not a sandbox (<a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md">MCP security policy</a>).</p>
+<div class="table-wrap"><table><thead><tr><th>Question</th><th>Official registry listing</th><th>Dated live scorecard</th><th>Security review</th></tr></thead><tbody><tr><td>Can I discover the server and its published metadata?</td><td>Yes</td><td>Sometimes</td><td>Not its main job</td></tr><tr><td>Did one known task complete recently?</td><td>No continuous proof</td><td>Yes, for covered tools and fixtures</td><td>Not necessarily</td></tr><tr><td>Was output quality checked against a known answer?</td><td>No</td><td>Yes, if the method publishes an oracle and threshold</td><td>Not necessarily</td></tr><tr><td>What did that observed task cost and how long did it take?</td><td>Not a live measurement</td><td>Can record both</td><td>Not necessarily</td></tr><tr><td>Is the server safe for my credentials, files and permissions?</td><td>Not certified</td><td>Not certified</td><td>This is the review&#39;s job</td></tr><tr><td>Will it work for every input, account and location tomorrow?</td><td>No</td><td>No</td><td>No</td></tr></tbody></table></div>
+<h2 id="what-a-useful-scorecard-must-publish">What a useful scorecard must publish</h2>
+<p>A reliability claim is reproducible only when it includes:</p>
+<ul><li>the exact tool/build and category;</li><li>the public or redistributable fixture and expected answer;</li><li>the timestamp, account context and runner location when relevant;</li><li>whether the call completed, whether its output passed, and why;</li><li>the scorer version, threshold, latency and known cost;</li><li>a separate <strong>failed to observe</strong> state for cases where the checker could not make the call.</li></ul>
+<p>Do not count an account-plan denial, missing credential or checker&#39;s network failure as a product failure. It is missing evidence, not a failed task.</p>
+<h2 id="what-canaryindex-actually-measures">What CanaryIndex actually measures</h2>
+<p><a href="https://alidaram99.github.io/canaryindex/">CanaryIndex</a> is a narrow public scorecard, not a replacement MCP registry. Version 0.1 runs comparable Apify Actors in two categories: one-page PDF text-layer to Markdown and a direct public audio/video URL to transcript. Those Actors can be reached by agents through Apify&#39;s MCP server, but the current weekly canary calls the Actor runs directly; <strong>it does not claim to test arbitrary MCP-server initialization or every MCP transport</strong>.</p>
+<p>Its current method:</p>
+<ul><li>runs the same fixed public fixture for each comparable tool on Mondays at 08:17 UTC;</li><li>accepts the PDF result only when all three expected tokens are present (configured threshold 0.80 over three tokens);</li><li>scores transcription as <code>max(0, 1 − word error rate)</code> against two published transcript interpretations, with a 0.70 threshold;</li><li>defines reliability as accepted observations divided by completed observations;</li><li>records unknown cost as unknown, never zero;</li><li>requires both a public listing and a latest passing canary before recommending a tool;</li><li>excludes payment, sponsorship, affiliate status and publisher ownership from routing.</li></ul>
+<p>The monthly runner is capped at $5, with a configured worst case of $0.36 per weekly suite. Publisher-owned tools are visibly labeled, receive no ranking advantage, and use a labeled simulated FREE-tier price where owner event charges are exempt.</p>
+<p>Read the current result instead of copying a score from this article: <a href="https://alidaram99.github.io/canaryindex/api/recommendations.json">machine recommendations</a>, <a href="https://alidaram99.github.io/canaryindex/data/latest.json">latest raw observation</a>, and <a href="https://alidaram99.github.io/canaryindex/method/">full method</a>.</p>
+<h2 id="a-practical-selection-flow">A practical selection flow</h2>
+<ol><li><strong>Discover:</strong> find the candidate in the official registry or a relevant subregistry and inspect its publisher metadata.</li><li><strong>Threat-model:</strong> review transport, command, requested permissions, data access, authentication and publisher trust before connecting.</li><li><strong>Observe:</strong> run one representative task with a known answer, or use a transparent current scorecard that covers the same category.</li><li><strong>Classify:</strong> record passed, failed, or failed to observe. Do not collapse the third state into failure.</li><li><strong>Repeat:</strong> a single pass is an observation, not a permanent reliability guarantee.</li></ol>
+<p>For the step-by-step protocol checks—connection, authentication, <code>tools/list</code>, <code>tools/call</code>, and expected-answer comparison—use the companion <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/">MCP reliability testing guide</a>. This page is intentionally different: it explains which decision belongs to the registry, scorecard and security-review layers rather than duplicating that testing procedure.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-an-official-mcp-registry-listing-certify-reliability">Does an official MCP Registry listing certify reliability?</h3>
+<p>No. The official policy is permissive and does not promise continuous task testing. Treat the listing as discovery metadata.</p>
+<h3 id="does-a-passing-live-canary-prove-an-mcp-server-is-secure">Does a passing live canary prove an MCP server is secure?</h3>
+<p>No. A canary reports one task observation. Permissions, credentials, code execution and data handling need a separate security review.</p>
+<h3 id="why-keep-failed-separate-from-failed-to-observe">Why keep “failed” separate from “failed to observe”?</h3>
+<p>A failed result means the task ran and did not meet its contract. Failed to observe means the checker could not establish a result because of its own account, credentials, network or other measurement limit.</p>
+<h3 id="does-canaryindex-test-every-mcp-server">Does CanaryIndex test every MCP server?</h3>
+<p>No. Version 0.1 covers comparable Apify Actors in two narrow categories and calls their Actor runs directly. It publishes the limitation instead of generalizing those observations to the whole MCP ecosystem.</p>
+<h2 id="related">Related</h2>
+<ul><li>Procedure: <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/">which MCP server works today, and how to check</a></li><li>Evidence before completion: <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/">passing tests need a negative control</a></li><li>Package grounding: <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/">check a function against an exact package version</a></li><li><strong><a href="https://alidaram99.github.io/canaryindex/">Open CanaryIndex</a></strong> · <a href="https://alidaram99.github.io/canaryindex/method/">method</a></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

@@ -759,6 +759,113 @@ Video has no direct replacement. Microsoft suggests extracting frames and sendin
 
 ---
 
+# Does This Function Exist in This Package Version?
+
+URL: https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/
+
+
+**Check the package name, exact version and symbol together before an agent writes the call: a real package can still lack that function in the version your lockfile selected. ExactGround reads the published npm or PyPI artifact without installing or executing it and returns `exists: true`, `false`, or `null` when static evidence cannot decide.**
+
+*Facts and examples on this page were checked against the ExactGround API source, tests, README and linked package-format documentation on October 4, 2026.*
+
+## The exact-version question
+
+“Does this package exist?” and “does this function exist here?” are different checks. A package can be real while an agent uses an API added in a later release, removed in the pinned release, hidden behind an npm export boundary, or supplied dynamically at runtime.
+
+Use the version resolved by your lockfile, not the newest documentation page. npm package specifications can be exact versions, ranges or dist-tags ([npm package spec](https://docs.npmjs.com/cli/v11/using-npm/package-spec/)), while Node's `exports` field can expose only selected entry points and hide other package files ([Node.js package entry points](https://nodejs.org/api/packages.html#package-entry-points)). PyPI's JSON API identifies the release artifacts available for a project and version ([PyPI JSON API](https://docs.pypi.org/api/json/)).
+
+## One request, one answer per symbol
+
+```bash
+curl -s https://dropin-apis--exactground-api.apify.actor/v1/symbols \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"ecosystem":"pypi","package":"numpy","version":"2.1.0","symbols":["numpy.linalg.norm","numpy.asfarray"]}'
+```
+
+The verified example returns:
+
+```json
+{
+  "ecosystem": "pypi",
+  "package": "numpy",
+  "version": "2.1.0",
+  "packageExists": true,
+  "results": [
+    {
+      "symbol": "numpy.linalg.norm",
+      "exists": true,
+      "kind": "function",
+      "declaredIn": "numpy/linalg/_linalg.pyi"
+    },
+    {
+      "symbol": "numpy.asfarray",
+      "exists": false,
+      "missingAt": "numpy.asfarray",
+      "suggestions": ["array", "asarray", "NDArray", "ndarray", "recarray"]
+    }
+  ]
+}
+```
+
+For npm, the tested React example reports `react@18.2.0` `useState` as present and `useActionState` as absent. Its response identifies `@types/react@18.3.31 (DefinitelyTyped)` as the matching-major type source; that is evidence from the declaration fallback, not a claim that runtime implementation bytes were executed.
+
+## Interpret `true`, `false` and `null` differently
+
+| Result | Meaning | Safe next action |
+|---|---|---|
+| `true` | The resolved artifact's static public surface contains the symbol | Continue, then run your own tests |
+| `false` | The static surface establishes that the requested path is missing | Correct the call or version before editing |
+| `null` | Static analysis cannot know | Inspect runtime docs/source or test in an isolated environment; do not turn unknown into yes |
+
+`null` is expected for cases such as a Python module with dynamic `__getattr__`, a compiled extension, or an npm package with no types. ExactGround does not guess in those cases.
+
+## What the checker reads
+
+- **npm:** resolves the requested exact version, range or dist-tag, reads the tarball in memory, follows `exports`, `types` and `typesVersions`, and uses the TypeScript resolver. A package without bundled types can use a matching-major `@types/*` fallback, disclosed in `typesSource`.
+- **PyPI:** reads a suitable wheel or source distribution in memory, prefers `.pyi` stubs, and statically follows ordinary re-exports, `__all__`, class members and base classes.
+- **Neither ecosystem is executed:** no install scripts and no Python imports. Archives are capped at 60 MB. Private registries are not supported by this hosted API.
+
+Static package inspection answers availability, not safety, behavior or compatibility with the rest of your application. A present symbol can still be buggy, insecure, or misused.
+
+## Put it in an agent's decision loop
+
+1. Read the locked package and version from the project's lockfile.
+2. Call `check_packages` before any new install; a published name is not automatically trustworthy.
+3. Call `check_symbols` for an uncertain function, class or method before writing the call.
+4. Treat `false` as a block and `null` as an unresolved review item.
+5. After editing, run project tests and require fresh completion evidence.
+
+The MCP tool is `check_symbols`; the REST endpoint is `POST /v1/symbols`. Each symbol check costs **$0.002**. Invalid input and registry-unreachable requests are not charged, and a configured spending limit stops with HTTP 402 when reached.
+
+## FAQ
+
+### Can it check a function against the version in package-lock.json or poetry.lock?
+
+Yes, after the agent or caller supplies the resolved package name and exact version from that lockfile. The endpoint does not read your local lockfile by itself.
+
+### Does `exists: true` prove the function works?
+
+No. It proves the static published surface contains the symbol. You still need behavioral tests, compatibility checks and security review.
+
+### Why can `exists` be `null`?
+
+Some APIs are created dynamically, implemented only in compiled code, or published without analyzable declarations. Returning unknown is more accurate than reporting a guessed yes or no.
+
+### Does the API install or import the package?
+
+No. It reads bounded public package archives in memory and parses their static surface.
+
+## Related
+
+- Up: [check whether an npm or PyPI package exists](https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/)
+- Before install: [stop agents installing hallucinated packages](https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/)
+- After editing: [make agent completion require evidence](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/)
+- **[Open ExactGround API on Apify](https://apify.com/dropin-apis/exactground-api)** · [free local install guard](https://github.com/alidaram99/exactground)
+
+
+---
+
 # Check if an npm or PyPI Package Exists — API & MCP
 
 URL: https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/
@@ -1161,6 +1268,99 @@ Check CanaryIndex's `recommendations.json`. If the list for your category is emp
 
 ---
 
+# MCP Registry vs Live Reliability Scorecards
+
+URL: https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/
+
+
+**Use the official MCP Registry to discover published server metadata, not as proof that a server connects and completes your task today. Add a dated canary result for operational evidence, then review permissions and security separately; none of those layers replaces the others.**
+
+*The registry policy, MCP trust model and CanaryIndex v0.1 method on this page were checked against their linked sources on October 4, 2026.*
+
+## Discovery and reliability answer different questions
+
+The official Registry's moderation policy calls the service permissive and tells consumers to assume minimal-to-no moderation. It removes illegal content, malware, spam and non-functioning servers when identified, but explicitly does not remove every low-quality, buggy or vulnerable server ([official moderation policy](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/moderation-policy.mdx)).
+
+MCP's security policy separately says users and administrators choose which servers to trust. A local stdio server runs with the process privileges it is given, and the protocol is not a sandbox ([MCP security policy](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md)).
+
+| Question | Official registry listing | Dated live scorecard | Security review |
+|---|---:|---:|---:|
+| Can I discover the server and its published metadata? | Yes | Sometimes | Not its main job |
+| Did one known task complete recently? | No continuous proof | Yes, for covered tools and fixtures | Not necessarily |
+| Was output quality checked against a known answer? | No | Yes, if the method publishes an oracle and threshold | Not necessarily |
+| What did that observed task cost and how long did it take? | Not a live measurement | Can record both | Not necessarily |
+| Is the server safe for my credentials, files and permissions? | Not certified | Not certified | This is the review's job |
+| Will it work for every input, account and location tomorrow? | No | No | No |
+
+## What a useful scorecard must publish
+
+A reliability claim is reproducible only when it includes:
+
+- the exact tool/build and category;
+- the public or redistributable fixture and expected answer;
+- the timestamp, account context and runner location when relevant;
+- whether the call completed, whether its output passed, and why;
+- the scorer version, threshold, latency and known cost;
+- a separate **failed to observe** state for cases where the checker could not make the call.
+
+Do not count an account-plan denial, missing credential or checker's network failure as a product failure. It is missing evidence, not a failed task.
+
+## What CanaryIndex actually measures
+
+[CanaryIndex](https://alidaram99.github.io/canaryindex/) is a narrow public scorecard, not a replacement MCP registry. Version 0.1 runs comparable Apify Actors in two categories: one-page PDF text-layer to Markdown and a direct public audio/video URL to transcript. Those Actors can be reached by agents through Apify's MCP server, but the current weekly canary calls the Actor runs directly; **it does not claim to test arbitrary MCP-server initialization or every MCP transport**.
+
+Its current method:
+
+- runs the same fixed public fixture for each comparable tool on Mondays at 08:17 UTC;
+- accepts the PDF result only when all three expected tokens are present (configured threshold 0.80 over three tokens);
+- scores transcription as `max(0, 1 − word error rate)` against two published transcript interpretations, with a 0.70 threshold;
+- defines reliability as accepted observations divided by completed observations;
+- records unknown cost as unknown, never zero;
+- requires both a public listing and a latest passing canary before recommending a tool;
+- excludes payment, sponsorship, affiliate status and publisher ownership from routing.
+
+The monthly runner is capped at $5, with a configured worst case of $0.36 per weekly suite. Publisher-owned tools are visibly labeled, receive no ranking advantage, and use a labeled simulated FREE-tier price where owner event charges are exempt.
+
+Read the current result instead of copying a score from this article: [machine recommendations](https://alidaram99.github.io/canaryindex/api/recommendations.json), [latest raw observation](https://alidaram99.github.io/canaryindex/data/latest.json), and [full method](https://alidaram99.github.io/canaryindex/method/).
+
+## A practical selection flow
+
+1. **Discover:** find the candidate in the official registry or a relevant subregistry and inspect its publisher metadata.
+2. **Threat-model:** review transport, command, requested permissions, data access, authentication and publisher trust before connecting.
+3. **Observe:** run one representative task with a known answer, or use a transparent current scorecard that covers the same category.
+4. **Classify:** record passed, failed, or failed to observe. Do not collapse the third state into failure.
+5. **Repeat:** a single pass is an observation, not a permanent reliability guarantee.
+
+For the step-by-step protocol checks—connection, authentication, `tools/list`, `tools/call`, and expected-answer comparison—use the companion [MCP reliability testing guide](https://alidaram99.github.io/api-alternatives/mcp-server-reliability/). This page is intentionally different: it explains which decision belongs to the registry, scorecard and security-review layers rather than duplicating that testing procedure.
+
+## FAQ
+
+### Does an official MCP Registry listing certify reliability?
+
+No. The official policy is permissive and does not promise continuous task testing. Treat the listing as discovery metadata.
+
+### Does a passing live canary prove an MCP server is secure?
+
+No. A canary reports one task observation. Permissions, credentials, code execution and data handling need a separate security review.
+
+### Why keep “failed” separate from “failed to observe”?
+
+A failed result means the task ran and did not meet its contract. Failed to observe means the checker could not establish a result because of its own account, credentials, network or other measurement limit.
+
+### Does CanaryIndex test every MCP server?
+
+No. Version 0.1 covers comparable Apify Actors in two narrow categories and calls their Actor runs directly. It publishes the limitation instead of generalizing those observations to the whole MCP ecosystem.
+
+## Related
+
+- Procedure: [which MCP server works today, and how to check](https://alidaram99.github.io/api-alternatives/mcp-server-reliability/)
+- Evidence before completion: [passing tests need a negative control](https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/)
+- Package grounding: [check a function against an exact package version](https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/)
+- **[Open CanaryIndex](https://alidaram99.github.io/canaryindex/)** · [method](https://alidaram99.github.io/canaryindex/method/)
+
+
+---
+
 # whisper-1 and gpt-4o-transcribe removed Feb 26, 2027
 
 URL: https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/
@@ -1310,6 +1510,113 @@ It's the reason sitemap indexes exist at all: the [protocol](https://www.sitemap
 ### How is this different from the main Sitemap URL Extractor page?
 
 That page covers the full Actor end to end — every input field, the complete output schema, and code samples. This page goes deeper on the specific mechanics of nested indexes and gzip decompression for anyone whose sitemap isn't a single flat file. See also [Extract Structured Data from a URL](https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/) for turning the pages a sitemap lists into validated data once you have the URL list.
+
+
+---
+
+# Passing Tests Need a Negative Control
+
+URL: https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/
+
+
+**A passing test shows that the current code passed that command; it does not show the command would notice the failure you claim to have fixed. Add one bounded negative control: deliberately break the required behavior in a temporary copy and accept the evidence only when the intended assertion—not a parser error, timeout or crash—detects it.**
+
+*Facts and commands on this page were checked against DoneLatch v0.1.2 source, tests and documentation, plus the linked Stryker mutation-testing explanation, on October 4, 2026.*
+
+## The smallest useful negative control
+
+Mutation testing changes production code and runs the tests against that change. A mutant is “killed” when a test fails and “survives” when all tests still pass ([Stryker's explanation](https://stryker-mutator.io/docs/)). DoneLatch applies the same idea narrowly to an agent completion gate: you choose one representative fault for the outcome that matters, and it records whether your approved check detects it.
+
+For a “settings are persisted” claim, this is weak evidence:
+
+```js
+assert.equal(saveSettings(value), true);
+```
+
+It can stay green even if the actual file write is removed. A useful check starts a fresh reader and asserts the saved bytes; the negative control then removes that write in a disposable copy.
+
+## Define the check and the fault
+
+```yaml
+version: 1
+checks:
+  - id: persist
+    command: node
+    args: [checks/persist.mjs]
+    timeoutMs: 3000
+    failureExitCodes: [1]
+    failureMarker: ASSERT_PERSISTENCE
+faults:
+  - id: skip-write
+    file: src/store.mjs
+    find: 'writeFileSync(target, JSON.stringify(value));'
+    replace: '// deliberately skip the persisted write'
+    checkIds: [persist]
+exclude: [runtime]
+```
+
+The `find` and `replace` values are literal strings, not regular expressions, and the target text must occur exactly once. DoneLatch supports 1–16 checks and 1–16 faults. The human must inspect this exact configuration and run `donelatch trust`; changing it requires approval again.
+
+## What a valid result requires
+
+DoneLatch's `faultcheck` does all of these before the negative control counts:
+
+1. Copies the project into a new temporary directory; the original source is not mutated.
+2. Runs the selected check on a healthy baseline and requires it to pass without the failure marker.
+3. Restores a clean temporary copy, applies the one literal replacement and runs only the selected check.
+4. Requires the declared nonzero exit code and the declared failure marker.
+5. Rejects a missing executable, generic parser error, timeout or truncated output as inconclusive rather than calling it detection.
+6. Verifies the watched original project state did not change during the operation and removes the bounded temporary copy.
+
+Each configured fault gets an independent copy. A test that merely crashes after injection has not demonstrated that it understood the outcome you care about.
+
+## Run it after the final edit
+
+```sh
+npx --yes github:alidaram99/donelatch#v0.1.2 run
+npx --yes github:alidaram99/donelatch#v0.1.2 faultcheck
+npx --yes github:alidaram99/donelatch#v0.1.2 verify-done
+```
+
+`run` records the healthy checks. `faultcheck` records the negative control. `verify-done` accepts only when the latest passing records match the current watched files, Git HEAD and approved configuration; another edit makes the old evidence stale.
+
+The receipts are locally signed and hash-chained, but they are not independent attestation. A process with the same OS permissions can rewrite the local tool or key. Use a separately controlled CI acceptance step, container or separate OS user when the agent is adversarial.
+
+## When to use DoneLatch versus a mutation framework
+
+| Need | Better fit |
+|---|---|
+| One or a few human-chosen outcome failures tied to an agent's current “done” claim | DoneLatch `faultcheck` |
+| Broad automatic mutation across a codebase, mutation scores and language-specific operators | Stryker or another full mutation-testing framework |
+| Production availability after deployment | Synthetic or production monitoring |
+| Independent security or correctness judgment | Human/independent review plus isolated CI |
+
+DoneLatch is a free MIT local tool. It does not invent the correct fault, replace code review, or prove that every possible bug would be caught.
+
+## FAQ
+
+### Is ordinary code coverage a negative control?
+
+No. Coverage shows that code was executed, not that an assertion would fail if the behavior changed. A negative control makes a deliberate change and observes whether the intended check detects it.
+
+### Can any test failure count as detecting the fault?
+
+No. DoneLatch requires the configured marker and allowed assertion exit code. Parser errors, timeouts, missing commands and truncated output are inconclusive.
+
+### Does faultcheck edit my working tree?
+
+No. It injects each fault into an independent temporary copy and checks that the watched original state stayed unchanged.
+
+### Does one negative control prove the whole test suite is strong?
+
+No. It proves sensitivity only to the fault you selected. Use broader mutation testing and review when you need wider evidence.
+
+## Related
+
+- Up: [stop coding agents claiming “done” without evidence](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/)
+- Before coding: [check an API against the exact package version](https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/)
+- After deployment: [check whether an agent tool works today](https://alidaram99.github.io/api-alternatives/mcp-server-reliability/)
+- **[Get DoneLatch free](https://github.com/alidaram99/donelatch)** · [negative-control documentation](https://github.com/alidaram99/donelatch#define-an-outcome-contract)
 
 
 ---

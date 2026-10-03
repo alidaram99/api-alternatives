@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does This Function Exist in This Package Version?</title>
+<meta name="description" content="Check an npm or PyPI function, class or method against the exact published package version before an agent writes or installs code. True, false, or unknown.">
+<meta name="keywords" content="check function exists npm package version, python symbol available in version, verify import against lockfile, npm api version checker, pypi symbol checker">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Does This Function Exist in This Package Version?">
+<meta property="og:description" content="Check an npm or PyPI function, class or method against the exact published package version before an agent writes or installs code. True, false, or unknown.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ExactGround — npm/PyPI Package & API Checker","description":"Check an npm or PyPI function, class or method against the exact published package version before an agent writes or installs code. True, false, or unknown.","url":"https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.002,"priceCurrency":"USD","description":"Billed per event: Symbol checked"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Does this function exist in this exact npm or PyPI version?","description":"Check an npm or PyPI function, class or method against the exact published package version before an agent writes or installs code. True, false, or unknown.","url":"https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can it check a function against the version in package-lock.json or poetry.lock?","acceptedAnswer":{"@type":"Answer","text":"Yes, after the agent or caller supplies the resolved package name and exact version from that lockfile. The endpoint does not read your local lockfile by itself."}},{"@type":"Question","name":"Does exists: true prove the function works?","acceptedAnswer":{"@type":"Answer","text":"No. It proves the static published surface contains the symbol. You still need behavioral tests, compatibility checks and security review."}},{"@type":"Question","name":"Why can exists be null?","acceptedAnswer":{"@type":"Answer","text":"Some APIs are created dynamically, implemented only in compiled code, or published without analyzable declarations. Returning unknown is more accurate than reporting a guessed yes or no."}},{"@type":"Question","name":"Does the API install or import the package?","acceptedAnswer":{"@type":"Answer","text":"No. It reads bounded public package archives in memory and parses their static surface."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Does This Function Exist in This Package Version?","item":"https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/" class="active" title="Does This Function Exist in This Package Version?">Does This Function</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/" title="MCP Registry vs Live Reliability Scorecards">MCP Registry vs Live</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/" title="Passing Tests Need a Negative Control">Passing Tests Need a</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Does this function exist in this exact npm or PyPI version?</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Check the package name, exact version and symbol together before an agent writes the call: a real package can still lack that function in the version your lockfile selected. ExactGround reads the published npm or PyPI artifact without installing or executing it and returns <code>exists: true</code>, <code>false</code>, or <code>null</code> when static evidence cannot decide.</strong></p>
+<p><em>Facts and examples on this page were checked against the ExactGround API source, tests, README and linked package-format documentation on October 4, 2026.</em></p>
+<h2 id="the-exact-version-question">The exact-version question</h2>
+<p>“Does this package exist?” and “does this function exist here?” are different checks. A package can be real while an agent uses an API added in a later release, removed in the pinned release, hidden behind an npm export boundary, or supplied dynamically at runtime.</p>
+<p>Use the version resolved by your lockfile, not the newest documentation page. npm package specifications can be exact versions, ranges or dist-tags (<a href="https://docs.npmjs.com/cli/v11/using-npm/package-spec/">npm package spec</a>), while Node&#39;s <code>exports</code> field can expose only selected entry points and hide other package files (<a href="https://nodejs.org/api/packages.html#package-entry-points">Node.js package entry points</a>). PyPI&#39;s JSON API identifies the release artifacts available for a project and version (<a href="https://docs.pypi.org/api/json/">PyPI JSON API</a>).</p>
+<h2 id="one-request-one-answer-per-symbol">One request, one answer per symbol</h2>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s https://dropin-apis--exactground-api.apify.actor/v1/symbols \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;ecosystem&quot;:&quot;pypi&quot;,&quot;package&quot;:&quot;numpy&quot;,&quot;version&quot;:&quot;2.1.0&quot;,&quot;symbols&quot;:[&quot;numpy.linalg.norm&quot;,&quot;numpy.asfarray&quot;]}&#39;</code></pre></div>
+<p>The verified example returns:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;ecosystem&quot;: &quot;pypi&quot;,
+  &quot;package&quot;: &quot;numpy&quot;,
+  &quot;version&quot;: &quot;2.1.0&quot;,
+  &quot;packageExists&quot;: true,
+  &quot;results&quot;: [
+    {
+      &quot;symbol&quot;: &quot;numpy.linalg.norm&quot;,
+      &quot;exists&quot;: true,
+      &quot;kind&quot;: &quot;function&quot;,
+      &quot;declaredIn&quot;: &quot;numpy/linalg/_linalg.pyi&quot;
+    },
+    {
+      &quot;symbol&quot;: &quot;numpy.asfarray&quot;,
+      &quot;exists&quot;: false,
+      &quot;missingAt&quot;: &quot;numpy.asfarray&quot;,
+      &quot;suggestions&quot;: [&quot;array&quot;, &quot;asarray&quot;, &quot;NDArray&quot;, &quot;ndarray&quot;, &quot;recarray&quot;]
+    }
+  ]
+}</code></pre></div>
+<p>For npm, the tested React example reports <code>react@18.2.0</code> <code>useState</code> as present and <code>useActionState</code> as absent. Its response identifies <code>@types/react@18.3.31 (DefinitelyTyped)</code> as the matching-major type source; that is evidence from the declaration fallback, not a claim that runtime implementation bytes were executed.</p>
+<h2 id="interpret-true-false-and-null-differently">Interpret <code>true</code>, <code>false</code> and <code>null</code> differently</h2>
+<div class="table-wrap"><table><thead><tr><th>Result</th><th>Meaning</th><th>Safe next action</th></tr></thead><tbody><tr><td><code>true</code></td><td>The resolved artifact&#39;s static public surface contains the symbol</td><td>Continue, then run your own tests</td></tr><tr><td><code>false</code></td><td>The static surface establishes that the requested path is missing</td><td>Correct the call or version before editing</td></tr><tr><td><code>null</code></td><td>Static analysis cannot know</td><td>Inspect runtime docs/source or test in an isolated environment; do not turn unknown into yes</td></tr></tbody></table></div>
+<p><code>null</code> is expected for cases such as a Python module with dynamic <code>__getattr__</code>, a compiled extension, or an npm package with no types. ExactGround does not guess in those cases.</p>
+<h2 id="what-the-checker-reads">What the checker reads</h2>
+<ul><li><strong>npm:</strong> resolves the requested exact version, range or dist-tag, reads the tarball in memory, follows <code>exports</code>, <code>types</code> and <code>typesVersions</code>, and uses the TypeScript resolver. A package without bundled types can use a matching-major <code>@types/*</code> fallback, disclosed in <code>typesSource</code>.</li><li><strong>PyPI:</strong> reads a suitable wheel or source distribution in memory, prefers <code>.pyi</code> stubs, and statically follows ordinary re-exports, <code>__all__</code>, class members and base classes.</li><li><strong>Neither ecosystem is executed:</strong> no install scripts and no Python imports. Archives are capped at 60 MB. Private registries are not supported by this hosted API.</li></ul>
+<p>Static package inspection answers availability, not safety, behavior or compatibility with the rest of your application. A present symbol can still be buggy, insecure, or misused.</p>
+<h2 id="put-it-in-an-agents-decision-loop">Put it in an agent&#39;s decision loop</h2>
+<ol><li>Read the locked package and version from the project&#39;s lockfile.</li><li>Call <code>check_packages</code> before any new install; a published name is not automatically trustworthy.</li><li>Call <code>check_symbols</code> for an uncertain function, class or method before writing the call.</li><li>Treat <code>false</code> as a block and <code>null</code> as an unresolved review item.</li><li>After editing, run project tests and require fresh completion evidence.</li></ol>
+<p>The MCP tool is <code>check_symbols</code>; the REST endpoint is <code>POST /v1/symbols</code>. Each symbol check costs <strong>$0.002</strong>. Invalid input and registry-unreachable requests are not charged, and a configured spending limit stops with HTTP 402 when reached.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-it-check-a-function-against-the-version-in-package-lockjson-or-poetrylock">Can it check a function against the version in package-lock.json or poetry.lock?</h3>
+<p>Yes, after the agent or caller supplies the resolved package name and exact version from that lockfile. The endpoint does not read your local lockfile by itself.</p>
+<h3 id="does-exists-true-prove-the-function-works">Does <code>exists: true</code> prove the function works?</h3>
+<p>No. It proves the static published surface contains the symbol. You still need behavioral tests, compatibility checks and security review.</p>
+<h3 id="why-can-exists-be-null">Why can <code>exists</code> be <code>null</code>?</h3>
+<p>Some APIs are created dynamically, implemented only in compiled code, or published without analyzable declarations. Returning unknown is more accurate than reporting a guessed yes or no.</p>
+<h3 id="does-the-api-install-or-import-the-package">Does the API install or import the package?</h3>
+<p>No. It reads bounded public package archives in memory and parses their static surface.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/">check whether an npm or PyPI package exists</a></li><li>Before install: <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/">stop agents installing hallucinated packages</a></li><li>After editing: <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">make agent completion require evidence</a></li><li><strong><a href="https://apify.com/dropin-apis/exactground-api">Open ExactGround API on Apify</a></strong> · <a href="https://github.com/alidaram99/exactground">free local install guard</a></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
