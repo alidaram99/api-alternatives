@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Check if an npm or PyPI Package Exists — API &amp; MCP</title>
+<meta name="description" content="Confirms npm and PyPI packages exist, and that a function, class or method exists in the exact version you use, before an AI agent writes or installs code. MCP or REST, pay per check.">
+<meta name="keywords" content="check if npm package exists api, verify python package exists, does this function exist in this version, slopsquatting checker, hallucinated package detector, mcp package checker">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Check if an npm or PyPI Package Exists — API &amp; MCP">
+<meta property="og:description" content="Confirms npm and PyPI packages exist, and that a function, class or method exists in the exact version you use, before an AI agent writes or installs code. MCP or REST, pay per check.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/">
+<meta property="og:site_name" content="API Alternatives">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ExactGround — npm/PyPI Package & API Checker","description":"Confirms npm and PyPI packages exist, and that a function, class or method exists in the exact version you use, before an AI agent writes or installs code. MCP or REST, pay per check.","url":"https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.002,"priceCurrency":"USD","description":"Billed per event: Symbol checked"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I stop Claude Code or Cursor from installing hallucinated packages?","acceptedAnswer":{"@type":"Answer","text":"Install the free ExactGround hook — it blocks npm/pnpm/yarn/bun/npx and pip/uv/poetry/pdm/pipx installs of names that don't exist, before they run. This API adds version-exact function/method checks on top."}},{"@type":"Question","name":"What is slopsquatting?","acceptedAnswer":{"@type":"Answer","text":"Attackers publish malware under package names AI models tend to invent. When an agent runs an install command on the invented name, it installs the attacker's code instead."}},{"@type":"Question","name":"How is this different from Context7?","acceptedAnswer":{"@type":"Answer","text":"Context7 puts documentation text into the prompt. This API answers a yes/no question from the published artifact itself — does a given symbol exist in a given version — and blocks or flags the result."}},{"@type":"Question","name":"Which languages are supported?","acceptedAnswer":{"@type":"Answer","text":"npm (JavaScript and TypeScript) and PyPI (Python)."}},{"@type":"Question","name":"Is my code sent anywhere?","acceptedAnswer":{"@type":"Answer","text":"Only what you send in a request — package names and symbol paths, or a diff for check_diff. Nothing is stored after the response."}},{"@type":"Question","name":"Is this affiliated with npm, PyPI, Anthropic, OpenAI or Cursor?","acceptedAnswer":{"@type":"Answer","text":"No. It is an independent tool."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Check if an npm or PyPI Package Exists — API & MCP","item":"https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" class="active" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Check if an npm or PyPI package — or a specific function in it — exists</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>This API answers one question an AI coding agent can&#39;t answer on its own: does this npm or PyPI package exist, and does the function or method it&#39;s about to call actually exist in the exact version pinned in your lockfile?</strong> It reads the published package itself — TypeScript <code>.d.ts</code> declarations, DefinitelyTyped, Python wheel source and <code>.pyi</code> stubs — without running any of its code, and answers over MCP or REST.</p>
+<h2 id="why-this-exists">Why this exists</h2>
+<p>A USENIX Security 2025 study of 2.23 million AI-generated code samples found <strong>19.7% referenced at least one package that does not exist</strong>; 43% of those invented names recurred on every rerun, which is what makes &quot;slopsquatting&quot; (registering the invented name with malware) practical (<a href="https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen">paper</a>).</p>
+<p>The quieter failure is calling a real API that isn&#39;t in <em>your</em> version — <code>useActionState</code> exists in React 19 but not React 18; <code>numpy.asfarray</code> was removed in NumPy 2.0. The code looks right, passes review, and breaks at runtime.</p>
+<h2 id="what-it-checks">What it checks</h2>
+<div class="table-wrap"><table><thead><tr><th>Endpoint</th><th>Question it answers</th><th>Price</th></tr></thead><tbody><tr><td><code>check_symbols</code> / <code>POST /v1/symbols</code></td><td>Does <code>symbol</code> exist in <code>package@version</code>? Returns <code>exists</code>, kind, signature, deprecation notes and did-you-mean suggestions</td><td>$0.002 per symbol</td></tr><tr><td><code>check_packages</code> / <code>POST /v1/packages</code></td><td>Does the package exist? Was the pinned version published? Is it a look-alike of a popular package, brand new, or an npm security placeholder?</td><td>$0.0005 per package</td></tr><tr><td><code>check_diff</code> / <code>POST /v1/diff</code></td><td>For a diff: every added import, and whether each imported name exists in the pinned version</td><td>$0.01 per diff</td></tr></tbody></table></div>
+<p><code>exists: null</code> means &quot;cannot be known statically&quot; (a dynamic Python <code>__getattr__</code>, a compiled extension, or an untyped npm package) — it is never reported as a guess.</p>
+<h2 id="example-real-output">Example (real output)</h2>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s https://dropin-apis--exactground-api.apify.actor/v1/symbols \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;ecosystem&quot;:&quot;pypi&quot;,&quot;package&quot;:&quot;numpy&quot;,&quot;version&quot;:&quot;2.1.0&quot;,&quot;symbols&quot;:[&quot;numpy.linalg.norm&quot;,&quot;numpy.asfarray&quot;]}&#39;</code></pre></div>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;ecosystem&quot;: &quot;pypi&quot;, &quot;package&quot;: &quot;numpy&quot;, &quot;version&quot;: &quot;2.1.0&quot;, &quot;packageExists&quot;: true,
+  &quot;results&quot;: [
+    { &quot;symbol&quot;: &quot;numpy.linalg.norm&quot;, &quot;exists&quot;: true, &quot;kind&quot;: &quot;function&quot; },
+    { &quot;symbol&quot;: &quot;numpy.asfarray&quot;, &quot;exists&quot;: false, &quot;missingAt&quot;: &quot;numpy.asfarray&quot;,
+      &quot;suggestions&quot;: [&quot;array&quot;, &quot;asarray&quot;, &quot;NDArray&quot;, &quot;ndarray&quot;, &quot;recarray&quot;] }
+  ]
+}</code></pre></div>
+<p>A package check on a typo&#39;d name:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{ &quot;ecosystem&quot;: &quot;pypi&quot;, &quot;name&quot;: &quot;reqeusts&quot;, &quot;verdict&quot;: &quot;block&quot;, &quot;registry&quot;: &quot;missing&quot;,
+  &quot;reasons&quot;: [&quot;\&quot;reqeusts\&quot; does not exist on PyPI&quot;, &quot;did you mean \&quot;requests\&quot;? (it is 1 edit away)&quot;] }</code></pre></div>
+<h2 id="how-it-compares">How it compares</h2>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Answers</th><th>What it&#39;s for</th></tr></thead><tbody><tr><td><strong>This Actor</strong></td><td>Yes/no, from the published artifact itself</td><td>Does this exact name/version/symbol exist</td></tr><tr><td>Context7</td><td>Documentation text for a prompt</td><td>What does this library&#39;s docs say</td></tr><tr><td>Socket</td><td>Security score for packages that exist</td><td>Is this existing package malicious or risky</td></tr></tbody></table></div>
+<p>Context7 and Socket solve different, adjacent problems — this tool is the one that catches a name or API that was never real in the first place.</p>
+<h2 id="connect-an-agent-mcp">Connect an agent (MCP)</h2>
+<div class="codeblock"><span class="code-lang">sh</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-sh">claude mcp add --transport http exactground https://dropin-apis--exactground-api.apify.actor/mcp \
+  --header &quot;Authorization: Bearer $APIFY_TOKEN&quot;</code></pre></div>
+<p>Also works with Cursor, VS Code, Codex and any MCP-compatible client (<code>mcp.json</code> or <code>~/.codex/config.toml</code>), and can be found by agents on the <a href="https://mcp.apify.com">Apify MCP server</a> via <code>search-actors</code>.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per event, no subscription. A typical agent session (5 package checks, 20 symbol checks, 2 diffs) costs about <strong>$0.06</strong>. Requests that fail (invalid input, registry unreachable) are not charged; setting a maximum total charge stops the API with HTTP 402 once reached.</p>
+<p><strong><a href="https://apify.com/dropin-apis/exactground-api">Open ExactGround on Apify</a></strong> · <a href="https://github.com/alidaram99/exactground">Free local install guard</a></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="how-do-i-stop-claude-code-or-cursor-from-installing-hallucinated-packages">How do I stop Claude Code or Cursor from installing hallucinated packages?</h3>
+<p>Install the free <a href="https://github.com/alidaram99/exactground">ExactGround hook</a> — it blocks <code>npm</code>/<code>pnpm</code>/<code>yarn</code>/<code>bun</code>/<code>npx</code> and <code>pip</code>/<code>uv</code>/<code>poetry</code>/<code>pdm</code>/<code>pipx</code> installs of names that don&#39;t exist, before they run. This API adds version-exact function/method checks on top.</p>
+<h3 id="what-is-slopsquatting">What is slopsquatting?</h3>
+<p>Attackers publish malware under package names AI models tend to invent. When an agent runs an install command on the invented name, it installs the attacker&#39;s code instead.</p>
+<h3 id="how-is-this-different-from-context7">How is this different from Context7?</h3>
+<p>Context7 puts documentation text into the prompt. This API answers a yes/no question from the published artifact itself — does a given symbol exist in a given version — and blocks or flags the result.</p>
+<h3 id="which-languages-are-supported">Which languages are supported?</h3>
+<p>npm (JavaScript and TypeScript) and PyPI (Python).</p>
+<h3 id="is-my-code-sent-anywhere">Is my code sent anywhere?</h3>
+<p>Only what you send in a request — package names and symbol paths, or a diff for <code>check_diff</code>. Nothing is stored after the response.</p>
+<h3 id="is-this-affiliated-with-npm-pypi-anthropic-openai-or-cursor">Is this affiliated with npm, PyPI, Anthropic, OpenAI or Cursor?</h3>
+<p>No. It is an independent tool.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

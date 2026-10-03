@@ -433,6 +433,201 @@ Not on Azure. A wire-compatible replacement accepts the same `ProcessText/Screen
 
 ---
 
+# Check if an npm or PyPI Package Exists — API & MCP
+
+URL: https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/
+
+
+**This API answers one question an AI coding agent can't answer on its own: does this npm or PyPI package exist, and does the function or method it's about to call actually exist in the exact version pinned in your lockfile?** It reads the published package itself — TypeScript `.d.ts` declarations, DefinitelyTyped, Python wheel source and `.pyi` stubs — without running any of its code, and answers over MCP or REST.
+
+## Why this exists
+
+A USENIX Security 2025 study of 2.23 million AI-generated code samples found **19.7% referenced at least one package that does not exist**; 43% of those invented names recurred on every rerun, which is what makes "slopsquatting" (registering the invented name with malware) practical ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)).
+
+The quieter failure is calling a real API that isn't in *your* version — `useActionState` exists in React 19 but not React 18; `numpy.asfarray` was removed in NumPy 2.0. The code looks right, passes review, and breaks at runtime.
+
+## What it checks
+
+| Endpoint | Question it answers | Price |
+|---|---|---|
+| `check_symbols` / `POST /v1/symbols` | Does `symbol` exist in `package@version`? Returns `exists`, kind, signature, deprecation notes and did-you-mean suggestions | $0.002 per symbol |
+| `check_packages` / `POST /v1/packages` | Does the package exist? Was the pinned version published? Is it a look-alike of a popular package, brand new, or an npm security placeholder? | $0.0005 per package |
+| `check_diff` / `POST /v1/diff` | For a diff: every added import, and whether each imported name exists in the pinned version | $0.01 per diff |
+
+`exists: null` means "cannot be known statically" (a dynamic Python `__getattr__`, a compiled extension, or an untyped npm package) — it is never reported as a guess.
+
+## Example (real output)
+
+```bash
+curl -s https://dropin-apis--exactground-api.apify.actor/v1/symbols \
+  -H "Authorization: Bearer $APIFY_TOKEN" -H "Content-Type: application/json" \
+  -d '{"ecosystem":"pypi","package":"numpy","version":"2.1.0","symbols":["numpy.linalg.norm","numpy.asfarray"]}'
+```
+
+```json
+{
+  "ecosystem": "pypi", "package": "numpy", "version": "2.1.0", "packageExists": true,
+  "results": [
+    { "symbol": "numpy.linalg.norm", "exists": true, "kind": "function" },
+    { "symbol": "numpy.asfarray", "exists": false, "missingAt": "numpy.asfarray",
+      "suggestions": ["array", "asarray", "NDArray", "ndarray", "recarray"] }
+  ]
+}
+```
+
+A package check on a typo'd name:
+
+```json
+{ "ecosystem": "pypi", "name": "reqeusts", "verdict": "block", "registry": "missing",
+  "reasons": ["\"reqeusts\" does not exist on PyPI", "did you mean \"requests\"? (it is 1 edit away)"] }
+```
+
+## How it compares
+
+| Tool | Answers | What it's for |
+|---|---|---|
+| **This Actor** | Yes/no, from the published artifact itself | Does this exact name/version/symbol exist |
+| Context7 | Documentation text for a prompt | What does this library's docs say |
+| Socket | Security score for packages that exist | Is this existing package malicious or risky |
+
+Context7 and Socket solve different, adjacent problems — this tool is the one that catches a name or API that was never real in the first place.
+
+## Connect an agent (MCP)
+
+```sh
+claude mcp add --transport http exactground https://dropin-apis--exactground-api.apify.actor/mcp \
+  --header "Authorization: Bearer $APIFY_TOKEN"
+```
+
+Also works with Cursor, VS Code, Codex and any MCP-compatible client (`mcp.json` or `~/.codex/config.toml`), and can be found by agents on the [Apify MCP server](https://mcp.apify.com) via `search-actors`.
+
+## Pricing
+
+Pay per event, no subscription. A typical agent session (5 package checks, 20 symbol checks, 2 diffs) costs about **$0.06**. Requests that fail (invalid input, registry unreachable) are not charged; setting a maximum total charge stops the API with HTTP 402 once reached.
+
+**[Open ExactGround on Apify](https://apify.com/dropin-apis/exactground-api)** · [Free local install guard](https://github.com/alidaram99/exactground)
+
+## FAQ
+
+### How do I stop Claude Code or Cursor from installing hallucinated packages?
+
+Install the free [ExactGround hook](https://github.com/alidaram99/exactground) — it blocks `npm`/`pnpm`/`yarn`/`bun`/`npx` and `pip`/`uv`/`poetry`/`pdm`/`pipx` installs of names that don't exist, before they run. This API adds version-exact function/method checks on top.
+
+### What is slopsquatting?
+
+Attackers publish malware under package names AI models tend to invent. When an agent runs an install command on the invented name, it installs the attacker's code instead.
+
+### How is this different from Context7?
+
+Context7 puts documentation text into the prompt. This API answers a yes/no question from the published artifact itself — does a given symbol exist in a given version — and blocks or flags the result.
+
+### Which languages are supported?
+
+npm (JavaScript and TypeScript) and PyPI (Python).
+
+### Is my code sent anywhere?
+
+Only what you send in a request — package names and symbol paths, or a diff for `check_diff`. Nothing is stored after the response.
+
+### Is this affiliated with npm, PyPI, Anthropic, OpenAI or Cursor?
+
+No. It is an independent tool.
+
+
+---
+
+# Extract All URLs From a Sitemap — indexes, gzip, robots.txt
+
+URL: https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/
+
+
+**Give this Actor a domain or sitemap URL, and it returns one row per page URL from the site's public sitemap** — it does not open or crawl those pages, only the sitemap files themselves. It follows sitemap indexes, unpacks `.xml.gz`, and checks `robots.txt` for `Sitemap:` lines.
+
+## What it looks up
+
+Given a domain, it checks (in order): `robots.txt` (every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if not already listed. A start URL that already ends in `.xml` or `.xml.gz` is fetched directly. An index is followed one child file at a time until `maxUrls` is reached; a file starting with the gzip magic bytes is unpacked automatically.
+
+## Example input
+
+```json
+{
+  "startUrls": [{ "url": "https://www.sitemaps.org" }],
+  "maxUrls": 10
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `startUrls` | required | A domain or a sitemap URL (`.xml` or `.xml.gz`) |
+| `includeRegex` / `excludeRegex` | optional | Case-insensitive regex to keep or drop matching URLs |
+| `lastmodSince` | optional | ISO date — URLs with an older `lastmod` are dropped; URLs with no `lastmod` are kept |
+| `maxUrls` | integer, default 1000 | Stop after this many unique URLs |
+
+## Example output
+
+```json
+{
+  "url": "https://www.sitemaps.org/",
+  "lastmod": "2016-11-21",
+  "changefreq": null,
+  "priority": null,
+  "sourceSitemap": "https://www.sitemaps.org/sitemap.xml",
+  "domain": "www.sitemaps.org"
+}
+```
+
+Both a real sitemap index (`https://apify.com`) and a gzip child sitemap (`https://www.gnu.org`'s `sitemap0.xml.gz`) were checked against live sites during development.
+
+## Use cases
+
+- **A URL list for another Actor or crawler** that only needs the links, not a fresh crawl of the whole site.
+- **Change detection** — keep rows whose `lastmod` is after a date you pass in.
+- **A scoped export** — keep or drop URLs with a regular expression (`/blog/`, a locale, a file type).
+
+## Limits
+
+Public `http`/`https` sitemaps only, no login; private hosts are refused. At most 50 sitemap files per run and 20 MB per file after unpacking. At most 5 fetches in flight, with retries on HTTP 429/5xx, and `Crawl-delay` in robots.txt honored up to 5 seconds. A path disallowed for `User-agent: *` is not fetched. The run **fails** if every input produces zero URLs, so an empty success is never silently reported as a finished dataset.
+
+## Run it from code
+
+```bash
+curl -X POST "https://api.apify.com/v2/acts/dropin-apis~sitemap-url-extractor/run-sync-get-dataset-items" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"startUrls":[{"url":"https://www.sitemaps.org"}],"maxUrls":10}'
+```
+
+## Pricing
+
+Pay per event — the primary event is `apify-default-dataset-item` at **$0.0004 per URL ($0.40 per 1,000)**, charged when a row is saved. No monthly fee.
+
+**[Open Sitemap URL Extractor & Scraper on Apify](https://apify.com/dropin-apis/sitemap-url-extractor)**
+
+## FAQ
+
+### Does this crawl the pages listed in the sitemap?
+
+No. It only downloads sitemap files and returns the URLs listed inside them — it never fetches the pages those URLs point to.
+
+### What if the site publishes a sitemap index or a `.gz` file?
+
+A sitemap index is followed one child file at a time until `maxUrls` is reached. A file that starts with the gzip magic bytes is unpacked automatically — both paths were checked against real live sites, not only synthetic fixtures.
+
+### What does a plain domain input actually fetch?
+
+`/robots.txt` first (reading every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if those weren't already listed there. A start URL ending in `.xml` or `.xml.gz` is fetched directly, skipping the robots.txt step.
+
+### Why did the run fail with "0 URL(s)"?
+
+None of the inputs had a readable public sitemap. A missing `/sitemap_index.xml` on its own is normal and not a failure — the failure only triggers when every candidate sitemap was missing or wasn't valid sitemap XML.
+
+### What does it cost?
+
+$0.0004 per extracted URL ($0.40 per 1,000 rows), pay per event, with no subscription.
+
+
+---
+
 # Drop-in replacements for retiring APIs, plus data tools
 
 URL: https://alidaram99.github.io/api-alternatives/
@@ -550,6 +745,108 @@ OpenAI's speech-to-text guide documents `timestamp_granularities[]` and the tran
 ### Is gpt-transcribe cheaper than whisper-1?
 
 Yes, on OpenAI's October 2026 price list: $0.0045 per minute versus $0.006 per minute for whisper-1.
+
+
+---
+
+# PDF to Markdown API for RAG — DOCX & HTML too
+
+URL: https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/
+
+
+**This Actor converts public PDF, DOCX, HTML, TXT and Markdown URLs into Markdown**, with word count, source title and optional overlapping chunks for retrieval-augmented generation. It reads each document's text layer; it does not perform OCR on scanned pages.
+
+## What it converts
+
+| Format | How | Limits |
+|---|---|---|
+| PDF | PDF.js text layer; inferred headings, lists and simple aligned tables | First 20 pages by default, maximum 200. Complex multi-column layouts are best effort. |
+| DOCX | Mammoth: headings, paragraphs, lists and tables | Public Word files only, no external files or image downloads. |
+| HTML | Mozilla Readability article extraction, then Turndown Markdown | Static HTML only — no browser rendering, login or CAPTCHA bypass. |
+| TXT / MD | UTF-8 text | TXT is escaped as plain text; Markdown is kept as-is. |
+
+## Example input
+
+```json
+{
+  "urls": [
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    "https://example.com/"
+  ],
+  "maxPages": 2,
+  "includeImagesAlt": true,
+  "chunkSize": 1200,
+  "chunkOverlap": 100
+}
+```
+
+`urls` accepts 1–20 public HTTP(S) URLs, processed sequentially. `chunkSize: 0` disables chunking; otherwise 200–20,000 Unicode code points, with overlap at most half the chunk size.
+
+## Example output
+
+```json
+{
+  "url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  "contentType": "application/pdf",
+  "title": "dummy.pdf",
+  "markdown": "<!-- Page 1 -->\n\nDummy PDF file",
+  "pages": 1,
+  "wordCount": 3,
+  "chunks": [],
+  "warnings": ["PDF headings, reading order and tables are inferred from the text layer; complex layouts may need review."]
+}
+```
+
+Each chunk, when `chunkSize` is set, carries `index`, `start`, `end`, `text`, with offsets counted in Unicode code points of the returned Markdown.
+
+## How it compares
+
+| Option | OCR | Arabic text | RAG chunking | Price |
+|---|---|---|---|---|
+| **This Actor** | No (text layer only) | Yes — logical Unicode order, not reversed | Built in, overlap configurable | $0.0045 per converted page (PDF), or per 2,000-word block (HTML/DOCX/TXT/MD) |
+| A full OCR pipeline | Yes | Varies | Usually a separate step | Typically higher per-page cost |
+| Copy-pasting manually | N/A | Manual | Manual | Your time |
+
+This Actor does not do OCR — a scanned or image-only PDF page returns an explicit warning and no text, with no hidden OCR surcharge. Use a dedicated OCR product for scans.
+
+## Run it from code
+
+```bash
+curl -X POST "https://api.apify.com/v2/acts/dropin-apis~document-to-markdown/run-sync-get-dataset-items" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"urls":["https://example.com/"],"chunkSize":1200}'
+```
+
+In [Apify's MCP server](https://mcp.apify.com), search for `document-to-markdown` and call it with `call-actor` using the input above.
+
+## Pricing
+
+**$0.0045 per converted page-equivalent**, plus **$0.0005 per Actor start** at the default 512 MB. A one-page PDF costs $0.005; a two-page text PDF costs $0.0095; ten short HTML documents in one run cost $0.0455. Failed conversions have no page charge.
+
+**[Open Document to Markdown on Apify](https://apify.com/dropin-apis/document-to-markdown)**
+
+## FAQ
+
+### Can it read scanned PDFs or images?
+
+No. A scanned or blank PDF page returns an explicit warning and no text — there is no hidden OCR surcharge. Use a dedicated OCR product for scanned documents.
+
+### Does it preserve every PDF table and column?
+
+No. PDF text coordinates infer heading sizes, lists and simple aligned tables; complex multi-column pages, rotated content and inaccurate font maps can need review. DOCX and HTML use their own document structure directly.
+
+### Does it handle Arabic text correctly?
+
+Yes for text-layer content. Arabic DOCX and HTML retain logical Unicode text, including mixed Latin words and numbers. PDF.js extracts Arabic from real text-layer PDFs without reversing characters, though arbitrary PDF glyph-mapping errors in a source file cannot be universally repaired.
+
+### What does one page cost?
+
+$0.0045 per converted page for PDF (only pages with extracted text are charged), or one event per started 2,000-word block for HTML/DOCX/TXT/MD, plus a one-time $0.0005 Actor-start fee per run at default memory.
+
+### Is this a persistent API I can call anytime?
+
+It's a batch Actor: start a run with your URLs, then read the dataset. It needs no subscription, external OCR key, or separately hosted server, and works from the Apify Console, the run API above, or an MCP-connected agent.
 
 
 ---
@@ -859,6 +1156,114 @@ No replacement reproduces Google's private models exactly. Open Detoxify models 
 ### What happens if I do nothing?
 
 From January 1, 2027, calls to the Perspective API fail. Depending on your error handling, comments may then be published without screening or not published at all.
+
+
+---
+
+# Transcribe Audio URL to SRT — Whisper Speech to Text
+
+URL: https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/
+
+
+**Give this Actor a direct URL to an audio or video file and it returns the transcript, timed segments, and ready-to-save SRT and VTT subtitles.** It runs open-source Whisper (`faster-whisper`) in 99 languages with automatic language detection, and bills per started minute of audio — no subscription.
+
+## What it accepts
+
+mp3, mp4, m4a, wav, webm, ogg, flac, mkv and more — any direct link to a media file you're allowed to process (your own storage, S3, a CDN, a podcast enclosure URL). **It does not download from YouTube, TikTok, Instagram or other platform pages** — pass a direct file link.
+
+## Example input
+
+```json
+{
+  "urls": ["https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg"],
+  "language": "",
+  "model": "small",
+  "outputFormats": ["text", "segments", "srt", "vtt"],
+  "maxMinutesPerFile": 60
+}
+```
+
+Two models: `small` (default, more accurate, $0.014/min) and `base` (2–3× faster, less accurate, $0.006/min). Up to 500 URLs and 1 GB per file; `maxMinutesPerFile` (1–180) caps cost by cutting long files at that point and billing only the transcribed minutes.
+
+## Example output (real run on Apify)
+
+```json
+{
+  "url": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg",
+  "language": "en",
+  "durationSec": 24.11,
+  "billedMinutes": 1,
+  "text": "I'm going to step off the land now. That's one small step for man. One giant leap for mankind.",
+  "segments": [
+    { "start": 3.38, "end": 15.18, "text": "I'm going to step off the land now." },
+    { "start": 15.18, "end": 20.81, "text": "That's one small step for man." }
+  ],
+  "srt": "1\n00:00:03,380 --> 00:00:15,180\nI'm going to step off the land now.\n\n...",
+  "vtt": "WEBVTT\n\n00:00:03.380 --> 00:00:15.180\nI'm going to step off the land now.\n\n...",
+  "error": null
+}
+```
+
+A file that can't be processed (404, a web page instead of a media file, no audio track) returns a row with `error` set and `billedMinutes: 0` — the run continues with the next file.
+
+## How it compares
+
+| Audio | `small` model | `base` model |
+|---|---|---|
+| 30-second voice note | $0.014 | $0.006 |
+| 10-minute speech | $0.14 | $0.06 |
+| 1-hour podcast | $0.84 | $0.36 |
+
+Measured on Apify's default 2 GB memory, a 10.3-minute speech took 7 minutes with `small`; at 4 GB it took under 4 minutes, and `base` took 1.5 minutes. Accuracy is that of the open Whisper **small** model: good on clear speech, weaker than large commercial models on noisy audio, heavy accents and rare languages.
+
+## Run it from code
+
+```python
+from apify_client import ApifyClient
+client = ApifyClient(os.environ["APIFY_TOKEN"])
+run = client.actor("dropin-apis/media-url-transcriber").call(run_input={
+    "urls": ["https://example.com/podcast/episode-12.mp3"],
+    "outputFormats": ["text", "srt"],
+})
+```
+
+Agents connected to the [Apify MCP server](https://mcp.apify.com) can find it with `search-actors` ("transcribe audio") and run it with `call-actor`.
+
+## Pricing
+
+Pay per started minute of transcribed audio, plus Apify's standard run-start charge. **$0.014/minute** (`small`, default) or **$0.006/minute** (`base`). No subscription; failed files are not charged, and a maximum-charge budget on the run is checked before each file, stopping cleanly rather than over-billing.
+
+**[Open the Whisper Audio & Video URL Transcriber on Apify](https://apify.com/dropin-apis/media-url-transcriber)**
+
+## FAQ
+
+### How do I transcribe an MP4 video to text?
+
+Pass the direct URL of the .mp4 file in `urls`. The Actor extracts the audio track automatically and returns the transcript, segments, SRT and VTT.
+
+### Can I make SRT or VTT subtitles from an audio file?
+
+Yes — include `srt` and/or `vtt` in `outputFormats` (both are included by default), and each result row has ready-to-save subtitle text.
+
+### Does it work with YouTube or TikTok links?
+
+No. The Actor does not download from video or music platforms. Use a direct link to a media file you have the right to process.
+
+### Which languages are supported?
+
+All 99 Whisper languages, including English, Arabic, Spanish, French, German, Hindi, Chinese and Japanese, detected per file unless you set `language`.
+
+### What does it cost?
+
+$0.014 per started minute with the default `small` model ($0.84/hour), or $0.006/minute with `base` ($0.36/hour). Failed files are not charged.
+
+### Is my audio stored anywhere?
+
+No. Each file is downloaded to a temporary file inside the run, transcribed, and deleted. Only the transcript is saved to your dataset.
+
+### I need an OpenAI whisper-1 compatible endpoint instead
+
+Use the sister Actor, the [whisper-1 alternative](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) — the same engine behind OpenAI's `/v1/audio/transcriptions` request and response format, for apps already built on the OpenAI SDK.
 
 
 ---

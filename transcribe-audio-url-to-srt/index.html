@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transcribe Audio URL to SRT — Whisper Speech to Text</title>
+<meta name="description" content="Transcribe audio and video files from direct URLs into text, timed segments, SRT and VTT subtitles. 99 languages, open-source Whisper. From $0.006 per minute.">
+<meta name="keywords" content="transcribe audio from url to srt, audio url to text api, video url to srt, whisper transcription api, audio to subtitles, speech to text from url">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Transcribe Audio URL to SRT — Whisper Speech to Text">
+<meta property="og:description" content="Transcribe audio and video files from direct URLs into text, timed segments, SRT and VTT subtitles. 99 languages, open-source Whisper. From $0.006 per minute.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/">
+<meta property="og:site_name" content="API Alternatives">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Whisper Audio & Video URL Transcriber — Speech to Text","description":"Transcribe audio and video files from direct URLs into text, timed segments, SRT and VTT subtitles. 99 languages, open-source Whisper. From $0.006 per minute.","url":"https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.014,"priceCurrency":"USD","description":"Billed per event: Audio minute (small model)"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I transcribe an MP4 video to text?","acceptedAnswer":{"@type":"Answer","text":"Pass the direct URL of the .mp4 file in urls. The Actor extracts the audio track automatically and returns the transcript, segments, SRT and VTT."}},{"@type":"Question","name":"Can I make SRT or VTT subtitles from an audio file?","acceptedAnswer":{"@type":"Answer","text":"Yes — include srt and/or vtt in outputFormats (both are included by default), and each result row has ready-to-save subtitle text."}},{"@type":"Question","name":"Does it work with YouTube or TikTok links?","acceptedAnswer":{"@type":"Answer","text":"No. The Actor does not download from video or music platforms. Use a direct link to a media file you have the right to process."}},{"@type":"Question","name":"Which languages are supported?","acceptedAnswer":{"@type":"Answer","text":"All 99 Whisper languages, including English, Arabic, Spanish, French, German, Hindi, Chinese and Japanese, detected per file unless you set language."}},{"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"$0.014 per started minute with the default small model ($0.84/hour), or $0.006/minute with base ($0.36/hour). Failed files are not charged."}},{"@type":"Question","name":"Is my audio stored anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. Each file is downloaded to a temporary file inside the run, transcribed, and deleted. Only the transcript is saved to your dataset."}},{"@type":"Question","name":"I need an OpenAI whisper-1 compatible endpoint instead","acceptedAnswer":{"@type":"Answer","text":"Use the sister Actor, the whisper-1 alternative — the same engine behind OpenAI's /v1/audio/transcriptions request and response format, for apps already built on the OpenAI SDK."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Transcribe Audio URL to SRT — Whisper Speech to Text","item":"https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" class="active" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Transcribe an audio or video URL to text, SRT and VTT</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>Give this Actor a direct URL to an audio or video file and it returns the transcript, timed segments, and ready-to-save SRT and VTT subtitles.</strong> It runs open-source Whisper (<code>faster-whisper</code>) in 99 languages with automatic language detection, and bills per started minute of audio — no subscription.</p>
+<h2 id="what-it-accepts">What it accepts</h2>
+<p>mp3, mp4, m4a, wav, webm, ogg, flac, mkv and more — any direct link to a media file you&#39;re allowed to process (your own storage, S3, a CDN, a podcast enclosure URL). <strong>It does not download from YouTube, TikTok, Instagram or other platform pages</strong> — pass a direct file link.</p>
+<h2 id="example-input">Example input</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;urls&quot;: [&quot;https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg&quot;],
+  &quot;language&quot;: &quot;&quot;,
+  &quot;model&quot;: &quot;small&quot;,
+  &quot;outputFormats&quot;: [&quot;text&quot;, &quot;segments&quot;, &quot;srt&quot;, &quot;vtt&quot;],
+  &quot;maxMinutesPerFile&quot;: 60
+}</code></pre></div>
+<p>Two models: <code>small</code> (default, more accurate, $0.014/min) and <code>base</code> (2–3× faster, less accurate, $0.006/min). Up to 500 URLs and 1 GB per file; <code>maxMinutesPerFile</code> (1–180) caps cost by cutting long files at that point and billing only the transcribed minutes.</p>
+<h2 id="example-output-real-run-on-apify">Example output (real run on Apify)</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;url&quot;: &quot;https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg&quot;,
+  &quot;language&quot;: &quot;en&quot;,
+  &quot;durationSec&quot;: 24.11,
+  &quot;billedMinutes&quot;: 1,
+  &quot;text&quot;: &quot;I&#39;m going to step off the land now. That&#39;s one small step for man. One giant leap for mankind.&quot;,
+  &quot;segments&quot;: [
+    { &quot;start&quot;: 3.38, &quot;end&quot;: 15.18, &quot;text&quot;: &quot;I&#39;m going to step off the land now.&quot; },
+    { &quot;start&quot;: 15.18, &quot;end&quot;: 20.81, &quot;text&quot;: &quot;That&#39;s one small step for man.&quot; }
+  ],
+  &quot;srt&quot;: &quot;1\n00:00:03,380 --&gt; 00:00:15,180\nI&#39;m going to step off the land now.\n\n...&quot;,
+  &quot;vtt&quot;: &quot;WEBVTT\n\n00:00:03.380 --&gt; 00:00:15.180\nI&#39;m going to step off the land now.\n\n...&quot;,
+  &quot;error&quot;: null
+}</code></pre></div>
+<p>A file that can&#39;t be processed (404, a web page instead of a media file, no audio track) returns a row with <code>error</code> set and <code>billedMinutes: 0</code> — the run continues with the next file.</p>
+<h2 id="how-it-compares">How it compares</h2>
+<div class="table-wrap"><table><thead><tr><th>Audio</th><th><code>small</code> model</th><th><code>base</code> model</th></tr></thead><tbody><tr><td>30-second voice note</td><td>$0.014</td><td>$0.006</td></tr><tr><td>10-minute speech</td><td>$0.14</td><td>$0.06</td></tr><tr><td>1-hour podcast</td><td>$0.84</td><td>$0.36</td></tr></tbody></table></div>
+<p>Measured on Apify&#39;s default 2 GB memory, a 10.3-minute speech took 7 minutes with <code>small</code>; at 4 GB it took under 4 minutes, and <code>base</code> took 1.5 minutes. Accuracy is that of the open Whisper <strong>small</strong> model: good on clear speech, weaker than large commercial models on noisy audio, heavy accents and rare languages.</p>
+<h2 id="run-it-from-code">Run it from code</h2>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">from apify_client import ApifyClient
+client = ApifyClient(os.environ[&quot;APIFY_TOKEN&quot;])
+run = client.actor(&quot;dropin-apis/media-url-transcriber&quot;).call(run_input={
+    &quot;urls&quot;: [&quot;https://example.com/podcast/episode-12.mp3&quot;],
+    &quot;outputFormats&quot;: [&quot;text&quot;, &quot;srt&quot;],
+})</code></pre></div>
+<p>Agents connected to the <a href="https://mcp.apify.com">Apify MCP server</a> can find it with <code>search-actors</code> (&quot;transcribe audio&quot;) and run it with <code>call-actor</code>.</p>
+<h2 id="pricing">Pricing</h2>
+<p>Pay per started minute of transcribed audio, plus Apify&#39;s standard run-start charge. <strong>$0.014/minute</strong> (<code>small</code>, default) or <strong>$0.006/minute</strong> (<code>base</code>). No subscription; failed files are not charged, and a maximum-charge budget on the run is checked before each file, stopping cleanly rather than over-billing.</p>
+<p><strong><a href="https://apify.com/dropin-apis/media-url-transcriber">Open the Whisper Audio &amp; Video URL Transcriber on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="how-do-i-transcribe-an-mp4-video-to-text">How do I transcribe an MP4 video to text?</h3>
+<p>Pass the direct URL of the .mp4 file in <code>urls</code>. The Actor extracts the audio track automatically and returns the transcript, segments, SRT and VTT.</p>
+<h3 id="can-i-make-srt-or-vtt-subtitles-from-an-audio-file">Can I make SRT or VTT subtitles from an audio file?</h3>
+<p>Yes — include <code>srt</code> and/or <code>vtt</code> in <code>outputFormats</code> (both are included by default), and each result row has ready-to-save subtitle text.</p>
+<h3 id="does-it-work-with-youtube-or-tiktok-links">Does it work with YouTube or TikTok links?</h3>
+<p>No. The Actor does not download from video or music platforms. Use a direct link to a media file you have the right to process.</p>
+<h3 id="which-languages-are-supported">Which languages are supported?</h3>
+<p>All 99 Whisper languages, including English, Arabic, Spanish, French, German, Hindi, Chinese and Japanese, detected per file unless you set <code>language</code>.</p>
+<h3 id="what-does-it-cost">What does it cost?</h3>
+<p>$0.014 per started minute with the default <code>small</code> model ($0.84/hour), or $0.006/minute with <code>base</code> ($0.36/hour). Failed files are not charged.</p>
+<h3 id="is-my-audio-stored-anywhere">Is my audio stored anywhere?</h3>
+<p>No. Each file is downloaded to a temporary file inside the run, transcribed, and deleted. Only the transcript is saved to your dataset.</p>
+<h3 id="i-need-an-openai-whisper-1-compatible-endpoint-instead">I need an OpenAI whisper-1 compatible endpoint instead</h3>
+<p>Use the sister Actor, the <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1 alternative</a> — the same engine behind OpenAI&#39;s <code>/v1/audio/transcriptions</code> request and response format, for apps already built on the OpenAI SDK.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

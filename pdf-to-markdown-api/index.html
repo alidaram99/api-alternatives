@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF to Markdown API for RAG — DOCX &amp; HTML too</title>
+<meta name="description" content="Convert public PDF, DOCX, HTML, TXT and Markdown URLs into Markdown and overlapping RAG chunks. Arabic text support, no OCR. $0.0045 per converted page.">
+<meta name="keywords" content="pdf to markdown api, pdf to markdown for rag, document to markdown converter, docx to markdown, html to markdown api, arabic pdf to text">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PDF to Markdown API for RAG — DOCX &amp; HTML too">
+<meta property="og:description" content="Convert public PDF, DOCX, HTML, TXT and Markdown URLs into Markdown and overlapping RAG chunks. Arabic text support, no OCR. $0.0045 per converted page.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/">
+<meta property="og:site_name" content="API Alternatives">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PDF & Document to Markdown — DOCX, HTML for RAG","description":"Convert public PDF, DOCX, HTML, TXT and Markdown URLs into Markdown and overlapping RAG chunks. Arabic text support, no OCR. $0.0045 per converted page.","url":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0045,"priceCurrency":"USD","description":"Billed per event: Page converted"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can it read scanned PDFs or images?","acceptedAnswer":{"@type":"Answer","text":"No. A scanned or blank PDF page returns an explicit warning and no text — there is no hidden OCR surcharge. Use a dedicated OCR product for scanned documents."}},{"@type":"Question","name":"Does it preserve every PDF table and column?","acceptedAnswer":{"@type":"Answer","text":"No. PDF text coordinates infer heading sizes, lists and simple aligned tables; complex multi-column pages, rotated content and inaccurate font maps can need review. DOCX and HTML use their own document structure directly."}},{"@type":"Question","name":"Does it handle Arabic text correctly?","acceptedAnswer":{"@type":"Answer","text":"Yes for text-layer content. Arabic DOCX and HTML retain logical Unicode text, including mixed Latin words and numbers. PDF.js extracts Arabic from real text-layer PDFs without reversing characters, though arbitrary PDF glyph-mapping errors in a source file cannot be universally repaired."}},{"@type":"Question","name":"What does one page cost?","acceptedAnswer":{"@type":"Answer","text":"$0.0045 per converted page for PDF (only pages with extracted text are charged), or one event per started 2,000-word block for HTML/DOCX/TXT/MD, plus a one-time $0.0005 Actor-start fee per run at default memory."}},{"@type":"Question","name":"Is this a persistent API I can call anytime?","acceptedAnswer":{"@type":"Answer","text":"It's a batch Actor: start a run with your URLs, then read the dataset. It needs no subscription, external OCR key, or separately hosted server, and works from the Apify Console, the run API above, or an MCP-connected agent."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"PDF to Markdown API for RAG — DOCX & HTML too","item":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" class="active" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>PDF to Markdown API, with ready-to-embed RAG chunks</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>This Actor converts public PDF, DOCX, HTML, TXT and Markdown URLs into Markdown</strong>, with word count, source title and optional overlapping chunks for retrieval-augmented generation. It reads each document&#39;s text layer; it does not perform OCR on scanned pages.</p>
+<h2 id="what-it-converts">What it converts</h2>
+<div class="table-wrap"><table><thead><tr><th>Format</th><th>How</th><th>Limits</th></tr></thead><tbody><tr><td>PDF</td><td>PDF.js text layer; inferred headings, lists and simple aligned tables</td><td>First 20 pages by default, maximum 200. Complex multi-column layouts are best effort.</td></tr><tr><td>DOCX</td><td>Mammoth: headings, paragraphs, lists and tables</td><td>Public Word files only, no external files or image downloads.</td></tr><tr><td>HTML</td><td>Mozilla Readability article extraction, then Turndown Markdown</td><td>Static HTML only — no browser rendering, login or CAPTCHA bypass.</td></tr><tr><td>TXT / MD</td><td>UTF-8 text</td><td>TXT is escaped as plain text; Markdown is kept as-is.</td></tr></tbody></table></div>
+<h2 id="example-input">Example input</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;urls&quot;: [
+    &quot;https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&quot;,
+    &quot;https://example.com/&quot;
+  ],
+  &quot;maxPages&quot;: 2,
+  &quot;includeImagesAlt&quot;: true,
+  &quot;chunkSize&quot;: 1200,
+  &quot;chunkOverlap&quot;: 100
+}</code></pre></div>
+<p><code>urls</code> accepts 1–20 public HTTP(S) URLs, processed sequentially. <code>chunkSize: 0</code> disables chunking; otherwise 200–20,000 Unicode code points, with overlap at most half the chunk size.</p>
+<h2 id="example-output">Example output</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;url&quot;: &quot;https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&quot;,
+  &quot;contentType&quot;: &quot;application/pdf&quot;,
+  &quot;title&quot;: &quot;dummy.pdf&quot;,
+  &quot;markdown&quot;: &quot;&lt;!-- Page 1 --&gt;\n\nDummy PDF file&quot;,
+  &quot;pages&quot;: 1,
+  &quot;wordCount&quot;: 3,
+  &quot;chunks&quot;: [],
+  &quot;warnings&quot;: [&quot;PDF headings, reading order and tables are inferred from the text layer; complex layouts may need review.&quot;]
+}</code></pre></div>
+<p>Each chunk, when <code>chunkSize</code> is set, carries <code>index</code>, <code>start</code>, <code>end</code>, <code>text</code>, with offsets counted in Unicode code points of the returned Markdown.</p>
+<h2 id="how-it-compares">How it compares</h2>
+<div class="table-wrap"><table><thead><tr><th>Option</th><th>OCR</th><th>Arabic text</th><th>RAG chunking</th><th>Price</th></tr></thead><tbody><tr><td><strong>This Actor</strong></td><td>No (text layer only)</td><td>Yes — logical Unicode order, not reversed</td><td>Built in, overlap configurable</td><td>$0.0045 per converted page (PDF), or per 2,000-word block (HTML/DOCX/TXT/MD)</td></tr><tr><td>A full OCR pipeline</td><td>Yes</td><td>Varies</td><td>Usually a separate step</td><td>Typically higher per-page cost</td></tr><tr><td>Copy-pasting manually</td><td>N/A</td><td>Manual</td><td>Manual</td><td>Your time</td></tr></tbody></table></div>
+<p>This Actor does not do OCR — a scanned or image-only PDF page returns an explicit warning and no text, with no hidden OCR surcharge. Use a dedicated OCR product for scans.</p>
+<h2 id="run-it-from-code">Run it from code</h2>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -X POST &quot;https://api.apify.com/v2/acts/dropin-apis~document-to-markdown/run-sync-get-dataset-items&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;urls&quot;:[&quot;https://example.com/&quot;],&quot;chunkSize&quot;:1200}&#39;</code></pre></div>
+<p>In <a href="https://mcp.apify.com">Apify&#39;s MCP server</a>, search for <code>document-to-markdown</code> and call it with <code>call-actor</code> using the input above.</p>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$0.0045 per converted page-equivalent</strong>, plus <strong>$0.0005 per Actor start</strong> at the default 512 MB. A one-page PDF costs $0.005; a two-page text PDF costs $0.0095; ten short HTML documents in one run cost $0.0455. Failed conversions have no page charge.</p>
+<p><strong><a href="https://apify.com/dropin-apis/document-to-markdown">Open Document to Markdown on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-it-read-scanned-pdfs-or-images">Can it read scanned PDFs or images?</h3>
+<p>No. A scanned or blank PDF page returns an explicit warning and no text — there is no hidden OCR surcharge. Use a dedicated OCR product for scanned documents.</p>
+<h3 id="does-it-preserve-every-pdf-table-and-column">Does it preserve every PDF table and column?</h3>
+<p>No. PDF text coordinates infer heading sizes, lists and simple aligned tables; complex multi-column pages, rotated content and inaccurate font maps can need review. DOCX and HTML use their own document structure directly.</p>
+<h3 id="does-it-handle-arabic-text-correctly">Does it handle Arabic text correctly?</h3>
+<p>Yes for text-layer content. Arabic DOCX and HTML retain logical Unicode text, including mixed Latin words and numbers. PDF.js extracts Arabic from real text-layer PDFs without reversing characters, though arbitrary PDF glyph-mapping errors in a source file cannot be universally repaired.</p>
+<h3 id="what-does-one-page-cost">What does one page cost?</h3>
+<p>$0.0045 per converted page for PDF (only pages with extracted text are charged), or one event per started 2,000-word block for HTML/DOCX/TXT/MD, plus a one-time $0.0005 Actor-start fee per run at default memory.</p>
+<h3 id="is-this-a-persistent-api-i-can-call-anytime">Is this a persistent API I can call anytime?</h3>
+<p>It&#39;s a batch Actor: start a run with your URLs, then read the dataset. It needs no subscription, external OCR key, or separately hosted server, and works from the Apify Console, the run API above, or an MCP-connected agent.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
