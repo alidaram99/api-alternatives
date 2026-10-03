@@ -3,13 +3,31 @@
 URL: https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/
 
 
-**ExactGround is a free, open-source guard for AI coding agents.** It runs as a hook in Claude Code, Codex, Gemini CLI and Cursor. Before an `npm`, `pnpm`, `yarn`, `bun`, `npx`, `pip`, `uv`, `poetry` or `pdm` install command it can parse runs, it checks each package name against the public npm registry and PyPI. Names that do not exist, versions that were never published, and young look-alikes of popular packages are blocked. Source and install: [github.com/alidaram99/exactground](https://github.com/alidaram99/exactground).
+**Check that a package exists on the registry before an AI agent installs it. Code models invent plausible package names, and attackers can register those names. [ExactGround](https://github.com/alidaram99/exactground)'s free hook blocks installs of names that do not exist in Claude Code, Codex, Gemini CLI and Cursor, and its hosted API answers the stricter question: does this function exist in the exact version you use?**
 
-## Why agents need this
+*Facts on this page were checked against the linked sources and ExactGround v0.1.4 on October 3, 2026.*
 
-A USENIX Security 2025 study (Spracklen et al.) had 16 models write **576,000 code samples**. Of the **2.23 million package recommendations** in them, **440,445 (19.7%) named packages that do not exist**, 205,474 unique names. In a separate test, the authors re-ran 500 prompts that had produced a hallucination 10 times each, and 43% of those hallucinated names came back in all 10 runs ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)). Because the names are predictable, attackers can register them with malware. This is called *slopsquatting*.
+## How often agents invent packages
+
+- In the USENIX Security 2025 study by Spracklen et al., 16 models generated 576,000 code samples. Of the 2.23 million packages they referenced, 440,445 (19.7%) did not exist, and there were 205,474 unique invented names ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)).
+- The rate was at least 5.2% for commercial models and 21.7% for open-source models.
+- The names repeat. The authors re-ran 500 prompts that had produced a hallucination, 10 times each. In 43% of those cases the same invented name came back in all 10 runs, which is what makes registering it with malware (*slopsquatting*) practical.
+- Trend Micro's follow-up dataset of 100 agent web-development tasks found that "neither approach fully eliminates the threat" ([trendmicro/slopsquatting](https://github.com/trendmicro/slopsquatting)). It compared reasoning agents with "vibe coding" plus MCP validation.
 
 A rule in `CLAUDE.md` or `AGENTS.md` saying "never invent packages" is text the model may ignore. A hook is code that runs on every install.
+
+## Exists is not the same as safe
+
+There are four separate questions, and a registry lookup answers only the first:
+
+| Question | Who answers it |
+|---|---|
+| 1. Does the name exist on npm or PyPI? | ExactGround hook (free) and `check_packages` |
+| 2. Is it the package you meant, from the expected owner, and not a fresh look-alike? | ExactGround flags young, rarely downloaded look-alikes of popular names and npm security placeholders. Ownership and provenance need your own review or a supply-chain scanner. |
+| 3. Was this exact version published? | ExactGround hook and `check_packages` |
+| 4. Does the function or method the agent calls exist in that version? | ExactGround API `check_symbols` / `check_diff` |
+
+A package that exists can still be malicious, or a legitimate package can be compromised. ExactGround does not scan package contents. Pair it with a malware or supply-chain scanner and your lockfile.
 
 ## Try it in one line
 
@@ -26,13 +44,14 @@ BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest i
 - **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.4`, then trust the hook in `/hooks`.
 - **Gemini CLI and Cursor:** `exactground init gemini --write` or `exactground init cursor --write` in your project.
 
-Installs hidden inside `node -e`, `python -c`, `$(...)` or `eval` cannot be checked, so the hook denies them. If the registry or the checker fails, it denies too.
+What the hook covers:
+- `npm`, `pnpm`, `yarn`, `bun`, `npx`, `pip`, `uv`, `poetry` and `pdm` install commands it can parse.
+- Bare installs such as `npm install`, `uv sync` and `poetry install`, checked against the lockfile, so a dependency the agent wrote into `package.json` or `pyproject.toml` is caught too.
+- Private packages: list them in `.exactground.json` and approve that file with `exactground trust` in a terminal. The hook ignores a policy file that no human approved.
 
-**Threat model, plainly:** ExactGround stops an agent that hallucinates or mistypes a package name in a normal install command. It is a cooperative guardrail, not a sandbox: an agent that deliberately tries to evade it (by writing its own scripts, editing files the hooks do not see, or running code another way) can get around it. To contain an agent you do not trust, use OS or container sandboxing.
+Commands it cannot check are denied, not waved through. That covers installs inside `node -e`, `python -c`, `$(...)` and `eval`, program names built at run time (such as `& ('np'+'m')`), and loops that run a package manager. If the registry or the checker fails, the hook denies too.
 
-**Out of scope, on purpose:** an agent running as your user that deliberately obfuscates its commands (program names or file paths built at run time, its own scripts, encoded commands) can defeat any hook-based guard, including ExactGround. For an adversarial agent, use an OS sandbox or container, or a separate OS user.
-
-Bare installs such as `npm install`, `uv sync` and `poetry install` are checked against the lockfile, so a dependency the agent wrote into `package.json` or `pyproject.toml` is caught too.
+**Out of scope, on purpose.** ExactGround is a cooperative guardrail, not a sandbox. It stops an agent that hallucinates or mistypes a name in a normal install command. An agent running as your user that deliberately obfuscates its commands can defeat any hook-based guard, including this one. Examples include writing its own scripts, or building names and paths at run time in ways no rule anticipates. For an agent you treat as adversarial, use an OS sandbox or container, or a separate OS user ([SECURITY.md](https://github.com/alidaram99/exactground/blob/main/SECURITY.md)).
 
 ## Check that an API exists in your exact version
 
@@ -40,7 +59,7 @@ Many hallucinations are real packages used wrongly. `useActionState` does not ex
 - npm: `.d.ts` declarations, read with the TypeScript compiler.
 - Python: wheels, parsed statically and never executed.
 
-Status: live on the Apify Store since October 3, 2026. Calls need your Apify API token.
+The API has been live on the Apify Store since October 3, 2026. Calls need your Apify API token.
 
 It is an MCP server billed per check:
 - `check_symbols`: $0.002 per symbol.
@@ -51,7 +70,109 @@ It is an MCP server billed per check:
 claude mcp add --transport http exactground https://dropin-apis--exactground-api.apify.actor/mcp --header "Authorization: Bearer $APIFY_TOKEN"
 ```
 
-**[Open ExactGround on Apify](https://apify.com/dropin-apis/exactground-api)** · [Source on GitHub](https://github.com/alidaram99/exactground)
+## FAQ
+
+### What is slopsquatting?
+
+Slopsquatting means registering a package name that AI models tend to invent, so that agents and developers who trust the suggestion install the attacker's code.
+
+### Does a package existing on npm or PyPI mean it is safe?
+
+No. Existence rules out invented names and versions that were never published. Whether the package is the one you meant, who owns it, and what its code does are separate checks.
+
+### Can ExactGround stop an agent that is trying to get around it?
+
+Not reliably, and it does not claim to. It is built for agents that make mistakes, not agents that evade. Contain adversarial agents with an OS sandbox, a container or a separate user.
+
+## Related
+
+- Up: [all guides on this site](https://alidaram99.github.io/api-alternatives/)
+- Next: [stop agents claiming "done" without evidence](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) (DoneLatch)
+- **[Install ExactGround (free, MIT)](https://github.com/alidaram99/exactground)** · [hosted API on Apify](https://apify.com/dropin-apis/exactground-api)
+
+
+---
+
+# Stop AI coding agents claiming "done" without evidence
+
+URL: https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/
+
+
+**A coding agent's "done" is only evidence when the checks you chose ran after its last change and their results are tied to that exact state of the code. [DoneLatch](https://github.com/alidaram99/donelatch), a free MIT tool for Claude Code, Codex, Gemini CLI and Cursor, refuses acceptance until such fresh passing checks exist and a deliberate fault shows the check can actually fail.**
+
+*Facts on this page were checked against the sources linked inline and the DoneLatch v0.1.2 README on October 3, 2026.*
+
+## Why "the agent said it passed" is not enough
+
+- In Stack Overflow's 2025 Developer Survey, 66% of developers who answered the AI-frustrations question picked "AI solutions that are almost right, but not quite", the most-cited answer; 45.2% picked "debugging AI-generated code is more time-consuming" ([survey](https://survey.stackoverflow.co/2025/ai#ai-tool-frustrations)). These are survey answers, not a measured failure rate.
+- A Claude Code bug report describes the model calling work "verified green" and done without running the project's canonical build-and-test command ([anthropics/claude-code#63861](https://github.com/anthropics/claude-code/issues/63861), May 30, 2026).
+- A Codex report describes background tasks whose final message says a command ran, while the host shows no observable command record or real exit code ([openai/codex#34152](https://github.com/openai/codex/issues/34152), July 19, 2026).
+
+Two different gaps show up here. The agent may not have run the check at all. Or it ran a check that cannot fail for the bug you care about.
+
+## The three things to require
+
+| Requirement | What it rules out | How DoneLatch does it |
+|---|---|---|
+| **Fresh:** the checks ran after the last relevant change | "Tests passed" from before the final edit | Each receipt binds the Git HEAD, watched file names, SHA-256 content hashes, modes and the config hash. Any later change makes it stale. |
+| **Recorded:** results come from the tool, not the agent's summary | A narrative of success with no command behind it | `run` executes the approved commands itself and writes a signed receipt with their results and output |
+| **Sensitive:** the check can detect a representative fault | A green test that would also pass with the feature broken | `faultcheck` injects a fault you define into a temporary copy and requires the check to fail with your declared marker and exit code |
+
+The third row is a small negative control, the idea behind mutation testing. DoneLatch's demo shows why it matters. A persistence test that only checks `saveSettings() === true` still passes when the write is deleted, so DoneLatch refuses "done". A check that reads the saved bytes catches the same fault, and DoneLatch accepts.
+
+## Set it up (about a minute, Node.js 24+)
+
+```sh
+npx --yes github:alidaram99/donelatch#v0.1.2 init        # writes receipts.yml (does not run anything)
+# Edit receipts.yml: one trusted acceptance command and one meaningful fault.
+npx --yes github:alidaram99/donelatch#v0.1.2 trust       # HUMAN ONLY: review and type APPROVE <hash>
+npx --yes github:alidaram99/donelatch#v0.1.2 run
+npx --yes github:alidaram99/donelatch#v0.1.2 faultcheck
+npx --yes github:alidaram99/donelatch#v0.1.2 verify-done # exit 0 only for current, sensitive evidence
+```
+
+Then attach it to the agent's stop event, so the agent cannot finish its turn on stale or missing evidence:
+
+| Agent | Hook event | Install |
+|---|---|---|
+| Claude Code | `Stop` | `claude plugin marketplace add alidaram99/donelatch`, then `claude plugin install donelatch@donelatch-marketplace` |
+| Codex | `Stop` | `codex plugin marketplace add alidaram99/donelatch --ref v0.1.2`, then install it and trust the hook in `/hooks` |
+| Gemini CLI | `AfterAgent` | `gemini extensions install https://github.com/alidaram99/donelatch --ref v0.1.2` |
+| Cursor | `stop` | manual adapter in the [agent install guide](https://github.com/alidaram99/donelatch/blob/main/docs/AGENT-INSTALL.md) |
+
+When evidence is missing or stale, the hook asks the agent for one correction turn. After that it reports the work as UNVERIFIED instead of looping.
+
+## Limits
+
+- **Humans approve the checks.** `trust` runs only in an interactive terminal and records the hash of the exact configuration outside the repository. Changing `receipts.yml` requires a new approval.
+- **The approval does not cover everything.** It does not pin the contents of the scripts your checks call, `PATH` resolution or the inherited environment.
+- **You choose the fault.** DoneLatch does not invent a correctness oracle. A check passes this gate only for the fault you wrote down.
+- **It is a cooperative guardrail.** Hooks can be disabled, skipped or time out, and then they fail open. A same-user agent that deliberately obfuscates or rewrites local files can defeat any hook-based guard, including this one. That class is out of scope. For an adversarial agent, use an OS sandbox, a container or a separate OS user. Enforce acceptance with `verify-done` in a CI step the agent cannot edit.
+- **Local signatures are not independent attestation.** The same OS user can read the signing key.
+
+## FAQ
+
+### How do I make Claude Code run the tests before it says it is done?
+
+Add a `Stop` hook that runs a verifier and blocks the stop when evidence is missing. DoneLatch's Claude Code plugin does this. It requires a passing `run` and `faultcheck` for the current files before `verify-done` accepts.
+
+### Is a passing test suite enough evidence?
+
+Not on its own. The tests must have run after the last change, and at least one of them must fail when the behavior you care about is broken. A check that cannot fail is not evidence.
+
+### Does this replace code review or mutation testing?
+
+No. It is a small, explicit completion gate for agent workflows. Full mutation testing, independent review and production monitoring still have their place.
+
+### Can a determined agent get around it?
+
+Yes, if it runs as your user and sets out to evade the check. Treat the hook as a guardrail for cooperative agents. Use OS-level isolation and a CI acceptance step for agents you do not trust.
+
+## Related
+
+- Up: [all guides on this site](https://alidaram99.github.io/api-alternatives/)
+- Next: [stop agents installing packages that do not exist](https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/) (ExactGround)
+- **[Get DoneLatch (free, MIT)](https://github.com/alidaram99/donelatch)** · [website](https://alidaram99.github.io/donelatch/)
 
 
 ---
@@ -165,7 +286,7 @@ curl -s -X POST "https://api.apify.com/v2/acts/<owner>~app-store-reviews/run-syn
 
 ---
 
-# Azure Content Moderator retirement (Mar 15, 2027): drop-in API
+# Azure Content Moderator retirement 2027: drop-in API
 
 URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/
 
@@ -176,7 +297,7 @@ Microsoft's [lifecycle page](https://learn.microsoft.com/en-us/lifecycle/product
 
 ## What changes on March 15, 2027
 
-- Existing Content Moderator resources stop being supported. No new Content Moderator projects could be created after March 15, 2024.
+- Existing Content Moderator resources stop being supported. Microsoft has deprecated the service since February 2024, so plan no new work on it.
 - `POST https://<region>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen` and the SDKs built on it (`Microsoft.Azure.CognitiveServices.ContentModerator`, `azure-cognitiveservices-vision-contentmoderator`) lose their service.
 - Code, stored results and dashboards that depend on `Terms`, `PII`, `Classification.Category1/2/3`, `ReviewRecommended` or `Status.Code 3000` have no equivalent in Content Safety. It returns severity levels for Hate, Sexual, Violence and SelfHarm instead.
 
@@ -286,7 +407,7 @@ If you use the old `Microsoft.Azure.CognitiveServices.ContentModerator` SDK, set
 | Option | Same ProcessText/Screen request and JSON? | Price | Notes |
 |---|---|---|---|
 | **Content Moderator drop-in on Apify (this page)** | **Yes**: change host and key | **$1 per 1,000 texts** | Terms (24-language open list), PII, Classification. Category scores approximate. No custom term lists, image or video |
-| [Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview) | No: `text:analyze` returns severity levels | Free tier 5,000 text records/month (1 record = up to 1,000 characters); paid per Azure pricing | Microsoft's successor. Custom blocklists, 100+ languages. Needs a rewrite and re-tuned thresholds |
+| [Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview) | No: `text:analyze` returns severity levels | Free F0 tier 5,000 transactions/month; paid per Azure pricing | Microsoft's successor. Custom blocklists, 100+ languages. Needs a rewrite and re-tuned thresholds |
 | [OpenAI moderation](https://developers.openai.com/api/docs/guides/moderation) (`omni-moderation-latest`) | No | Free with an OpenAI account | Policy categories; no term offsets or PII |
 | Self-host: [Detoxify](https://github.com/unitaryai/detoxify) + [Microsoft Presidio](https://github.com/microsoft/presidio) for PII | No: you build the API | Free (Apache-2.0 / MIT) + your servers | Most control, most work |
 
@@ -352,12 +473,37 @@ Latin-script text under 40 characters is treated as English. Pass `language=spa`
 
 ---
 
-# Azure Content Moderator vs Content Safety: what changes (2027)
+# Content Moderator to Content Safety: what changes
 
 URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/
 
 
-**Azure AI Content Safety is not a new version of Content Moderator's API: it has a different endpoint (`text:analyze`), JSON body and result (severity levels for Hate, Sexual, Violence and SelfHarm), so migrating means rewriting the call and re-mapping your thresholds** ([Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview)). Content Moderator retires on March 15, 2027. If you would rather not rewrite before then, a [wire-compatible Content Moderator replacement](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) keeps `ProcessText/Screen` working with only a host and key change.
+**Microsoft points Content Moderator customers to Azure AI Content Safety, but it is not a new version of the same API. It uses a different endpoint (`text:analyze`), a different JSON body and a different taxonomy (Hate, Sexual, Violence and SelfHarm severities). PII, video and human review each move to a different Microsoft product, so every workflow needs its own migration decision** ([Microsoft migration guide](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator)).
+
+*Facts on this page were checked against the linked Microsoft Learn pages on October 3, 2026.*
+
+**Which date?** Microsoft gives two retirement dates:
+- Content Moderator's documentation says it "will be retired on March 15, 2027" ([Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/export-delete-data)).
+- The lifecycle table lists April 1, 2027, 06:59 Pacific time ([lifecycle](https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator)).
+
+Plan for the earlier date, and check the retirement notice for your own subscription.
+
+If you would rather not rewrite the text-screening call before then, a [wire-compatible Content Moderator replacement](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) keeps `ProcessText/Screen` working with only a host and key change.
+
+## Where each Content Moderator feature goes
+
+| Content Moderator feature | Microsoft's replacement | Like for like? |
+|---|---|---|
+| Text classification (Category1/2/3, `ReviewRecommended`) | Content Safety `text:analyze` (Hate, Sexual, Violence, SelfHarm) | No. New taxonomy and scale; re-tune thresholds. |
+| Profanity terms and custom term lists | Content Safety blocklists (up to 10,000 terms per list, regex support) | Partly. No built-in profanity list with offsets. |
+| PII in text | Azure AI Language PII detection | No. A separate service and API. |
+| Image moderation | Content Safety image analysis | No. Different categories and response. |
+| OCR on images | Azure AI Vision | No. A separate service. |
+| Face detection | Azure AI Face | No. A separate service. |
+| Video moderation | None. The guide says to extract frames and use the image API. | No direct equivalent |
+| Review API and human review tool | Content Safety Studio (web-based monitoring) | No. A different workflow. |
+
+Source: [Microsoft's migration guide](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator). The free F0 tier of Content Safety includes 5,000 transactions a month.
 
 ## The two requests side by side
 
@@ -377,7 +523,7 @@ curl -X POST "<endpoint>/contentsafety/text:analyze?api-version=2024-09-01" \
   -d '{"text": "Is this a crap email abcdef@abcd.com?", "categories": ["Hate", "Sexual", "SelfHarm", "Violence"], "outputType": "FourSeverityLevels"}'
 ```
 
-Content Safety returns `categoriesAnalysis` (for example `{"category": "Hate", "severity": 2}`) and `blocklistsMatch`. Severities are `0, 2, 4, 6` (four levels) or `0–7` (eight levels).
+Content Safety returns `categoriesAnalysis` (for example `{"category": "Hate", "severity": 2}`) and `blocklistsMatch`. Text severities are `0, 2, 4, 6` (four levels) or the full `0–7` scale (eight levels) ([harm categories](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories)).
 
 ## Field-by-field mapping
 
@@ -391,14 +537,15 @@ Content Safety returns `categoriesAnalysis` (for example `{"category": "Hate", "
 | `Classification.ReviewRecommended` | None | Derive from your own severity thresholds |
 | `NormalizedText`, `AutoCorrectedText`, `Misrepresentation` | None | |
 | `Status.Code 3000`, `TrackingId` | HTTP status and error body | Error handling changes |
-| Image, video moderation | Image analysis (separate endpoint) | |
+| Image moderation | Image analysis (separate endpoint) | Video has no direct equivalent |
 
 ## Which way to go
 
 | Situation | Path |
 |---|---|
-| You can rewrite the call and re-tune thresholds before March 2027 | Move to Content Safety (Microsoft's supported path; free tier of 5,000 text records a month) |
+| You can rewrite the call and re-tune thresholds before March 2027 | Move to Content Safety (Microsoft's supported path; free F0 tier of 5,000 transactions a month) |
 | Your code, stored results or dashboards depend on `Terms`, `PII` or `Category1/2/3` | Keep the format with a [wire-compatible replacement](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) ($1 per 1,000 texts) and migrate later on your own schedule |
+| You use PII detection, video, OCR, faces or the review tool | The Microsoft service in the table above; the wire-compatible replacement covers **text** screening only |
 | You only need a free generic moderation signal | OpenAI's `omni-moderation-latest` (free), also with a different API |
 
 The minimal change with the wire-compatible replacement:
@@ -418,7 +565,7 @@ No. Content Safety uses `POST /contentsafety/text:analyze` with a JSON body and 
 
 ### Does Content Safety detect PII like Content Moderator did?
 
-Not in `text:analyze`. Content Moderator's `PII` output (email, phone, IP, address, SSN) has no equivalent there, so you need a separate PII detection service or a wire-compatible replacement.
+Not in `text:analyze`. Microsoft's guide moves PII detection to Azure AI Language. A wire-compatible replacement can keep the old `PII` field (email, IP, US/UK phone, US SSN, US address).
 
 ### How do Content Moderator categories map to Content Safety?
 
@@ -426,11 +573,21 @@ Roughly: Category1 (sexually explicit) and Category2 (suggestive) relate to Sexu
 
 ### When does Azure Content Moderator stop working?
 
-Microsoft says it retires on March 15, 2027. Microsoft's lifecycle table lists April 1, 2027; plan for March 15.
+Microsoft's Content Moderator documentation says March 15, 2027, while its lifecycle table lists April 1, 2027. Plan for March 15 and check the notice for your subscription.
 
 ### Can I keep using ProcessText/Screen after the retirement?
 
 Not on Azure. A wire-compatible replacement accepts the same `ProcessText/Screen` request and returns the same JSON from a new host.
+
+### What replaces Content Moderator video moderation and the review tool?
+
+Video has no direct replacement. Microsoft suggests extracting frames and sending them to the image API. The Review API and human review tool move to Content Safety Studio, which is a different workflow.
+
+## Related
+
+- Up: [all retiring-API guides](https://alidaram99.github.io/api-alternatives/)
+- Next: [Perspective API shutdown checklist](https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/)
+- **[Keep ProcessText/Screen on Apify](https://apify.com/dropin-apis/content-moderator-compat)** ($1 per 1,000 texts, text screening only)
 
 
 ---
@@ -663,6 +820,14 @@ Reviews and app details for any app in any country, from Apple's public feed, wi
 Shelf price, specials and unit price per kg or litre, by search term, from public catalog data.
 **$1 per 1,000 products** · [Guide](https://alidaram99.github.io/api-alternatives/woolworths-api/) · [Apify Store](https://apify.com/dropin-apis/woolworths-au-products)
 
+## Tools for AI coding agents
+
+Free, open-source guardrails for coding agents, with answers to the questions they raise:
+
+- [Stop agents installing packages that do not exist](https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/) (ExactGround)
+- [Stop agents claiming "done" without evidence](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) (DoneLatch)
+- [Which MCP server actually works today?](https://alidaram99.github.io/api-alternatives/mcp-server-reliability/) (CanaryIndex)
+
 ## How it works
 
 1. Create a free Apify account and copy your API token.
@@ -670,6 +835,78 @@ Shelf price, specials and unit price per kg or litre, by search term, from publi
 3. Point your existing code at that URL and send the token. Pay only for what you use, and set a spending cap if you like.
 
 Nothing you send is stored: comments, texts and audio are processed in memory and discarded.
+
+
+---
+
+# Which MCP server actually works today? How to check
+
+URL: https://alidaram99.github.io/api-alternatives/mcp-server-reliability/
+
+
+**A listing in an MCP registry shows that a server can be found. It does not show that the server connects, authenticates and answers a real tool call today, and the official registry says to assume minimal-to-no moderation. To know whether it works, run one representative call yourself, record when and how, and keep "it failed" separate from "we could not run it". For the two tool categories it covers, [CanaryIndex](https://alidaram99.github.io/canaryindex/) publishes exactly that kind of dated, raw evidence.**
+
+*Facts on this page were checked against the linked sources and CanaryIndex's published data on October 3, 2026.*
+
+## What a registry listing does and does not tell you
+
+- **The official MCP Registry is permissive by design.** Its moderation policy says: "The MCP Registry is quite permissive! We only remove illegal content, malware, spam, and completely broken servers." It also says consumers "should assume minimal-to-no moderation". It does not remove "low-quality or buggy servers" or servers with security vulnerabilities ([moderation policy](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/moderation-policy.mdx)).
+- **Choosing a server is your responsibility.** MCP's security policy says "the decision to connect to and use a server rests with the user or administrator" ([SECURITY.md](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md)).
+- **Entries can be listed but unusable.** A client developer who validated registry entries found that "about half of the servers have no configuration". Of those that do, he found "only about a third" produce a valid server configuration ([registry discussion #635](https://github.com/modelcontextprotocol/registry/discussions/635), October 2025).
+- **Catalogs carry broken entries too.** Open issues in Docker's MCP catalog include a server that does not start ([#1720](https://github.com/docker/mcp-registry/issues/1720)), an entry whose SSE endpoint returns HTTP 410 ([#4735](https://github.com/docker/mcp-registry/issues/4735)), and source links that return 404 ([#4564](https://github.com/docker/mcp-registry/issues/4564)).
+
+## How to check a server yourself
+
+1. **Connect with the protocol version it speaks.** Under the current MCP specification (2026-07-28), clients negotiate the version on each request. Servers on 2025-11-25 and earlier expect an `initialize` handshake first. A good client handles both ([versioning](https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning)).
+2. **Authenticate the way a real user would.** An open endpoint that works for you without credentials tells you nothing about the authenticated path.
+3. **Call `tools/list`** and confirm that the tool you need is there, with the input schema you expect ([tools](https://modelcontextprotocol.io/specification/2026-07-28/server/tools)).
+4. **Make one representative `tools/call`** with an input whose correct answer you know. A JSON-RPC error is a protocol failure. A result with `isError: true` is a tool failure. A successful result can still be wrong, so compare it with the expected answer.
+5. **Record the date, client, network location and account you used, and repeat.** One success is an observation, not a reliability figure.
+
+The official [MCP Inspector](https://github.com/modelcontextprotocol/inspector) (`npx @modelcontextprotocol/inspector --cli`) is a scriptable client for exactly these calls.
+
+## Three outcomes, not two
+
+| Outcome | Meaning | Counts against the tool? |
+|---|---|---|
+| **Passed** | The call completed and the output met the expected answer | No |
+| **Failed** | The call completed but returned an error or a wrong answer | Yes |
+| **Failed to observe** | The checker could not run the call: plan limits, credentials, rate limits or its own network | **No.** It says nothing about the tool. |
+
+Merging the last two is the most common way a scorecard misleads.
+
+## What CanaryIndex publishes today
+
+CanaryIndex is a narrow, public scorecard, not an MCP directory:
+
+- **What it covers:** comparable Apify Actors in two categories, PDF text-layer to Markdown and direct audio/video URL to transcript. Apify Actors can also be called through Apify's MCP server. Each tool gets the same fixed public fixture weekly (Mondays, 08:17 UTC, on GitHub-hosted runners), under a $5 monthly budget cap.
+- **How a tool passes:** when the run succeeds and the objective score reaches the category threshold. For transcripts, the threshold is 0.70, where the score is 1 − word error rate.
+- **What the latest run found:** that run (October 2, 2026, 22:49 UTC) recorded 7 tools:
+  - The publisher's own PDF tool passed with all expected tokens.
+  - The publisher's own transcriber completed but did **not** pass (word error rate 0.4211, score 0.58).
+  - All 5 third-party Actors are **failed to observe**. Apify returned HTTP 403 because the publisher's plan cannot run other publishers' public Actors. That is a limit of the checker's account, not a failure of those tools.
+- **Recommendations are currently empty.** A recommendation needs a current pass *and* a public listing, and nothing met both at that run. Read it yourself from [recommendations.json](https://alidaram99.github.io/canaryindex/api/recommendations.json) or [the raw latest observation](https://alidaram99.github.io/canaryindex/data/latest.json).
+- **What it does not certify:** security, privacy, legal compliance, universal correctness or future availability. Its observations come from one fixture, one account and one runner location at one time ([method](https://alidaram99.github.io/canaryindex/method/)).
+
+## FAQ
+
+### Does a server being in the official MCP Registry mean it works?
+
+No. The registry removes completely broken servers when they are found, but it does not test entries and does not remove buggy ones. Test the server yourself before an agent depends on it.
+
+### Is a reliable MCP server also a safe one?
+
+No. Reliability says the server answered correctly when called. Whether to trust it with your data and credentials is a separate security review.
+
+### Which MCP server should my agent use for PDF-to-Markdown or transcription?
+
+Check CanaryIndex's `recommendations.json`. If the list for your category is empty, as it was in the latest run, no tool currently has public passing evidence there. Run your own representative call before relying on one.
+
+## Related
+
+- Up: [all guides on this site](https://alidaram99.github.io/api-alternatives/)
+- Next: [stop agents claiming "done" without evidence](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) (DoneLatch)
+- **[Open the CanaryIndex scorecards](https://alidaram99.github.io/canaryindex/)** · [method](https://alidaram99.github.io/canaryindex/method/)
 
 
 ---
@@ -1063,14 +1300,16 @@ Open the Actor on the Apify Store, then copy its Standby URL and your token: **[
 
 ---
 
-# Perspective API shutdown checklist: migrate before Dec 31, 2026
+# Perspective API shutdown: replacement checklist (2026)
 
 URL: https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/
 
 
-**Google's Perspective API stops after December 31, 2026, and Google offers no migration support, so every integration has to move before then** ([perspectiveapi.com](https://perspectiveapi.com/)). This checklist takes you from "where do we even call it?" to a tested cutover, whichever replacement you choose.
+**Google says Perspective API access continues only until December 31, 2026, and it stopped accepting new usage and quota requests in February 2026. Inventory the attributes and thresholds you rely on, compare replacements on your own comments in shadow mode, and cut over well before the deadline** ([perspectiveapi.com](https://perspectiveapi.com/)).
 
-New Perspective usage and quota requests already ended in February 2026. Treat the quota you have today as the most you will ever get.
+*Facts on this page were checked against perspectiveapi.com and the Perspective drop-in's README on October 3, 2026.*
+
+Google says it "will not be offering direct migration support", and it names no replacement. Treat the quota you have today as the most you will ever get.
 
 ## The timeline
 
@@ -1078,8 +1317,8 @@ New Perspective usage and quota requests already ended in February 2026. Treat t
 |---|---|
 | February 2026 | Google stops handling new usage and quota-increase requests |
 | Now to mid-December 2026 | Your window to inventory, choose, test and cut over |
-| December 31, 2026 | Last day of service ("no longer be in service after 2026") |
-| January 1, 2027 | Calls to `commentanalyzer.googleapis.com` fail |
+| December 31, 2026 | Last day of service ("The service will remain active until December 31, 2026") |
+| January 1, 2027 | Expect calls to `commentanalyzer.googleapis.com` to fail (Google has not said how) |
 
 ## Checklist
 
@@ -1100,9 +1339,9 @@ New Perspective usage and quota requests already ended in February 2026. Treat t
 
 | If you need… | Choose |
 |---|---|
-| No code changes; same request and JSON | A wire-compatible drop-in such as the [Perspective drop-in on Apify](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) ($1 per 1,000 comments) |
+| No code changes; same request and JSON | A wire-compatible drop-in such as the [Perspective drop-in on Apify](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) ($1 per 1,000 comments; 7 attributes, 7 languages, `PROBABILITY` scores only) |
 | Free, and you can rewrite the call and re-tune | OpenAI's moderation endpoint (`omni-moderation-latest`, free) |
-| You already run on Azure | Azure AI Content Safety (free tier 5,000 text records a month) |
+| You already run on Azure | Azure AI Content Safety (free F0 tier of 5,000 transactions a month; see [what changes from Content Moderator](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/)) |
 | Full control, no third party | Self-host the open [Detoxify](https://github.com/unitaryai/detoxify) models |
 
 Only the first option keeps the Perspective request and response. The others use different categories and score scales, so thresholds and stored data need re-mapping.
@@ -1119,6 +1358,8 @@ Only the first option keeps the Perspective request and response. The others use
 - Run both side by side (shadow mode) for a week if you can.
 - Switch before mid-December, not on December 31: holiday change freezes and the final-day rush are real risks.
 - Keep the old code path behind a flag until January, then delete it.
+- Write down a rollback: which flag flips back, who decides, and which metric triggers it (for example, the hide rate moving more than you accept).
+- Keep the shadow-test results (sample, thresholds, agreement rate, date) with the change, so the decision can be audited later.
 
 ### 6. After January 1, 2027
 
@@ -1141,11 +1382,11 @@ Full curl, Python and Node.js examples are on the [Perspective API replacement p
 
 ### When exactly does the Perspective API stop working?
 
-Google says the API will no longer be in service after 2026, meaning after December 31, 2026. Plan for requests to fail from January 1, 2027.
+Google says "The service will remain active until December 31, 2026." Plan for requests to fail from January 1, 2027.
 
 ### Can I still request a Perspective API key or more quota?
 
-No. Google handled usage and quota requests only until February 2026.
+No. Google says usage and increased-quota requests were addressed only until February 2026, and it no longer accepts new requests.
 
 ### Do I have to change my code to replace Perspective?
 
@@ -1158,6 +1399,12 @@ No replacement reproduces Google's private models exactly. Open Detoxify models 
 ### What happens if I do nothing?
 
 From January 1, 2027, calls to the Perspective API fail. Depending on your error handling, comments may then be published without screening or not published at all.
+
+## Related
+
+- Up: [all retiring-API guides](https://alidaram99.github.io/api-alternatives/)
+- Next: [Azure Content Moderator to Content Safety](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/)
+- **[Keep the Perspective request on Apify](https://apify.com/dropin-apis/perspective-compat)** ($1 per 1,000 comments)
 
 
 ---
@@ -1367,7 +1614,7 @@ MP3 (default), Opus, AAC, FLAC, WAV and headerless PCM (signed 16-bit little-end
 
 ---
 
-# whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps
+# whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps
 
 URL: https://alidaram99.github.io/api-alternatives/whisper-1-alternative/
 
@@ -1379,10 +1626,10 @@ The same OpenAI notice also removes `gpt-4o-transcribe`, `gpt-4o-mini-transcribe
 ## What changes on February 26, 2027
 
 - Requests with `model="whisper-1"` to `https://api.openai.com/v1/audio/transcriptions` and `/v1/audio/translations` stop working.
-- OpenAI's [speech-to-text guide](https://developers.openai.com/api/docs/guides/speech-to-text) documents these features **only for whisper-1**:
-  - `timestamp_granularities[]` (word and segment timestamps);
-  - the `srt`, `vtt` and `verbose_json` response formats;
-  - the `/v1/audio/translations` endpoint (any language → English).
+- OpenAI's documentation ties these features to whisper-1:
+  - `timestamp_granularities[]` (word and segment timestamps): "only supported for whisper-1" ([speech-to-text guide](https://developers.openai.com/api/docs/guides/speech-to-text));
+  - the `srt`, `vtt` and `verbose_json` response formats: the API reference says `json` is the only format for `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`, and lists none of these for `gpt-transcribe` ([details](https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/));
+  - the `/v1/audio/translations` endpoint (any language → English), which the guide uses with whisper-1.
 - Subtitle generators, caption pipelines and tools that align words to video need a replacement for those features, not just a new model name.
 
 ## The minimal migration: base_url and api_key only
@@ -1522,6 +1769,76 @@ All 99 Whisper languages, with auto-detection. Passing `language` (ISO-639-1) im
 ## Get started
 
 **[whisper-1 drop-in on Apify](https://apify.com/dropin-apis/whisper-compat)**: copy the Standby URL into `base_url` and use your Apify token as `api_key`.
+
+
+---
+
+# Does whisper-1 retirement break SRT and VTT output?
+
+URL: https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/
+
+
+**It can. OpenAI removes `whisper-1` on February 26, 2027. Its API reference lists `json` as the only response format for `gpt-4o-transcribe` and `gpt-4o-mini-transcribe`, and its guide documents word timestamps only for `whisper-1`. Test `srt`, `vtt` and timestamps on the replacement before you change the model name. If you need the exact whisper-1 request and output, point the OpenAI SDK at a whisper-1-compatible endpoint, or use a URL-to-subtitles tool when your input is a public media file.**
+
+*Facts on this page were checked against OpenAI's deprecations page, speech-to-text guide and API reference, and the two Actors' READMEs, on October 3, 2026.*
+
+## What OpenAI's documentation says
+
+- **Removal date.** On August 26, 2026, OpenAI notified developers that `whisper-1`, `gpt-4o-transcribe`, `gpt-4o-mini-transcribe` and `gpt-4o-transcribe-diarize` will be removed on February 26, 2027. It recommends `gpt-transcribe` or `gpt-live-transcribe` ([deprecations](https://developers.openai.com/api/docs/deprecations)).
+- **Formats by model.** The transcription reference lists `json`, `text`, `srt`, `verbose_json`, `vtt` and `diarized_json`. "For gpt-4o-transcribe and gpt-4o-mini-transcribe, the only supported format is json". `gpt-4o-transcribe-diarize` supports `json`, `text` and `diarized_json`. The reference does not list subtitle formats for `gpt-transcribe`.
+- **Word timestamps.** "The timestamp_granularities[] parameter is only supported for whisper-1", and it requires `response_format=verbose_json` ([speech-to-text guide](https://developers.openai.com/api/docs/guides/speech-to-text)).
+- **Translation.** The guide uses `/v1/audio/translations` with `whisper-1`.
+
+Developers already hit subtitle problems with whisper-1 itself, for example SRT generation and VTT timestamps that do not line up ([Stack Overflow](https://stackoverflow.com/questions/76041231/openai-speech-to-text-api-not-giving-correct-timestamp-in-vtt-file)). A migration is a good time to test those outputs properly rather than assume them.
+
+## What to test before you switch
+
+| You use | Check on the replacement |
+|---|---|
+| `response_format=srt` or `vtt` | Is the format accepted? Do cue boundaries and timing match your player and caption pipeline? |
+| `verbose_json` with `timestamp_granularities[]=word` | Are word timestamps available at all? If not, what replaces karaoke captions, search-in-audio or editing tools? |
+| `/v1/audio/translations` | Is there an equivalent path to English, or do you need a separate translation step? |
+| Language detection and the `language` field | Same language codes, and the same behavior on mixed-language audio? |
+| Error handling | Do error codes and messages still match what your code parses? |
+
+Run a handful of your real files through both before changing production. A sample that matches on clean speech can still differ on noise, music or accents.
+
+## Two ways to keep subtitles working
+
+| Your input | Option | Output | Price |
+|---|---|---|---|
+| You send audio files through the OpenAI SDK | [whisper-1-compatible endpoint](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/): keep `model="whisper-1"`, change `base_url` and `api_key` | `json`, `text`, `srt`, `vtt`, `verbose_json` with word and segment timestamps; `/v1/audio/translations` | $0.006 per minute, billed per started 15 s |
+| You have a direct public URL to a media file | [Media URL transcriber](https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/): send the URL, get every format back in one row | `text`, `segments`, `srt`, `vtt` (segment timestamps, not word timestamps) | $0.006/min (`base`) or $0.014/min (`small`) |
+
+Both run the open Whisper models in 99 languages, not OpenAI's hosted models. Results are close to whisper-1 on clean speech but not identical:
+- The compatible endpoint runs Whisper *small*, which measured about 4% word error on clean English (LibriSpeech). It accepts up to 25 MB and 10 minutes per file.
+- The URL transcriber accepts up to 1 GB per file, and up to 180 minutes with `maxMinutesPerFile`. It does not download from YouTube, TikTok or other platform pages.
+
+```diff
+- client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
++ client = OpenAI(base_url="https://dropin-apis--whisper-compat.apify.actor/v1", api_key=os.environ["APIFY_TOKEN"])
+  srt = client.audio.transcriptions.create(model="whisper-1", file=f, response_format="srt")
+```
+
+## FAQ
+
+### Will my SRT and VTT code keep working after February 26, 2027?
+
+Not with `whisper-1` on OpenAI, because the model is removed that day. `gpt-4o-transcribe` and `gpt-4o-mini-transcribe` only return `json`, and are removed the same day. Test subtitle output on `gpt-transcribe`, or keep the whisper-1 request on a compatible endpoint.
+
+### Does gpt-transcribe support word timestamps?
+
+OpenAI's speech-to-text guide documents `timestamp_granularities[]` only for `whisper-1`. Check the current guide and test before you rely on word timestamps with another model.
+
+### Is a whisper-1-compatible endpoint the same model as whisper-1?
+
+No. It keeps the request and the response format. The transcription comes from open Whisper models, so the words can differ on difficult audio.
+
+## Related
+
+- Up: [every OpenAI transcription model removed on Feb 26, 2027](https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/)
+- Next: [whisper-1 replacement with the same API](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/)
+- **[Keep whisper-1 SRT and VTT on Apify](https://apify.com/dropin-apis/whisper-compat)**
 
 
 ---

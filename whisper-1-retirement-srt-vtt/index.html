@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does whisper-1 retirement break SRT and VTT output?</title>
+<meta name="description" content="whisper-1 is removed Feb 26, 2027. OpenAI documents SRT, VTT and word timestamps for whisper-1 only. Test them on gpt-transcribe or keep a compatible endpoint.">
+<meta name="keywords" content="whisper-1 deprecated srt, whisper-1 replacement vtt, openai transcription migration subtitles, gpt-transcribe srt, whisper-1 word timestamps replacement, response_format srt gpt-4o-transcribe">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Does whisper-1 retirement break SRT and VTT output?">
+<meta property="og:description" content="whisper-1 is removed Feb 26, 2027. OpenAI documents SRT, VTT and word timestamps for whisper-1 only. Test them on gpt-transcribe or keep a compatible endpoint.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenAI whisper-1 Alternative — Speech-to-Text API","description":"whisper-1 is removed Feb 26, 2027. OpenAI documents SRT, VTT and word timestamps for whisper-1 only. Test them on gpt-transcribe or keep a compatible endpoint.","url":"https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: 15 seconds of audio"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Does the whisper-1 retirement break SRT and VTT output?","description":"whisper-1 is removed Feb 26, 2027. OpenAI documents SRT, VTT and word timestamps for whisper-1 only. Test them on gpt-transcribe or keep a compatible endpoint.","url":"https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Will my SRT and VTT code keep working after February 26, 2027?","acceptedAnswer":{"@type":"Answer","text":"Not with whisper-1 on OpenAI, because the model is removed that day. gpt-4o-transcribe and gpt-4o-mini-transcribe only return json, and are removed the same day. Test subtitle output on gpt-transcribe, or keep the whisper-1 request on a compatible endpoint."}},{"@type":"Question","name":"Does gpt-transcribe support word timestamps?","acceptedAnswer":{"@type":"Answer","text":"OpenAI's speech-to-text guide documents timestamp_granularities[] only for whisper-1. Check the current guide and test before you rely on word timestamps with another model."}},{"@type":"Question","name":"Is a whisper-1-compatible endpoint the same model as whisper-1?","acceptedAnswer":{"@type":"Answer","text":"No. It keeps the request and the response format. The transcription comes from open Whisper models, so the words can differ on difficult audio."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Does whisper-1 retirement break SRT and VTT output?","item":"https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" class="active" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Does the whisper-1 retirement break SRT and VTT output?</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  <p class="deadline">⏳ 146 days left — the old API shuts down February 26, 2027.</p>
+  <p><strong>It can. OpenAI removes <code>whisper-1</code> on February 26, 2027. Its API reference lists <code>json</code> as the only response format for <code>gpt-4o-transcribe</code> and <code>gpt-4o-mini-transcribe</code>, and its guide documents word timestamps only for <code>whisper-1</code>. Test <code>srt</code>, <code>vtt</code> and timestamps on the replacement before you change the model name. If you need the exact whisper-1 request and output, point the OpenAI SDK at a whisper-1-compatible endpoint, or use a URL-to-subtitles tool when your input is a public media file.</strong></p>
+<p><em>Facts on this page were checked against OpenAI&#39;s deprecations page, speech-to-text guide and API reference, and the two Actors&#39; READMEs, on October 3, 2026.</em></p>
+<h2 id="what-openais-documentation-says">What OpenAI&#39;s documentation says</h2>
+<ul><li><strong>Removal date.</strong> On August 26, 2026, OpenAI notified developers that <code>whisper-1</code>, <code>gpt-4o-transcribe</code>, <code>gpt-4o-mini-transcribe</code> and <code>gpt-4o-transcribe-diarize</code> will be removed on February 26, 2027. It recommends <code>gpt-transcribe</code> or <code>gpt-live-transcribe</code> (<a href="https://developers.openai.com/api/docs/deprecations">deprecations</a>).</li><li><strong>Formats by model.</strong> The transcription reference lists <code>json</code>, <code>text</code>, <code>srt</code>, <code>verbose_json</code>, <code>vtt</code> and <code>diarized_json</code>. &quot;For gpt-4o-transcribe and gpt-4o-mini-transcribe, the only supported format is json&quot;. <code>gpt-4o-transcribe-diarize</code> supports <code>json</code>, <code>text</code> and <code>diarized_json</code>. The reference does not list subtitle formats for <code>gpt-transcribe</code>.</li><li><strong>Word timestamps.</strong> &quot;The timestamp_granularities[] parameter is only supported for whisper-1&quot;, and it requires <code>response_format=verbose_json</code> (<a href="https://developers.openai.com/api/docs/guides/speech-to-text">speech-to-text guide</a>).</li><li><strong>Translation.</strong> The guide uses <code>/v1/audio/translations</code> with <code>whisper-1</code>.</li></ul>
+<p>Developers already hit subtitle problems with whisper-1 itself, for example SRT generation and VTT timestamps that do not line up (<a href="https://stackoverflow.com/questions/76041231/openai-speech-to-text-api-not-giving-correct-timestamp-in-vtt-file">Stack Overflow</a>). A migration is a good time to test those outputs properly rather than assume them.</p>
+<h2 id="what-to-test-before-you-switch">What to test before you switch</h2>
+<div class="table-wrap"><table><thead><tr><th>You use</th><th>Check on the replacement</th></tr></thead><tbody><tr><td><code>response_format=srt</code> or <code>vtt</code></td><td>Is the format accepted? Do cue boundaries and timing match your player and caption pipeline?</td></tr><tr><td><code>verbose_json</code> with <code>timestamp_granularities[]=word</code></td><td>Are word timestamps available at all? If not, what replaces karaoke captions, search-in-audio or editing tools?</td></tr><tr><td><code>/v1/audio/translations</code></td><td>Is there an equivalent path to English, or do you need a separate translation step?</td></tr><tr><td>Language detection and the <code>language</code> field</td><td>Same language codes, and the same behavior on mixed-language audio?</td></tr><tr><td>Error handling</td><td>Do error codes and messages still match what your code parses?</td></tr></tbody></table></div>
+<p>Run a handful of your real files through both before changing production. A sample that matches on clean speech can still differ on noise, music or accents.</p>
+<h2 id="two-ways-to-keep-subtitles-working">Two ways to keep subtitles working</h2>
+<div class="table-wrap"><table><thead><tr><th>Your input</th><th>Option</th><th>Output</th><th>Price</th></tr></thead><tbody><tr><td>You send audio files through the OpenAI SDK</td><td><a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1-compatible endpoint</a>: keep <code>model=&quot;whisper-1&quot;</code>, change <code>base_url</code> and <code>api_key</code></td><td><code>json</code>, <code>text</code>, <code>srt</code>, <code>vtt</code>, <code>verbose_json</code> with word and segment timestamps; <code>/v1/audio/translations</code></td><td>$0.006 per minute, billed per started 15 s</td></tr><tr><td>You have a direct public URL to a media file</td><td><a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/">Media URL transcriber</a>: send the URL, get every format back in one row</td><td><code>text</code>, <code>segments</code>, <code>srt</code>, <code>vtt</code> (segment timestamps, not word timestamps)</td><td>$0.006/min (<code>base</code>) or $0.014/min (<code>small</code>)</td></tr></tbody></table></div>
+<p>Both run the open Whisper models in 99 languages, not OpenAI&#39;s hosted models. Results are close to whisper-1 on clean speech but not identical:</p>
+<ul><li>The compatible endpoint runs Whisper <em>small</em>, which measured about 4% word error on clean English (LibriSpeech). It accepts up to 25 MB and 10 minutes per file.</li><li>The URL transcriber accepts up to 1 GB per file, and up to 180 minutes with <code>maxMinutesPerFile</code>. It does not download from YouTube, TikTok or other platform pages.</li></ul>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- client = OpenAI(api_key=os.environ[&quot;OPENAI_API_KEY&quot;])
++ client = OpenAI(base_url=&quot;https://dropin-apis--whisper-compat.apify.actor/v1&quot;, api_key=os.environ[&quot;APIFY_TOKEN&quot;])
+  srt = client.audio.transcriptions.create(model=&quot;whisper-1&quot;, file=f, response_format=&quot;srt&quot;)</code></pre></div>
+<h2 id="faq">FAQ</h2>
+<h3 id="will-my-srt-and-vtt-code-keep-working-after-february-26-2027">Will my SRT and VTT code keep working after February 26, 2027?</h3>
+<p>Not with <code>whisper-1</code> on OpenAI, because the model is removed that day. <code>gpt-4o-transcribe</code> and <code>gpt-4o-mini-transcribe</code> only return <code>json</code>, and are removed the same day. Test subtitle output on <code>gpt-transcribe</code>, or keep the whisper-1 request on a compatible endpoint.</p>
+<h3 id="does-gpt-transcribe-support-word-timestamps">Does gpt-transcribe support word timestamps?</h3>
+<p>OpenAI&#39;s speech-to-text guide documents <code>timestamp_granularities[]</code> only for <code>whisper-1</code>. Check the current guide and test before you rely on word timestamps with another model.</p>
+<h3 id="is-a-whisper-1-compatible-endpoint-the-same-model-as-whisper-1">Is a whisper-1-compatible endpoint the same model as whisper-1?</h3>
+<p>No. It keeps the request and the response format. The transcription comes from open Whisper models, so the words can differ on difficult audio.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/">every OpenAI transcription model removed on Feb 26, 2027</a></li><li>Next: <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1 replacement with the same API</a></li><li><strong><a href="https://apify.com/dropin-apis/whisper-compat">Keep whisper-1 SRT and VTT on Apify</a></strong></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

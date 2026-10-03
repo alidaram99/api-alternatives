@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Which MCP server actually works today? How to check</title>
+<meta name="description" content="A registry listing proves an MCP server can be found, not that it works. Run one real tool call, record the result, and keep &quot;failed&quot; apart from &quot;not observed&quot;.">
+<meta name="keywords" content="mcp server reliability, working mcp servers, mcp server status, is this mcp server working, mcp registry quality, test mcp server tools/call, ai agent tool reliability scorecard">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Which MCP server actually works today? How to check">
+<meta property="og:description" content="A registry listing proves an MCP server can be found, not that it works. Run one real tool call, record the result, and keep &quot;failed&quot; apart from &quot;not observed&quot;.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Which MCP server actually works today?","description":"A registry listing proves an MCP server can be found, not that it works. Run one real tool call, record the result, and keep \"failed\" apart from \"not observed\".","url":"https://alidaram99.github.io/api-alternatives/mcp-server-reliability/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/mcp-server-reliability/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does a server being in the official MCP Registry mean it works?","acceptedAnswer":{"@type":"Answer","text":"No. The registry removes completely broken servers when they are found, but it does not test entries and does not remove buggy ones. Test the server yourself before an agent depends on it."}},{"@type":"Question","name":"Is a reliable MCP server also a safe one?","acceptedAnswer":{"@type":"Answer","text":"No. Reliability says the server answered correctly when called. Whether to trust it with your data and credentials is a separate security review."}},{"@type":"Question","name":"Which MCP server should my agent use for PDF-to-Markdown or transcription?","acceptedAnswer":{"@type":"Answer","text":"Check CanaryIndex's recommendations.json. If the list for your category is empty, as it was in the latest run, no tool currently has public passing evidence there. Run your own representative call before relying on one."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Which MCP server actually works today? How to check","item":"https://alidaram99.github.io/api-alternatives/mcp-server-reliability/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" class="active" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Which MCP server actually works today?</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>A listing in an MCP registry shows that a server can be found. It does not show that the server connects, authenticates and answers a real tool call today, and the official registry says to assume minimal-to-no moderation. To know whether it works, run one representative call yourself, record when and how, and keep &quot;it failed&quot; separate from &quot;we could not run it&quot;. For the two tool categories it covers, <a href="https://alidaram99.github.io/canaryindex/">CanaryIndex</a> publishes exactly that kind of dated, raw evidence.</strong></p>
+<p><em>Facts on this page were checked against the linked sources and CanaryIndex&#39;s published data on October 3, 2026.</em></p>
+<h2 id="what-a-registry-listing-does-and-does-not-tell-you">What a registry listing does and does not tell you</h2>
+<ul><li><strong>The official MCP Registry is permissive by design.</strong> Its moderation policy says: &quot;The MCP Registry is quite permissive! We only remove illegal content, malware, spam, and completely broken servers.&quot; It also says consumers &quot;should assume minimal-to-no moderation&quot;. It does not remove &quot;low-quality or buggy servers&quot; or servers with security vulnerabilities (<a href="https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/moderation-policy.mdx">moderation policy</a>).</li><li><strong>Choosing a server is your responsibility.</strong> MCP&#39;s security policy says &quot;the decision to connect to and use a server rests with the user or administrator&quot; (<a href="https://github.com/modelcontextprotocol/modelcontextprotocol/blob/main/SECURITY.md">SECURITY.md</a>).</li><li><strong>Entries can be listed but unusable.</strong> A client developer who validated registry entries found that &quot;about half of the servers have no configuration&quot;. Of those that do, he found &quot;only about a third&quot; produce a valid server configuration (<a href="https://github.com/modelcontextprotocol/registry/discussions/635">registry discussion #635</a>, October 2025).</li><li><strong>Catalogs carry broken entries too.</strong> Open issues in Docker&#39;s MCP catalog include a server that does not start (<a href="https://github.com/docker/mcp-registry/issues/1720">#1720</a>), an entry whose SSE endpoint returns HTTP 410 (<a href="https://github.com/docker/mcp-registry/issues/4735">#4735</a>), and source links that return 404 (<a href="https://github.com/docker/mcp-registry/issues/4564">#4564</a>).</li></ul>
+<h2 id="how-to-check-a-server-yourself">How to check a server yourself</h2>
+<ol><li><strong>Connect with the protocol version it speaks.</strong> Under the current MCP specification (2026-07-28), clients negotiate the version on each request. Servers on 2025-11-25 and earlier expect an <code>initialize</code> handshake first. A good client handles both (<a href="https://modelcontextprotocol.io/specification/2026-07-28/basic/versioning">versioning</a>).</li><li><strong>Authenticate the way a real user would.</strong> An open endpoint that works for you without credentials tells you nothing about the authenticated path.</li><li><strong>Call <code>tools/list</code></strong> and confirm that the tool you need is there, with the input schema you expect (<a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">tools</a>).</li><li><strong>Make one representative <code>tools/call</code></strong> with an input whose correct answer you know. A JSON-RPC error is a protocol failure. A result with <code>isError: true</code> is a tool failure. A successful result can still be wrong, so compare it with the expected answer.</li><li><strong>Record the date, client, network location and account you used, and repeat.</strong> One success is an observation, not a reliability figure.</li></ol>
+<p>The official <a href="https://github.com/modelcontextprotocol/inspector">MCP Inspector</a> (<code>npx @modelcontextprotocol/inspector --cli</code>) is a scriptable client for exactly these calls.</p>
+<h2 id="three-outcomes-not-two">Three outcomes, not two</h2>
+<div class="table-wrap"><table><thead><tr><th>Outcome</th><th>Meaning</th><th>Counts against the tool?</th></tr></thead><tbody><tr><td><strong>Passed</strong></td><td>The call completed and the output met the expected answer</td><td>No</td></tr><tr><td><strong>Failed</strong></td><td>The call completed but returned an error or a wrong answer</td><td>Yes</td></tr><tr><td><strong>Failed to observe</strong></td><td>The checker could not run the call: plan limits, credentials, rate limits or its own network</td><td><strong>No.</strong> It says nothing about the tool.</td></tr></tbody></table></div>
+<p>Merging the last two is the most common way a scorecard misleads.</p>
+<h2 id="what-canaryindex-publishes-today">What CanaryIndex publishes today</h2>
+<p>CanaryIndex is a narrow, public scorecard, not an MCP directory:</p>
+<ul><li><strong>What it covers:</strong> comparable Apify Actors in two categories, PDF text-layer to Markdown and direct audio/video URL to transcript. Apify Actors can also be called through Apify&#39;s MCP server. Each tool gets the same fixed public fixture weekly (Mondays, 08:17 UTC, on GitHub-hosted runners), under a $5 monthly budget cap.</li><li><strong>How a tool passes:</strong> when the run succeeds and the objective score reaches the category threshold. For transcripts, the threshold is 0.70, where the score is 1 − word error rate.</li><li><strong>What the latest run found:</strong> that run (October 2, 2026, 22:49 UTC) recorded 7 tools:</li></ul>
+<p>  - The publisher&#39;s own PDF tool passed with all expected tokens.   - The publisher&#39;s own transcriber completed but did <strong>not</strong> pass (word error rate 0.4211, score 0.58).   - All 5 third-party Actors are <strong>failed to observe</strong>. Apify returned HTTP 403 because the publisher&#39;s plan cannot run other publishers&#39; public Actors. That is a limit of the checker&#39;s account, not a failure of those tools.</p>
+<ul><li><strong>Recommendations are currently empty.</strong> A recommendation needs a current pass <em>and</em> a public listing, and nothing met both at that run. Read it yourself from <a href="https://alidaram99.github.io/canaryindex/api/recommendations.json">recommendations.json</a> or <a href="https://alidaram99.github.io/canaryindex/data/latest.json">the raw latest observation</a>.</li><li><strong>What it does not certify:</strong> security, privacy, legal compliance, universal correctness or future availability. Its observations come from one fixture, one account and one runner location at one time (<a href="https://alidaram99.github.io/canaryindex/method/">method</a>).</li></ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-a-server-being-in-the-official-mcp-registry-mean-it-works">Does a server being in the official MCP Registry mean it works?</h3>
+<p>No. The registry removes completely broken servers when they are found, but it does not test entries and does not remove buggy ones. Test the server yourself before an agent depends on it.</p>
+<h3 id="is-a-reliable-mcp-server-also-a-safe-one">Is a reliable MCP server also a safe one?</h3>
+<p>No. Reliability says the server answered correctly when called. Whether to trust it with your data and credentials is a separate security review.</p>
+<h3 id="which-mcp-server-should-my-agent-use-for-pdf-to-markdown-or-transcription">Which MCP server should my agent use for PDF-to-Markdown or transcription?</h3>
+<p>Check CanaryIndex&#39;s <code>recommendations.json</code>. If the list for your category is empty, as it was in the latest run, no tool currently has public passing evidence there. Run your own representative call before relying on one.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/">all guides on this site</a></li><li>Next: <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">stop agents claiming &quot;done&quot; without evidence</a> (DoneLatch)</li><li><strong><a href="https://alidaram99.github.io/canaryindex/">Open the CanaryIndex scorecards</a></strong> · <a href="https://alidaram99.github.io/canaryindex/method/">method</a></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stop AI coding agents claiming &quot;done&quot; without evidence</title>
+<meta name="description" content="An agent&#39;s &quot;done&quot; counts only if your checks ran after its last edit and can catch a real fault. Enforce it in Claude Code, Codex, Gemini CLI, Cursor.">
+<meta name="keywords" content="ai coding agent says done without testing, require claude code to run tests before stopping, codex verification hook, agent completion evidence, claude code stop hook tests, negative control test">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Stop AI coding agents claiming &quot;done&quot; without evidence">
+<meta property="og:description" content="An agent&#39;s &quot;done&quot; counts only if your checks ran after its last edit and can catch a real fault. Enforce it in Claude Code, Codex, Gemini CLI, Cursor.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Stop coding agents from claiming \"done\" without evidence","description":"An agent's \"done\" counts only if your checks ran after its last edit and can catch a real fault. Enforce it in Claude Code, Codex, Gemini CLI, Cursor.","url":"https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I make Claude Code run the tests before it says it is done?","acceptedAnswer":{"@type":"Answer","text":"Add a Stop hook that runs a verifier and blocks the stop when evidence is missing. DoneLatch's Claude Code plugin does this. It requires a passing run and faultcheck for the current files before verify-done accepts."}},{"@type":"Question","name":"Is a passing test suite enough evidence?","acceptedAnswer":{"@type":"Answer","text":"Not on its own. The tests must have run after the last change, and at least one of them must fail when the behavior you care about is broken. A check that cannot fail is not evidence."}},{"@type":"Question","name":"Does this replace code review or mutation testing?","acceptedAnswer":{"@type":"Answer","text":"No. It is a small, explicit completion gate for agent workflows. Full mutation testing, independent review and production monitoring still have their place."}},{"@type":"Question","name":"Can a determined agent get around it?","acceptedAnswer":{"@type":"Answer","text":"Yes, if it runs as your user and sets out to evade the check. Treat the hook as a guardrail for cooperative agents. Use OS-level isolation and a CI acceptance step for agents you do not trust."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Stop AI coding agents claiming \"done\" without evidence","item":"https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" class="active" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Stop coding agents from claiming &quot;done&quot; without evidence</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>A coding agent&#39;s &quot;done&quot; is only evidence when the checks you chose ran after its last change and their results are tied to that exact state of the code. <a href="https://github.com/alidaram99/donelatch">DoneLatch</a>, a free MIT tool for Claude Code, Codex, Gemini CLI and Cursor, refuses acceptance until such fresh passing checks exist and a deliberate fault shows the check can actually fail.</strong></p>
+<p><em>Facts on this page were checked against the sources linked inline and the DoneLatch v0.1.2 README on October 3, 2026.</em></p>
+<h2 id="why-the-agent-said-it-passed-is-not-enough">Why &quot;the agent said it passed&quot; is not enough</h2>
+<ul><li>In Stack Overflow&#39;s 2025 Developer Survey, 66% of developers who answered the AI-frustrations question picked &quot;AI solutions that are almost right, but not quite&quot;, the most-cited answer; 45.2% picked &quot;debugging AI-generated code is more time-consuming&quot; (<a href="https://survey.stackoverflow.co/2025/ai#ai-tool-frustrations">survey</a>). These are survey answers, not a measured failure rate.</li><li>A Claude Code bug report describes the model calling work &quot;verified green&quot; and done without running the project&#39;s canonical build-and-test command (<a href="https://github.com/anthropics/claude-code/issues/63861">anthropics/claude-code#63861</a>, May 30, 2026).</li><li>A Codex report describes background tasks whose final message says a command ran, while the host shows no observable command record or real exit code (<a href="https://github.com/openai/codex/issues/34152">openai/codex#34152</a>, July 19, 2026).</li></ul>
+<p>Two different gaps show up here. The agent may not have run the check at all. Or it ran a check that cannot fail for the bug you care about.</p>
+<h2 id="the-three-things-to-require">The three things to require</h2>
+<div class="table-wrap"><table><thead><tr><th>Requirement</th><th>What it rules out</th><th>How DoneLatch does it</th></tr></thead><tbody><tr><td><strong>Fresh:</strong> the checks ran after the last relevant change</td><td>&quot;Tests passed&quot; from before the final edit</td><td>Each receipt binds the Git HEAD, watched file names, SHA-256 content hashes, modes and the config hash. Any later change makes it stale.</td></tr><tr><td><strong>Recorded:</strong> results come from the tool, not the agent&#39;s summary</td><td>A narrative of success with no command behind it</td><td><code>run</code> executes the approved commands itself and writes a signed receipt with their results and output</td></tr><tr><td><strong>Sensitive:</strong> the check can detect a representative fault</td><td>A green test that would also pass with the feature broken</td><td><code>faultcheck</code> injects a fault you define into a temporary copy and requires the check to fail with your declared marker and exit code</td></tr></tbody></table></div>
+<p>The third row is a small negative control, the idea behind mutation testing. DoneLatch&#39;s demo shows why it matters. A persistence test that only checks <code>saveSettings() === true</code> still passes when the write is deleted, so DoneLatch refuses &quot;done&quot;. A check that reads the saved bytes catches the same fault, and DoneLatch accepts.</p>
+<h2 id="set-it-up-about-a-minute-nodejs-24">Set it up (about a minute, Node.js 24+)</h2>
+<div class="codeblock"><span class="code-lang">sh</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-sh">npx --yes github:alidaram99/donelatch#v0.1.2 init        # writes receipts.yml (does not run anything)
+# Edit receipts.yml: one trusted acceptance command and one meaningful fault.
+npx --yes github:alidaram99/donelatch#v0.1.2 trust       # HUMAN ONLY: review and type APPROVE &lt;hash&gt;
+npx --yes github:alidaram99/donelatch#v0.1.2 run
+npx --yes github:alidaram99/donelatch#v0.1.2 faultcheck
+npx --yes github:alidaram99/donelatch#v0.1.2 verify-done # exit 0 only for current, sensitive evidence</code></pre></div>
+<p>Then attach it to the agent&#39;s stop event, so the agent cannot finish its turn on stale or missing evidence:</p>
+<div class="table-wrap"><table><thead><tr><th>Agent</th><th>Hook event</th><th>Install</th></tr></thead><tbody><tr><td>Claude Code</td><td><code>Stop</code></td><td><code>claude plugin marketplace add alidaram99/donelatch</code>, then <code>claude plugin install donelatch@donelatch-marketplace</code></td></tr><tr><td>Codex</td><td><code>Stop</code></td><td><code>codex plugin marketplace add alidaram99/donelatch --ref v0.1.2</code>, then install it and trust the hook in <code>/hooks</code></td></tr><tr><td>Gemini CLI</td><td><code>AfterAgent</code></td><td><code>gemini extensions install https://github.com/alidaram99/donelatch --ref v0.1.2</code></td></tr><tr><td>Cursor</td><td><code>stop</code></td><td>manual adapter in the <a href="https://github.com/alidaram99/donelatch/blob/main/docs/AGENT-INSTALL.md">agent install guide</a></td></tr></tbody></table></div>
+<p>When evidence is missing or stale, the hook asks the agent for one correction turn. After that it reports the work as UNVERIFIED instead of looping.</p>
+<h2 id="limits">Limits</h2>
+<ul><li><strong>Humans approve the checks.</strong> <code>trust</code> runs only in an interactive terminal and records the hash of the exact configuration outside the repository. Changing <code>receipts.yml</code> requires a new approval.</li><li><strong>The approval does not cover everything.</strong> It does not pin the contents of the scripts your checks call, <code>PATH</code> resolution or the inherited environment.</li><li><strong>You choose the fault.</strong> DoneLatch does not invent a correctness oracle. A check passes this gate only for the fault you wrote down.</li><li><strong>It is a cooperative guardrail.</strong> Hooks can be disabled, skipped or time out, and then they fail open. A same-user agent that deliberately obfuscates or rewrites local files can defeat any hook-based guard, including this one. That class is out of scope. For an adversarial agent, use an OS sandbox, a container or a separate OS user. Enforce acceptance with <code>verify-done</code> in a CI step the agent cannot edit.</li><li><strong>Local signatures are not independent attestation.</strong> The same OS user can read the signing key.</li></ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="how-do-i-make-claude-code-run-the-tests-before-it-says-it-is-done">How do I make Claude Code run the tests before it says it is done?</h3>
+<p>Add a <code>Stop</code> hook that runs a verifier and blocks the stop when evidence is missing. DoneLatch&#39;s Claude Code plugin does this. It requires a passing <code>run</code> and <code>faultcheck</code> for the current files before <code>verify-done</code> accepts.</p>
+<h3 id="is-a-passing-test-suite-enough-evidence">Is a passing test suite enough evidence?</h3>
+<p>Not on its own. The tests must have run after the last change, and at least one of them must fail when the behavior you care about is broken. A check that cannot fail is not evidence.</p>
+<h3 id="does-this-replace-code-review-or-mutation-testing">Does this replace code review or mutation testing?</h3>
+<p>No. It is a small, explicit completion gate for agent workflows. Full mutation testing, independent review and production monitoring still have their place.</p>
+<h3 id="can-a-determined-agent-get-around-it">Can a determined agent get around it?</h3>
+<p>Yes, if it runs as your user and sets out to evade the check. Treat the hook as a guardrail for cooperative agents. Use OS-level isolation and a CI acceptance step for agents you do not trust.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/">all guides on this site</a></li><li>Next: <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/">stop agents installing packages that do not exist</a> (ExactGround)</li><li><strong><a href="https://github.com/alidaram99/donelatch">Get DoneLatch (free, MIT)</a></strong> · <a href="https://alidaram99.github.io/donelatch/">website</a></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
