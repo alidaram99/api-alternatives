@@ -14,7 +14,7 @@ A rule in `CLAUDE.md` or `AGENTS.md` saying "never invent packages" is text the 
 ## Try it in one line
 
 ```console
-$ npx -y github:alidaram99/exactground#v0.1.2 check pypi:requests pypi:reqeusts react@99.0.0
+$ npx -y github:alidaram99/exactground#v0.1.3 check pypi:requests pypi:reqeusts react@99.0.0
 OK      pypi:requests
 BLOCK   pypi:reqeusts — "reqeusts" does not exist on PyPI; did you mean "requests"? (it is 1 edit away)
 BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest is 19.3.0)
@@ -23,10 +23,12 @@ BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest i
 ## Install it in your agent
 
 - **Claude Code:** `claude plugin marketplace add alidaram99/exactground`, then `claude plugin install exactground@exactground-marketplace`.
-- **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.2`, then trust the hook in `/hooks`.
+- **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.3`, then trust the hook in `/hooks`.
 - **Gemini CLI and Cursor:** `exactground init gemini --write` or `exactground init cursor --write` in your project.
 
 Installs hidden inside `node -e`, `python -c`, `$(...)` or `eval` cannot be checked, so the hook denies them. If the registry or the checker fails, it denies too.
+
+**Threat model, plainly:** ExactGround stops an agent that hallucinates or mistypes a package name in a normal install command. It is a cooperative guardrail, not a sandbox: an agent that deliberately tries to evade it (by writing its own scripts, editing files the hooks do not see, or running code another way) can get around it. To contain an agent you do not trust, use OS or container sandboxing.
 
 Bare installs such as `npm install`, `uv sync` and `poetry install` are checked against the lockfile, so a dependency the agent wrote into `package.json` or `pyproject.toml` is caught too.
 
