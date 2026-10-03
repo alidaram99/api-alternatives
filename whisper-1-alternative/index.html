@@ -3,19 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>whisper-1 alternative with SRT, VTT and word timestamps</title>
-<meta name="description" content="OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps using the official OpenAI SDK. $0.006 per minute.">
-<meta name="keywords" content="whisper-1 alternative, whisper api srt, whisper api word timestamps, whisper-1 vs gpt-4o-transcribe, openai whisper api replacement, whisper-1 pricing">
+<title>whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps</title>
+<meta name="description" content="Yes, OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps: change base_url and api_key. $0.006 per minute.">
+<meta name="keywords" content="is whisper-1 being deprecated, whisper-1 deprecation, whisper-1 replacement, whisper-1 alternative, migrate from whisper-1, whisper api srt, whisper api word timestamps, whisper-1 vs gpt-transcribe">
 <link rel="canonical" href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="whisper-1 alternative with SRT, VTT and word timestamps">
-<meta property="og:description" content="OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps using the official OpenAI SDK. $0.006 per minute.">
+<meta property="og:title" content="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">
+<meta property="og:description" content="Yes, OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps: change base_url and api_key. $0.006 per minute.">
 <meta property="og:url" content="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">
 <meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
 <link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenAI whisper-1 Alternative — Speech-to-Text API","description":"OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps using the official OpenAI SDK. $0.006 per minute.","url":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: 15 seconds of audio"}}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this OpenAI?","acceptedAnswer":{"@type":"Answer","text":"No. It is an independent service that runs OpenAI's open-source Whisper model (MIT license) behind the same API shape."}},{"@type":"Question","name":"Do you keep my audio?","acceptedAnswer":{"@type":"Answer","text":"No. Audio is decoded in memory, transcribed and discarded."}},{"@type":"Question","name":"Languages?","acceptedAnswer":{"@type":"Answer","text":"All 99 Whisper languages, with auto-detection. Passing language (ISO-639-1) improves speed and accuracy."}}]}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"whisper-1 alternative with SRT, VTT and word timestamps","item":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenAI whisper-1 Alternative — Speech-to-Text API","description":"Yes, OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps: change base_url and api_key. $0.006 per minute.","url":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: 15 seconds of audio"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"whisper-1 is removed on 26 February 2027. Keep SRT, VTT and word timestamps.","description":"Yes, OpenAI removes whisper-1 on Feb 26, 2027. Keep /v1/audio/transcriptions with SRT, VTT and word timestamps: change base_url and api_key. $0.006 per minute.","url":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/","datePublished":"2026-10-01","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is whisper-1 being deprecated?","acceptedAnswer":{"@type":"Answer","text":"Yes. OpenAI notified developers on August 26, 2026 that whisper-1 will be removed from the API on February 26, 2027."}},{"@type":"Question","name":"What should I use instead of whisper-1?","acceptedAnswer":{"@type":"Answer","text":"OpenAI recommends gpt-transcribe (or gpt-live-transcribe for realtime). If you need whisper-1's exact API, including SRT, VTT, word timestamps and /v1/audio/translations, use a whisper-1-compatible endpoint such as this page's drop-in, and change only base_url and api_key."}},{"@type":"Question","name":"Is gpt-4o-transcribe a safe replacement for whisper-1?","acceptedAnswer":{"@type":"Answer","text":"No. OpenAI's same notice removes gpt-4o-transcribe and gpt-4o-mini-transcribe on February 26, 2027, together with whisper-1."}},{"@type":"Question","name":"How do I keep SRT and VTT subtitles after whisper-1 is removed?","acceptedAnswer":{"@type":"Answer","text":"Point the OpenAI SDK at a whisper-1-compatible endpoint and keep response_format=\"srt\" or \"vtt\". This page's drop-in returns the same SRT and VTT output as whisper-1 did."}},{"@type":"Question","name":"Will transcripts be as accurate as whisper-1?","acceptedAnswer":{"@type":"Answer","text":"Not quite. The drop-in runs the open Whisper small model, which measured about 4% word error rate on clean English, and is weaker than OpenAI's larger model on noisy audio and rare languages."}},{"@type":"Question","name":"Is this OpenAI?","acceptedAnswer":{"@type":"Answer","text":"No. It is an independent service that runs OpenAI's open-source Whisper model (MIT license) behind the same API shape."}},{"@type":"Question","name":"Do you keep my audio?","acceptedAnswer":{"@type":"Answer","text":"No. Audio is decoded in memory, transcribed and discarded."}},{"@type":"Question","name":"Which languages are supported?","acceptedAnswer":{"@type":"Answer","text":"All 99 Whisper languages, with auto-detection. Passing language (ISO-639-1) improves speed and accuracy."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps","item":"https://alidaram99.github.io/api-alternatives/whisper-1-alternative/"}]}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
 </head>
 <body>
@@ -25,10 +28,13 @@
     <nav>
         <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
         <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
-        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator Alternative: ProcessText/Screen">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
         <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
-        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API Alternative: drop-in comments:analyze">Perspective API</a>
-        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" class="active" title="whisper-1 alternative with SRT, VTT and word timestamps">whisper-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" class="active" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
         <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
     </nav>
   </div>
@@ -37,30 +43,31 @@
   <h1>whisper-1 is removed on 26 February 2027. Keep SRT, VTT and word timestamps.</h1>
   <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
   <p class="deadline">⏳ 146 days left — the old API shuts down February 26, 2027.</p>
-  <p>OpenAI&#39;s <a href="https://developers.openai.com/api/docs/deprecations">deprecations page</a> schedules <strong><code>whisper-1</code> for removal on February 26, 2027</strong>. Its successors are not drop-in. Apps built on whisper-1 features have to change: subtitles through <code>response_format=srt</code> or <code>vtt</code>, <code>timestamp_granularities[]=word</code> and <code>segment</code>, and <code>/v1/audio/translations</code>.</p>
-<p>This page shows how to keep exactly that API: <code>POST /v1/audio/transcriptions</code> and <code>/v1/audio/translations</code>, the same multipart fields, and the same <code>json</code>, <code>text</code>, <code>srt</code>, <code>vtt</code> and <code>verbose_json</code> responses. It works with the <strong>official OpenAI SDKs</strong>. You change <code>base_url</code> and <code>api_key</code>, and nothing else.</p>
-<h2 id="python-official-openai-sdk">Python: official <code>openai</code> SDK</h2>
-<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
-from openai import OpenAI
-
-client = OpenAI(
-    base_url=&quot;https://dropin-apis--whisper-compat.apify.actor/v1&quot;,   # was: default api.openai.com
-    api_key=os.environ[&quot;APIFY_TOKEN&quot;],           # your Apify token, sent as Authorization: Bearer
-)
-
-with open(&quot;armstrong.ogg&quot;, &quot;rb&quot;) as f:
-    srt = client.audio.transcriptions.create(model=&quot;whisper-1&quot;, file=f, response_format=&quot;srt&quot;)
-print(srt)
-
-with open(&quot;armstrong.ogg&quot;, &quot;rb&quot;) as f:
-    verbose = client.audio.transcriptions.create(
-        model=&quot;whisper-1&quot;, file=f, response_format=&quot;verbose_json&quot;,
-        timestamp_granularities=[&quot;word&quot;, &quot;segment&quot;],
-    )
-for w in verbose.words[:5]:
-    print(f&quot;{w.start:6.2f}-{w.end:6.2f}  {w.word}&quot;)
-print(len(verbose.segments), &quot;segments,&quot;, verbose.duration, &quot;seconds&quot;)</code></pre></div>
-<p>Real output on NASA&#39;s public-domain Apollo 11 clip (&quot;one small step&quot;):</p>
+  <p><strong>Yes: OpenAI announced on August 26, 2026 that <code>whisper-1</code> will be removed from the API on February 26, 2027, and it recommends <code>gpt-transcribe</code> or <code>gpt-live-transcribe</code> instead</strong> (<a href="https://developers.openai.com/api/docs/deprecations">OpenAI deprecations</a>). If your app depends on whisper-1&#39;s subtitle formats, word timestamps or <code>/v1/audio/translations</code>, a whisper-1-compatible endpoint such as our <a href="https://apify.com/dropin-apis/whisper-compat">whisper-1 drop-in on Apify</a> keeps that code working: you change <code>base_url</code> and <code>api_key</code> in the official OpenAI SDK, at $0.006 per minute.</p>
+<p>The same OpenAI notice also removes <code>gpt-4o-transcribe</code>, <code>gpt-4o-mini-transcribe</code> and <code>gpt-4o-transcribe-diarize</code> on the same date. See <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/">OpenAI&#39;s 2027 transcription model removals</a> for what to do with those.</p>
+<h2 id="what-changes-on-february-26-2027">What changes on February 26, 2027</h2>
+<ul><li>Requests with <code>model=&quot;whisper-1&quot;</code> to <code>https://api.openai.com/v1/audio/transcriptions</code> and <code>/v1/audio/translations</code> stop working.</li><li>OpenAI&#39;s <a href="https://developers.openai.com/api/docs/guides/speech-to-text">speech-to-text guide</a> documents these features <strong>only for whisper-1</strong>:</li></ul>
+<p>  - <code>timestamp_granularities[]</code> (word and segment timestamps);   - the <code>srt</code>, <code>vtt</code> and <code>verbose_json</code> response formats;   - the <code>/v1/audio/translations</code> endpoint (any language → English).</p>
+<ul><li>Subtitle generators, caption pipelines and tools that align words to video need a replacement for those features, not just a new model name.</li></ul>
+<h2 id="the-minimal-migration-baseurl-and-apikey-only">The minimal migration: base_url and api_key only</h2>
+<p>The new endpoint is the Actor&#39;s Standby URL plus <code>/v1</code>: <code>https://dropin-apis--whisper-compat.apify.actor/v1</code>. Use your <a href="https://console.apify.com/settings/integrations">Apify API token</a> as the API key; the OpenAI SDKs send it as <code>Authorization: Bearer …</code>, which is how Apify authenticates. Keep <code>model=&quot;whisper-1&quot;</code> and everything else.</p>
+<h3 id="python-official-openai-sdk">Python (official <code>openai</code> SDK)</h3>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">  from openai import OpenAI
+- client = OpenAI(api_key=os.environ[&quot;OPENAI_API_KEY&quot;])
++ client = OpenAI(base_url=&quot;https://dropin-apis--whisper-compat.apify.actor/v1&quot;, api_key=os.environ[&quot;APIFY_TOKEN&quot;])
+  srt = client.audio.transcriptions.create(model=&quot;whisper-1&quot;, file=open(&quot;talk.mp3&quot;, &quot;rb&quot;), response_format=&quot;srt&quot;)</code></pre></div>
+<h3 id="nodejs-official-openai-sdk">Node.js (official <code>openai</code> SDK)</h3>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">  import OpenAI from &#39;openai&#39;;
+- const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
++ const client = new OpenAI({ baseURL: &#39;https://dropin-apis--whisper-compat.apify.actor/v1&#39;, apiKey: process.env.APIFY_TOKEN });
+  const vtt = await client.audio.transcriptions.create({ model: &#39;whisper-1&#39;, file: fs.createReadStream(&#39;talk.mp3&#39;), response_format: &#39;vtt&#39; });</code></pre></div>
+<h3 id="curl">curl</h3>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- curl -s https://api.openai.com/v1/audio/transcriptions -H &quot;Authorization: Bearer $OPENAI_API_KEY&quot; \
++ curl -s https://dropin-apis--whisper-compat.apify.actor/v1/audio/transcriptions -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+    -F model=whisper-1 -F response_format=verbose_json -F &#39;timestamp_granularities[]=word&#39; -F file=@talk.mp3</code></pre></div>
+<blockquote><p>Pass the token only as <code>api_key</code>. If you append <code>?token=…</code> to <code>base_url</code>, the SDK adds the route after the query string and the request goes to the wrong URL.</p></blockquote>
+<h2 id="real-output">Real output</h2>
+<p>SRT and word timestamps from NASA&#39;s public-domain Apollo 11 clip (&quot;one small step&quot;), using the Python SDK as above:</p>
 <div class="codeblock"><span class="code-lang">text</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-text">1
 00:00:00,000 --&gt; 00:00:05,000
 I&#39;m going to step off the limb now.
@@ -79,41 +86,37 @@ One giant leap for mankind.
   4.18-  4.34  step
   4.34-  4.58  off
 3 segments, 24.11 seconds</code></pre></div>
-<p>(Armstrong said &quot;the LEM&quot;. The small model heard &quot;limb&quot;, which is the kind of error to expect, see Limits below.)</p>
-<blockquote><p>Pass the token only as <code>api_key</code>. If you append <code>?token=…</code> to <code>base_url</code>, the SDK adds the route after the query string and the request goes to the wrong URL.</p></blockquote>
-<h2 id="nodejs-official-openai-sdk">Node.js: official <code>openai</code> SDK</h2>
-<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">import fs from &#39;node:fs&#39;;
-import OpenAI from &#39;openai&#39;;
-
-const client = new OpenAI({
-  baseURL: &#39;https://dropin-apis--whisper-compat.apify.actor/v1&#39;,
-  apiKey: process.env.APIFY_TOKEN,
-});
-
-const vtt = await client.audio.transcriptions.create({
-  model: &#39;whisper-1&#39;,
-  file: fs.createReadStream(&#39;armstrong.ogg&#39;),
-  response_format: &#39;vtt&#39;,
-});
-console.log(vtt); // WEBVTT ... 00:00:15.000 --&gt; 00:00:18.000  That&#39;s one small step for man.</code></pre></div>
-<h2 id="curl-word-timestamps">curl: word timestamps</h2>
-<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s &quot;https://dropin-apis--whisper-compat.apify.actor/v1/audio/transcriptions&quot; \
-  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
-  -F model=whisper-1 \
-  -F response_format=verbose_json \
-  -F &#39;timestamp_granularities[]=word&#39; \
-  -F file=@armstrong.ogg</code></pre></div>
-<p>The response is OpenAI&#39;s <code>verbose_json</code> shape: <code>task</code>, <code>language</code> (<code>&quot;english&quot;</code>), <code>duration</code>, <code>text</code>, <code>words[]</code> (<code>word</code>, <code>start</code>, <code>end</code>) and <code>usage</code> (<code>{&quot;type&quot;:&quot;duration&quot;,&quot;seconds&quot;:25}</code>). <code>segments[]</code> is included when you request <code>segment</code> granularity, which is the default.</p>
+<p>(Armstrong said &quot;the LEM&quot;. The small model heard &quot;limb&quot;, which is the kind of error to expect; see Limits below.)</p>
+<p>The <code>verbose_json</code> response has OpenAI&#39;s shape: <code>task</code>, <code>language</code> (<code>&quot;english&quot;</code>), <code>duration</code>, <code>text</code>, <code>words[]</code> (<code>word</code>, <code>start</code>, <code>end</code>), <code>segments[]</code> and <code>usage</code> (<code>{&quot;type&quot;:&quot;duration&quot;,&quot;seconds&quot;:25}</code>).</p>
+<h2 id="your-options-compared">Your options compared</h2>
+<div class="table-wrap"><table><thead><tr><th>Option</th><th>whisper-1 request and formats (SRT, VTT, word timestamps, translations)?</th><th>Price</th><th>Notes</th></tr></thead><tbody><tr><td><strong>whisper-1 drop-in on Apify (this page)</strong></td><td><strong>Yes</strong>: official SDK, change <code>base_url</code> and <code>api_key</code></td><td><strong>$0.006/min</strong>, billed per started 15 s</td><td>Whisper <em>small</em> model (about 4% word error on clean English); up to 10 min / 25 MB per file</td></tr><tr><td>OpenAI <code>gpt-transcribe</code></td><td>OpenAI&#39;s guide documents those features only for whisper-1</td><td>$0.0045/min</td><td>OpenAI&#39;s recommended successor; more accurate model. Check its formats before relying on subtitles</td></tr><tr><td>OpenAI <code>gpt-live-transcribe</code></td><td>Realtime model; different usage</td><td>$0.017/min</td><td>For live audio</td></tr><tr><td><code>gpt-4o-transcribe</code> / <code>gpt-4o-mini-transcribe</code></td><td>No</td><td>~$0.006 / ~$0.003 per min (token-based)</td><td><strong>Also removed on February 26, 2027</strong></td></tr><tr><td>Self-host <a href="https://github.com/SYSTRAN/faster-whisper">faster-whisper</a> or <a href="https://github.com/ggml-org/whisper.cpp">whisper.cpp</a></td><td>Formats yes (your code); OpenAI-compatible API only if you add a server layer</td><td>Free (MIT) + your hardware</td><td>Any Whisper size, including large models; you run and scale it</td></tr></tbody></table></div>
+<p>OpenAI prices are from <a href="https://developers.openai.com/api/docs/pricing">OpenAI&#39;s pricing page</a> as of October 2026.</p>
 <h2 id="compatibility">Compatibility</h2>
 <div class="table-wrap"><table><thead><tr><th>Feature</th><th>Status</th></tr></thead><tbody><tr><td><code>/v1/audio/transcriptions</code>, <code>/v1/audio/translations</code>, <code>GET /v1/models</code></td><td>✅</td></tr><tr><td>Fields <code>file</code>, <code>model</code> (<code>whisper-1</code>), <code>language</code>, <code>prompt</code>, <code>response_format</code>, <code>temperature</code>, <code>timestamp_granularities[]</code></td><td>✅ Same names, defaults and validation</td></tr><tr><td><code>json</code> (+ <code>usage</code>), <code>text</code>, <code>srt</code>, <code>vtt</code>, <code>verbose_json</code> with segments and words</td><td>✅</td></tr><tr><td>OpenAI error envelope (<code>{&quot;error&quot;:{&quot;message&quot;,&quot;type&quot;,&quot;param&quot;,&quot;code&quot;}}</code>)</td><td>✅</td></tr><tr><td><code>stream</code>, <code>include</code>, <code>chunking_strategy</code>, <code>diarized_json</code>, gpt-4o / gpt-transcribe models</td><td>❌ (whisper-1 didn&#39;t support them either)</td></tr></tbody></table></div>
 <h2 id="limits-read-before-switching">Limits: read before switching</h2>
-<ul><li><strong>Model:</strong> Whisper <strong>small</strong> (multilingual) running with faster-whisper/CTranslate2 int8 on CPU, beam size 5. OpenAI&#39;s whisper-1 is the much larger Whisper V2. On clean English (LibriSpeech) we measured <strong>about 4% word error rate</strong>. Expect more errors on noisy audio, heavy accents and less common languages.</li><li><strong>Length:</strong> up to <strong>10 minutes and 25 MB per request</strong>. Longer files get <code>400 audio_too_long</code>, so split them first, for example <code>ffmpeg -i in.mp3 -f segment -segment_time 540 out%03d.mp3</code>.</li><li><strong>Speed:</strong> about 4 seconds of audio per second of compute. A 1-minute file takes about 12 s and a 10-minute file about 2.5 min. Each instance handles one file at a time. A busy instance answers <code>429 rate_limit_exceeded</code>, which the OpenAI SDKs retry automatically.</li><li><strong>Cold start:</strong> after about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds extra.</li></ul>
+<ul><li><strong>Model:</strong> Whisper <strong>small</strong> (multilingual), run with faster-whisper/CTranslate2 int8 on CPU, beam size 5. OpenAI&#39;s whisper-1 is the much larger Whisper V2.</li></ul>
+<p>  - On clean English (LibriSpeech) we measured <strong>about 4% word error rate</strong>.   - Expect more errors on noisy audio, heavy accents and less common languages.</p>
+<ul><li><strong>Length:</strong> up to <strong>10 minutes and 25 MB per request</strong>. Longer files get <code>400 audio_too_long</code>, so split them first, for example <code>ffmpeg -i in.mp3 -f segment -segment_time 540 out%03d.mp3</code>.</li><li><strong>Speed:</strong> about 4 seconds of audio per second of compute. A 1-minute file takes about 12 s and a 10-minute file about 2.5 min.</li><li><strong>Concurrency:</strong> each instance handles one file at a time. A busy instance answers <code>429 rate_limit_exceeded</code>, which the OpenAI SDKs retry automatically.</li><li><strong>Cold start:</strong> after about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds extra.</li></ul>
 <h2 id="pricing">Pricing</h2>
-<p><strong>$0.006 per minute, billed per started 15 seconds</strong> ($0.0015 per 15 s). OpenAI billed whisper-1 at $0.006 per minute rounded to the second, so the two prices match on whole 15-second blocks. A clip under 15 seconds costs $0.0015 here instead of about $0.001. Failed requests are not charged. If you set a spending cap, a file the remaining budget can&#39;t cover is refused <em>before</em> it is transcribed (<code>429 insufficient_quota</code>).</p>
+<p><strong>$0.006 per minute, billed per started 15 seconds</strong> ($0.0015 per 15 s).</p>
+<ul><li>OpenAI billed whisper-1 at $0.006 per minute rounded to the second, so the two prices match on whole 15-second blocks. A clip under 15 seconds costs $0.0015 here instead of about $0.001.</li><li>Failed requests are not charged.</li><li>If you set a spending cap, a file the remaining budget can&#39;t cover is refused <em>before</em> it is transcribed (<code>429 insufficient_quota</code>).</li></ul>
 <h2 id="faq">FAQ</h2>
-<p><strong>Is this OpenAI?</strong> No. It is an independent service that runs OpenAI&#39;s open-source Whisper model (MIT license) behind the same API shape.</p>
-<p><strong>Do you keep my audio?</strong> No. Audio is decoded in memory, transcribed and discarded.</p>
-<p><strong>Languages?</strong> All 99 Whisper languages, with auto-detection. Passing <code>language</code> (ISO-639-1) improves speed and accuracy.</p>
+<h3 id="is-whisper-1-being-deprecated">Is whisper-1 being deprecated?</h3>
+<p>Yes. OpenAI notified developers on August 26, 2026 that whisper-1 will be removed from the API on February 26, 2027.</p>
+<h3 id="what-should-i-use-instead-of-whisper-1">What should I use instead of whisper-1?</h3>
+<p>OpenAI recommends <code>gpt-transcribe</code> (or <code>gpt-live-transcribe</code> for realtime). If you need whisper-1&#39;s exact API, including SRT, VTT, word timestamps and <code>/v1/audio/translations</code>, use a whisper-1-compatible endpoint such as this page&#39;s drop-in, and change only <code>base_url</code> and <code>api_key</code>.</p>
+<h3 id="is-gpt-4o-transcribe-a-safe-replacement-for-whisper-1">Is gpt-4o-transcribe a safe replacement for whisper-1?</h3>
+<p>No. OpenAI&#39;s same notice removes <code>gpt-4o-transcribe</code> and <code>gpt-4o-mini-transcribe</code> on February 26, 2027, together with whisper-1.</p>
+<h3 id="how-do-i-keep-srt-and-vtt-subtitles-after-whisper-1-is-removed">How do I keep SRT and VTT subtitles after whisper-1 is removed?</h3>
+<p>Point the OpenAI SDK at a whisper-1-compatible endpoint and keep <code>response_format=&quot;srt&quot;</code> or <code>&quot;vtt&quot;</code>. This page&#39;s drop-in returns the same SRT and VTT output as whisper-1 did.</p>
+<h3 id="will-transcripts-be-as-accurate-as-whisper-1">Will transcripts be as accurate as whisper-1?</h3>
+<p>Not quite. The drop-in runs the open Whisper <em>small</em> model, which measured about 4% word error rate on clean English, and is weaker than OpenAI&#39;s larger model on noisy audio and rare languages.</p>
+<h3 id="is-this-openai">Is this OpenAI?</h3>
+<p>No. It is an independent service that runs OpenAI&#39;s open-source Whisper model (MIT license) behind the same API shape.</p>
+<h3 id="do-you-keep-my-audio">Do you keep my audio?</h3>
+<p>No. Audio is decoded in memory, transcribed and discarded.</p>
+<h3 id="which-languages-are-supported">Which languages are supported?</h3>
+<p>All 99 Whisper languages, with auto-detection. Passing <code>language</code> (ISO-639-1) improves speed and accuracy.</p>
 <h2 id="get-started">Get started</h2>
 <p><strong><a href="https://apify.com/dropin-apis/whisper-compat">whisper-1 drop-in on Apify</a></strong>: copy the Standby URL into <code>base_url</code> and use your Apify token as <code>api_key</code>.</p>
 </main>

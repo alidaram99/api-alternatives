@@ -161,29 +161,68 @@ curl -s -X POST "https://api.apify.com/v2/acts/<owner>~app-store-reviews/run-syn
 
 ---
 
-# Azure Content Moderator Alternative: ProcessText/Screen
+# Azure Content Moderator retirement (Mar 15, 2027): drop-in API
 
 URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/
 
 
-Microsoft's [Content Moderator overview](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview) says the service has been deprecated since February 2024 and **retires on March 15, 2027**. The product [lifecycle page](https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator) lists April 1, 2027. The suggested successor, **Azure AI Content Safety**, is a different API with a different URL, request and response (severity levels for Hate/Sexual/SelfHarm/Violence). Code that reads `Terms`, `PII` and `Classification.Category1/2/3` has to be rewritten.
+**Yes: Microsoft deprecated Azure Content Moderator in February 2024 and retires it on March 15, 2027; its successor, Azure AI Content Safety, is a different API with different requests and results** ([Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview)). To keep code that reads `Terms`, `PII` and `Classification`, point your `ProcessText/Screen` calls at a wire-compatible endpoint such as our [Content Moderator drop-in on Apify](https://apify.com/dropin-apis/content-moderator-compat): same request, same JSON, $1 per 1,000 texts.
 
-This page shows a **wire-compatible replacement for the text screen endpoint**, so that code keeps working. You call the same `POST /contentmoderator/moderate/v1.0/ProcessText/Screen` with the same query string and raw-text body, and get back the same response JSON.
+Microsoft's [lifecycle page](https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator) lists the retirement as April 1, 2027 (06:59 PT). The product notice says March 15, 2027, so plan for **March 15**. If you prefer to move to Content Safety, see [Content Moderator vs Content Safety: what changes](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/).
 
-## What changes in your code
+## What changes on March 15, 2027
 
-1. The endpoint: `https://<region>.api.cognitive.microsoft.com` becomes `https://dropin-apis--content-moderator-compat.apify.actor`.
-2. Authentication: send your [Apify API token](https://console.apify.com/settings/integrations) as `Authorization: Bearer …` or `?token=…`. An `Ocp-Apim-Subscription-Key` header is accepted and ignored.
+- Existing Content Moderator resources stop being supported. No new Content Moderator projects could be created after March 15, 2024.
+- `POST https://<region>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen` and the SDKs built on it (`Microsoft.Azure.CognitiveServices.ContentModerator`, `azure-cognitiveservices-vision-contentmoderator`) lose their service.
+- Code, stored results and dashboards that depend on `Terms`, `PII`, `Classification.Category1/2/3`, `ReviewRecommended` or `Status.Code 3000` have no equivalent in Content Safety. It returns severity levels for Hate, Sexual, Violence and SelfHarm instead.
+
+## The minimal migration: host and key only
+
+The new endpoint is the Actor's Standby URL, `https://dropin-apis--content-moderator-compat.apify.actor`. Authenticate with your [Apify API token](https://console.apify.com/settings/integrations) as `Authorization: Bearer …` (or `?token=…`). An `Ocp-Apim-Subscription-Key` header is accepted and ignored. Path, query string, raw-text body and response are unchanged.
 
 ### curl
 
+```diff
+- curl -s -X POST "https://westus.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True" \
+-   -H "Ocp-Apim-Subscription-Key: $AZURE_KEY" \
++ curl -s -X POST "https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True" \
++   -H "Authorization: Bearer $APIFY_TOKEN" \
+    -H 'Content-Type: text/plain' --data-binary 'Is this a crap email abcdef@abcd.com?'
+```
+
+### Python (`requests`)
+
+```diff
+- BASE = "https://westus.api.cognitive.microsoft.com"
+- AUTH = {"Ocp-Apim-Subscription-Key": os.environ["AZURE_KEY"]}
++ BASE = "https://dropin-apis--content-moderator-compat.apify.actor"
++ AUTH = {"Authorization": "Bearer " + os.environ["APIFY_TOKEN"]}
+  r = requests.post(f"{BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen",
+                    params={"language": "eng", "classify": "True", "PII": "True"},
+                    headers={"Content-Type": "text/plain", **AUTH}, data=text.encode("utf-8"))
+```
+
+### Node.js (`fetch`)
+
+```diff
+- const BASE = 'https://westus.api.cognitive.microsoft.com';
+- const AUTH = { 'Ocp-Apim-Subscription-Key': process.env.AZURE_KEY };
++ const BASE = 'https://dropin-apis--content-moderator-compat.apify.actor';
++ const AUTH = { Authorization: `Bearer ${process.env.APIFY_TOKEN}` };
+  const res = await fetch(`${BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True`, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain', ...AUTH }, body: text,
+  });
+```
+
+## Real output on Microsoft's own example
+
 ```bash
-curl -s -X POST "https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True&token=$APIFY_TOKEN" \
-  -H 'Content-Type: text/plain' \
+curl -s -X POST "https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True" \
+  -H "Authorization: Bearer $APIFY_TOKEN" -H 'Content-Type: text/plain' \
   --data-binary 'Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052'
 ```
 
-That is Microsoft's own documentation example. Our response matches Microsoft's published `NormalizedText`, the `Terms` entry (`crap` at Index 10) and every PII index:
+Our response matches Microsoft's published `NormalizedText`, the `Terms` entry (`crap` at Index 10) and every PII index:
 
 ```json
 {
@@ -238,40 +277,16 @@ Console.WriteLine($"Status {root.GetProperty("Status").GetProperty("Code").GetIn
 
 If you use the old `Microsoft.Azure.CognitiveServices.ContentModerator` SDK, set `client.Endpoint` to the Standby URL and pass `ServiceClientCredentials` that add the `Authorization: Bearer` header. *We tested the REST path above, not that SDK.*
 
-### Python (`requests`)
+## Your options compared
 
-```python
-import os
-import requests
+| Option | Same ProcessText/Screen request and JSON? | Price | Notes |
+|---|---|---|---|
+| **Content Moderator drop-in on Apify (this page)** | **Yes**: change host and key | **$1 per 1,000 texts** | Terms (24-language open list), PII, Classification. Category scores approximate. No custom term lists, image or video |
+| [Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview) | No: `text:analyze` returns severity levels | Free tier 5,000 text records/month (1 record = up to 1,000 characters); paid per Azure pricing | Microsoft's successor. Custom blocklists, 100+ languages. Needs a rewrite and re-tuned thresholds |
+| [OpenAI moderation](https://developers.openai.com/api/docs/guides/moderation) (`omni-moderation-latest`) | No | Free with an OpenAI account | Policy categories; no term offsets or PII |
+| Self-host: [Detoxify](https://github.com/unitaryai/detoxify) + [Microsoft Presidio](https://github.com/microsoft/presidio) for PII | No: you build the API | Free (Apache-2.0 / MIT) + your servers | Most control, most work |
 
-BASE = "https://dropin-apis--content-moderator-compat.apify.actor"
-APIFY_TOKEN = os.environ["APIFY_TOKEN"]
-
-r = requests.post(
-    f"{BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen",
-    params={"language": "eng", "classify": "True", "PII": "True"},
-    headers={"Content-Type": "text/plain", "Authorization": f"Bearer {APIFY_TOKEN}"},
-    data="This is crap, email me at someone@example.com".encode("utf-8"),
-)
-screen = r.json()
-print(screen["Status"]["Code"], screen["Classification"]["Category3"]["Score"],
-      [t["Term"] for t in screen["Terms"] or []], [e["Text"] for e in screen["PII"]["Email"]])
-# 3000 0.98 ['crap'] ['someone@example.com']
-```
-
-### Node.js (`fetch`)
-
-```js
-const BASE = 'https://dropin-apis--content-moderator-compat.apify.actor';
-const res = await fetch(`${BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'text/plain', Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
-  body: 'You are a worthless idiot',
-});
-const screen = await res.json();
-console.log(screen.Status.Code, screen.Classification.ReviewRecommended, screen.Classification.Category3.Score);
-// 3000 true 0.997
-```
+If you can rewrite the integration and re-tune thresholds, Content Safety is the supported path. The drop-in is for code, stored results and dashboards that depend on the old response format.
 
 ## What is identical, approximate, or unsupported
 
@@ -291,19 +306,127 @@ console.log(screen.Status.Code, screen.Classification.ReviewRecommended, screen.
 
 ## Pricing
 
-**$1 per 1,000 screened texts**, pay per event. Requests that fail validation are not charged. There is no subscription, and you can cap spending per run on Apify (`429 TooManyRequests` at the cap).
+**$1 per 1,000 screened texts**, pay per event.
+- Requests that fail validation are not charged.
+- There is no subscription.
+- You can cap spending per run on Apify (`429 TooManyRequests` at the cap).
 
 ## FAQ
 
-**Should I just move to Content Safety?** If you can rewrite the integration and re-tune thresholds, yes, that is a fine path. This replacement is for teams whose code, stored results and dashboards depend on the old response format.
+### Is Azure Content Moderator being retired?
 
-**Do you store text?** No. Nothing is written to disk or logged.
+Yes. Microsoft deprecated it in February 2024 and retires it on March 15, 2027. Microsoft's lifecycle table lists April 1, 2027, but the product notice says March 15, 2027, so plan for March 15.
 
-**Short non-English texts?** Latin-script text under 40 characters is treated as English. Pass `language=spa`, `language=deu` and so on to use the right profanity list.
+### What replaces Azure Content Moderator?
+
+Microsoft's replacement is Azure AI Content Safety, which uses a different API: `text:analyze` with severity levels for Hate, Sexual, Violence and SelfHarm. To keep the old `ProcessText/Screen` request and JSON, use a wire-compatible endpoint such as this page's drop-in.
+
+### How do I migrate from Azure Content Moderator without rewriting code?
+
+Change the host from `<region>.api.cognitive.microsoft.com` to the drop-in's Standby URL and send your Apify token as `Authorization: Bearer …` instead of `Ocp-Apim-Subscription-Key`. The path, query parameters, body and response JSON stay the same.
+
+### Should I just move to Content Safety?
+
+If you can rewrite the integration and re-tune thresholds, yes, that is Microsoft's supported path. This replacement is for teams whose code, stored results and dashboards depend on the old response format.
+
+### Are custom term lists supported?
+
+No. The drop-in supports the built-in profanity list (`ListId 0`), PII and classification. Custom term lists, image and video moderation are not supported.
+
+### Do you store text?
+
+No. Nothing is written to disk or logged.
+
+### How are short non-English texts handled?
+
+Latin-script text under 40 characters is treated as English. Pass `language=spa`, `language=deu` and so on to use the right profanity list.
 
 ## Get started
 
 **[Azure Content Moderator drop-in on Apify](https://apify.com/dropin-apis/content-moderator-compat)**: copy its Standby URL and your token, then change the endpoint in your code.
+
+
+---
+
+# Azure Content Moderator vs Content Safety: what changes (2027)
+
+URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/
+
+
+**Azure AI Content Safety is not a new version of Content Moderator's API: it has a different endpoint (`text:analyze`), JSON body and result (severity levels for Hate, Sexual, Violence and SelfHarm), so migrating means rewriting the call and re-mapping your thresholds** ([Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview)). Content Moderator retires on March 15, 2027. If you would rather not rewrite before then, a [wire-compatible Content Moderator replacement](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) keeps `ProcessText/Screen` working with only a host and key change.
+
+## The two requests side by side
+
+**Content Moderator (retiring):**
+
+```bash
+curl -X POST "https://<region>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True&PII=True" \
+  -H "Ocp-Apim-Subscription-Key: $KEY" -H "Content-Type: text/plain" \
+  --data-binary 'Is this a crap email abcdef@abcd.com?'
+```
+
+**Content Safety (Microsoft's replacement),** per Microsoft's [text quickstart](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text):
+
+```bash
+curl -X POST "<endpoint>/contentsafety/text:analyze?api-version=2024-09-01" \
+  -H "Ocp-Apim-Subscription-Key: $KEY" -H "Content-Type: application/json" \
+  -d '{"text": "Is this a crap email abcdef@abcd.com?", "categories": ["Hate", "Sexual", "SelfHarm", "Violence"], "outputType": "FourSeverityLevels"}'
+```
+
+Content Safety returns `categoriesAnalysis` (for example `{"category": "Hate", "severity": 2}`) and `blocklistsMatch`. Severities are `0, 2, 4, 6` (four levels) or `0–7` (eight levels).
+
+## Field-by-field mapping
+
+| Content Moderator `ProcessText/Screen` | Content Safety `text:analyze` | Notes |
+|---|---|---|
+| Raw text body (`text/plain`, `html`, `xml`, `markdown`) | JSON `{"text": "..."}` | Body format changes |
+| Query `language`, `classify`, `PII`, `autocorrect`, `listId` | JSON `categories`, `blocklistNames`, `haltOnBlocklistHit`, `outputType` | Different parameters |
+| `Terms[]` (built-in profanity list, `ListId 0`, with `Index`/`OriginalIndex`) | `blocklistsMatch[]` from **your own** blocklists | No built-in profanity list with offsets |
+| `PII` (Email, IPA, Phone, Address, SSN with indexes) | None | Use a separate PII service, such as Azure AI Language PII detection |
+| `Classification.Category1` (explicit), `Category2` (suggestive), `Category3` (offensive), each 0–1 | `Sexual`, `Hate`, `Violence`, `SelfHarm` severity levels | No 1:1 mapping; re-tune thresholds |
+| `Classification.ReviewRecommended` | None | Derive from your own severity thresholds |
+| `NormalizedText`, `AutoCorrectedText`, `Misrepresentation` | None | |
+| `Status.Code 3000`, `TrackingId` | HTTP status and error body | Error handling changes |
+| Image, video moderation | Image analysis (separate endpoint) | |
+
+## Which way to go
+
+| Situation | Path |
+|---|---|
+| You can rewrite the call and re-tune thresholds before March 2027 | Move to Content Safety (Microsoft's supported path; free tier of 5,000 text records a month) |
+| Your code, stored results or dashboards depend on `Terms`, `PII` or `Category1/2/3` | Keep the format with a [wire-compatible replacement](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) ($1 per 1,000 texts) and migrate later on your own schedule |
+| You only need a free generic moderation signal | OpenAI's `omni-moderation-latest` (free), also with a different API |
+
+The minimal change with the wire-compatible replacement:
+
+```diff
+- POST https://<region>.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True
+- Ocp-Apim-Subscription-Key: $AZURE_KEY
++ POST https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&classify=True
++ Authorization: Bearer $APIFY_TOKEN
+```
+
+## FAQ
+
+### Is Azure Content Safety the same API as Content Moderator?
+
+No. Content Safety uses `POST /contentsafety/text:analyze` with a JSON body and returns severity levels for Hate, Sexual, Violence and SelfHarm. Content Moderator's `ProcessText/Screen` took a raw text body and returned `Terms`, `PII` and `Classification` scores.
+
+### Does Content Safety detect PII like Content Moderator did?
+
+Not in `text:analyze`. Content Moderator's `PII` output (email, phone, IP, address, SSN) has no equivalent there, so you need a separate PII detection service or a wire-compatible replacement.
+
+### How do Content Moderator categories map to Content Safety?
+
+Roughly: Category1 (sexually explicit) and Category2 (suggestive) relate to Sexual, and Category3 (offensive) overlaps with Hate and Violence. The scales differ (0–1 scores versus severity levels), so thresholds must be re-tuned on your own data.
+
+### When does Azure Content Moderator stop working?
+
+Microsoft says it retires on March 15, 2027. Microsoft's lifecycle table lists April 1, 2027; plan for March 15.
+
+### Can I keep using ProcessText/Screen after the retirement?
+
+Not on Azure. A wire-compatible replacement accepts the same `ProcessText/Screen` request and returns the same JSON from a new host.
 
 
 ---
@@ -321,15 +444,15 @@ They run on [Apify](https://apify.com) and are billed per use, with no subscript
 
 ### Google Perspective API (ends after 31 Dec 2026)
 `POST /v1alpha1/comments:analyze`, with TOXICITY, INSULT, THREAT, PROFANITY, IDENTITY_ATTACK, SEXUALLY_EXPLICIT and SEVERE_TOXICITY, in 7 languages. Google's own Python client works with only the discovery URL changed. Scores come from open models: close to Perspective's, not identical.
-**$1 per 1,000 comments** · [Migration guide](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) · [Apify Store](https://apify.com/dropin-apis/perspective-compat)
+**$1 per 1,000 comments** · [Migration guide](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) · [Apify Store](https://apify.com/dropin-apis/perspective-compat) · [Shutdown checklist](https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/)
 
 ### Azure Content Moderator, text screen (retires 15 Mar 2027)
 `POST /contentmoderator/moderate/v1.0/ProcessText/Screen`, with the same `Terms`, `PII`, `Classification` and `Status` JSON. It matches Microsoft's own documented example field for field. Category scores are approximate, and custom term lists are not supported.
-**$1 per 1,000 texts** · [Migration guide](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) · [Apify Store](https://apify.com/dropin-apis/content-moderator-compat)
+**$1 per 1,000 texts** · [Migration guide](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/) · [Apify Store](https://apify.com/dropin-apis/content-moderator-compat) · [Content Moderator vs Content Safety](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/)
 
 ### OpenAI whisper-1 (removed 26 Feb 2027)
 `/v1/audio/transcriptions` and `/translations`, with SRT, VTT, and word and segment timestamps. It works with the official OpenAI Python and Node SDKs by changing `base_url` and `api_key`. It uses the smaller open Whisper model (about 4% word error on clear English), with up to 10 minutes per file.
-**$0.006 per minute** · [Migration guide](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) · [Apify Store](https://apify.com/dropin-apis/whisper-compat)
+**$0.006 per minute** · [Migration guide](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) · [Apify Store](https://apify.com/dropin-apis/whisper-compat) · [All OpenAI transcription models removed Feb 26, 2027](https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/)
 
 ## Data tools
 
@@ -352,32 +475,137 @@ Nothing you send is stored: comments, texts and audio are processed in memory an
 
 ---
 
-# Perspective API Alternative: drop-in comments:analyze
+# OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027
+
+URL: https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/
+
+
+**On August 26, 2026, OpenAI told developers that `whisper-1`, `gpt-4o-transcribe`, `gpt-4o-mini-transcribe` and `gpt-4o-transcribe-diarize` will all be removed from the API on February 26, 2027, and recommended `gpt-transcribe` or `gpt-live-transcribe` instead** ([OpenAI deprecations, "2026-08-26: Transcription models"](https://developers.openai.com/api/docs/deprecations)). Plain transcription can usually move to `gpt-transcribe` by changing the model name. Apps that rely on whisper-1-only features (SRT/VTT subtitles, word timestamps, `/v1/audio/translations`) need either a rewrite or a [whisper-1-compatible endpoint](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/).
+
+## What is removed on February 26, 2027
+
+| Model | Removed | OpenAI's recommended replacement |
+|---|---|---|
+| `whisper-1` | February 26, 2027 | `gpt-transcribe` or `gpt-live-transcribe` |
+| `gpt-4o-transcribe` | February 26, 2027 | `gpt-transcribe` or `gpt-live-transcribe` |
+| `gpt-4o-mini-transcribe` | February 26, 2027 | `gpt-transcribe` or `gpt-live-transcribe` |
+| `gpt-4o-transcribe-diarize` | February 26, 2027 | `gpt-transcribe` or `gpt-live-transcribe` |
+
+Related: OpenAI's deprecations page also lists `tts-1` and `tts-1-hd` (text-to-speech) for removal on January 6, 2027, with `gpt-realtime-2.1-mini` recommended.
+
+## Which replacement fits your use
+
+| You use the model for… | Simplest path | What to check |
+|---|---|---|
+| Plain text transcripts (`json` / `text`) | Change `model` to `gpt-transcribe` | Accuracy and cost on your audio |
+| Subtitles (`srt`, `vtt`) or word/segment timestamps | A whisper-1-compatible endpoint, such as the [whisper-1 drop-in on Apify](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/) | OpenAI's speech-to-text guide documents `timestamp_granularities[]` only for whisper-1 |
+| Translation to English (`/v1/audio/translations`) | A whisper-1-compatible endpoint | OpenAI's guide documents `/v1/audio/translations` only with whisper-1 |
+| Live captions | `gpt-live-transcribe` | Realtime API usage differs from file upload |
+| Speaker labels (`diarized_json`) | Re-test on `gpt-transcribe`, or a separate diarization step | Output shape changes |
+
+## Prices
+
+| Model | Price (OpenAI pricing page, October 2026) | Status |
+|---|---|---|
+| `whisper-1` | $0.006 / minute | Removed Feb 26, 2027 |
+| `gpt-4o-transcribe` | token-based, estimated $0.006 / minute | Removed Feb 26, 2027 |
+| `gpt-4o-mini-transcribe` | token-based, estimated $0.003 / minute | Removed Feb 26, 2027 |
+| `gpt-transcribe` | $0.0045 / minute | Recommended |
+| `gpt-live-transcribe` | $0.017 / minute | Recommended (realtime) |
+| whisper-1 drop-in on Apify | $0.006 / minute, billed per started 15 s | Independent; Whisper *small* model |
+
+Source: [OpenAI pricing](https://developers.openai.com/api/docs/pricing).
+
+## Keeping whisper-1's API: the two-line change
+
+If you need whisper-1's exact request and response formats after February 26, 2027, keep `model="whisper-1"` and point the official SDK at a compatible endpoint:
+
+```diff
+- client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
++ client = OpenAI(base_url="https://dropin-apis--whisper-compat.apify.actor/v1", api_key=os.environ["APIFY_TOKEN"])
+```
+
+The full guide, with Node.js and curl examples, real SRT output and limits, is on the [whisper-1 replacement page](https://alidaram99.github.io/api-alternatives/whisper-1-alternative/).
+
+## FAQ
+
+### Is gpt-4o-transcribe being deprecated?
+
+Yes. OpenAI's August 26, 2026 notice removes `gpt-4o-transcribe`, together with `gpt-4o-mini-transcribe`, `gpt-4o-transcribe-diarize` and `whisper-1`, from the API on February 26, 2027.
+
+### What replaces gpt-4o-transcribe and whisper-1?
+
+OpenAI recommends `gpt-transcribe`, or `gpt-live-transcribe` for realtime audio.
+
+### When exactly are OpenAI's old transcription models removed?
+
+February 26, 2027, for all four models.
+
+### Does gpt-transcribe support SRT, VTT and word timestamps?
+
+OpenAI's speech-to-text guide documents `timestamp_granularities[]` and the translations endpoint only for whisper-1. Test the subtitle formats you need on `gpt-transcribe` before migrating, or use a whisper-1-compatible endpoint.
+
+### Is gpt-transcribe cheaper than whisper-1?
+
+Yes, on OpenAI's October 2026 price list: $0.0045 per minute versus $0.006 per minute for whisper-1.
+
+
+---
+
+# Perspective API shutdown (Dec 31, 2026): drop-in replacement
 
 URL: https://alidaram99.github.io/api-alternatives/perspective-api-alternative/
 
 
-Google Jigsaw's **Perspective API** (`commentanalyzer.googleapis.com`) is being sunset. The [official site](https://perspectiveapi.com/) says the service ends after **December 31, 2026**, with no migration path. Every forum, comment section, Discord bot and research pipeline that calls `comments:analyze` will start getting errors.
+**Yes: Google's Perspective API stops serving requests after December 31, 2026, and Google is not offering migration support** ([perspectiveapi.com](https://perspectiveapi.com/)). To keep existing `comments:analyze` code working, point it at a wire-compatible replacement such as our [Perspective drop-in on Apify](https://apify.com/dropin-apis/perspective-compat): it takes the same request and returns the same `attributeScores` JSON for $1 per 1,000 comments, and you change only the host and the key.
 
-This page shows how to keep that code working with a **wire-compatible replacement**. You send the same `POST /v1alpha1/comments:analyze` body and get back the same JSON: `attributeScores.TOXICITY.summaryScore.value`, `spanScores`, `languages`, `clientToken`, and Google-style error envelopes. **The scores come from open-source models, so they are close to Perspective's but not identical**. See [How the scores compare](#how-the-scores-compare) before you switch production thresholds.
+Google's own words: the API "will no longer be in service after 2026", usage and quota requests were "addressed until February 2026", and "we will not be offering direct migration support". The scores in our replacement come from open models of the same family (Detoxify), so they are **close to Perspective's but not identical**. See [How the scores compare](#how-the-scores-compare). Planning the switch step by step? Use the [Perspective shutdown migration checklist](https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/).
 
-## What breaks on January 1, 2027
+## What changes on January 1, 2027
 
-- Any request to `https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze` (REST, `googleapiclient`, the `perspective-api-client` npm package, the R `peRspective` package, and so on).
-- Plugins that hard-code that host, such as the Discourse plugin and many Discord moderation bots.
-- Benchmarks and research code that use Perspective's TOXICITY score as a metric.
+After December 31, 2026 the service is gone, so these stop working:
 
-## The migration
+- Every request to `https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze`. That covers REST, Google's `googleapiclient`, the `perspective-api-client` npm package, R's `peRspective` and similar.
+- `comments:suggestscore` and anything else on that host.
+- Plugins that hard-code the host, such as the Discourse plugin and many Discord moderation bots.
+- Research and benchmark code that uses Perspective's TOXICITY score as a metric.
 
-Your new endpoint is the Actor's Standby URL, `https://dropin-apis--perspective-compat.apify.actor`. You authenticate with your [Apify API token](https://console.apify.com/settings/integrations), either as `?token=…` or as `Authorization: Bearer …`. The Google `key=` parameter is accepted and ignored.
+New keys and quota increases already ended in February 2026, so you cannot get a new Google key to buy time.
 
-### curl / any HTTP client
+## The minimal migration: host and key only
 
-```bash
-# Before: https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_KEY
-curl -s -X POST "https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze?token=$APIFY_TOKEN" \
-  -H 'Content-Type: application/json' \
-  -d '{"comment":{"text":"You are an idiot"},"requestedAttributes":{"TOXICITY":{},"INSULT":{}},"languages":["en"]}'
+The new endpoint is the Actor's Standby URL, `https://dropin-apis--perspective-compat.apify.actor`. Authenticate with your [Apify API token](https://console.apify.com/settings/integrations), either as `Authorization: Bearer …` or as `?token=…`. A leftover Google `key=` parameter is accepted and ignored. The request body and the response are unchanged.
+
+### curl
+
+```diff
+- curl -s -X POST "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_API_KEY" \
++ curl -s -X POST "https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze" \
++   -H "Authorization: Bearer $APIFY_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -d '{"comment":{"text":"You are an idiot"},"requestedAttributes":{"TOXICITY":{}}}'
+```
+
+### Python (`requests`)
+
+```diff
+- URL = "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=" + GOOGLE_API_KEY
+- HEADERS = {}
++ URL = "https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze"
++ HEADERS = {"Authorization": "Bearer " + os.environ["APIFY_TOKEN"]}
+  r = requests.post(URL, headers=HEADERS, json={"comment": {"text": text}, "requestedAttributes": {"TOXICITY": {}}})
+  score = r.json()["attributeScores"]["TOXICITY"]["summaryScore"]["value"]
+```
+
+### Node.js (`fetch`)
+
+```diff
+- const url = `https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=${process.env.GOOGLE_API_KEY}`;
+- const headers = { 'Content-Type': 'application/json' };
++ const url = 'https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze';
++ const headers = { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.APIFY_TOKEN}` };
+  const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify({ comment: { text }, requestedAttributes: { TOXICITY: {} } }) });
+  const score = (await res.json()).attributeScores.TOXICITY.summaryScore.value;
 ```
 
 Response (real output from our test run):
@@ -388,16 +616,14 @@ Response (real output from our test run):
     "TOXICITY": {
       "spanScores": [{ "begin": 0, "end": 16, "score": { "value": 0.99683121, "type": "PROBABILITY" } }],
       "summaryScore": { "value": 0.99683121, "type": "PROBABILITY" }
-    },
-    "INSULT": {
-      "spanScores": [{ "begin": 0, "end": 16, "score": { "value": 0.9958577, "type": "PROBABILITY" } }],
-      "summaryScore": { "value": 0.9958577, "type": "PROBABILITY" }
     }
   },
   "languages": ["en"],
   "detectedLanguages": ["en"]
 }
 ```
+
+## Library-specific notes
 
 ### Python: Google's own `google-api-python-client`
 
@@ -422,19 +648,6 @@ response = client.comments().analyze(body={
     "requestedAttributes": {"TOXICITY": {}},
 }).execute()
 print(response["attributeScores"]["TOXICITY"]["summaryScore"]["value"])  # 0.01015937
-```
-
-### Node.js: plain `fetch`
-
-```js
-const BASE = 'https://dropin-apis--perspective-compat.apify.actor';
-const res = await fetch(`${BASE}/v1alpha1/comments:analyze`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.APIFY_TOKEN}` },
-  body: JSON.stringify({ comment: { text: 'You are an idiot' }, requestedAttributes: { TOXICITY: {} } }),
-});
-const data = await res.json();
-console.log(data.attributeScores.TOXICITY.summaryScore.value); // 0.99683121
 ```
 
 ### Node.js: the `perspective-api-client` npm package
@@ -462,9 +675,22 @@ perspective.analyze('You are a complete moron', { attributes: ['toxicity', 'insu
 
 ### Discourse (`discourse-perspective-api`)
 
-The plugin keeps the API key as a site setting, but the host is the constant `GOOGLE_API_DOMAIN = "https://commentanalyzer.googleapis.com"` in `lib/discourse_perspective.rb`. In a fork, change that constant to your Standby URL and append `token=<APIFY_TOKEN>` to the request query. The plugin's models (`TOXICITY`, `SEVERE_TOXICITY`) and thresholds work as before. *We have not run this inside a live Discourse instance. The request and response format is what we tested.*
+The plugin keeps the API key as a site setting, but the host is the constant `GOOGLE_API_DOMAIN = "https://commentanalyzer.googleapis.com"` in `lib/discourse_perspective.rb`. In a fork:
+- change that constant to your Standby URL;
+- append `token=<APIFY_TOKEN>` to the request query.
 
-Other wrappers that already accept a base URL (for example GateNLP's Perspective client) only need the URL and the token.
+The plugin's models (`TOXICITY`, `SEVERE_TOXICITY`) and thresholds work as before. *We have not run this inside a live Discourse instance. The request and response format is what we tested.*
+
+## Your options compared
+
+| Option | Same request and JSON as Perspective? | Attributes | Price | Notes |
+|---|---|---|---|---|
+| **Perspective drop-in on Apify (this page)** | **Yes**: change host and key | TOXICITY, SEVERE_TOXICITY, INSULT, THREAT, IDENTITY_ATTACK, PROFANITY, SEXUALLY_EXPLICIT (en) | **$1 per 1,000 comments** | Open Detoxify models; scores close, not identical. 7 languages. Nothing stored |
+| Self-host [Detoxify](https://github.com/unitaryai/detoxify) | No: Python library, your own API wrapper | toxicity, severe_toxicity, obscene, threat, insult, identity_attack, sexual_explicit | Free (Apache-2.0) + your servers | The same model family we run; you operate it |
+| [OpenAI moderation](https://developers.openai.com/api/docs/guides/moderation) (`omni-moderation-latest`) | No: different endpoint, categories and response | harassment, hate, violence, sexual, self-harm and more | Free with an OpenAI account | Policy categories, not Perspective attributes; thresholds must be re-tuned |
+| [Azure AI Content Safety](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview) | No: different endpoint and severity scale | Hate, Sexual, Violence, SelfHarm (severity levels) | Free tier 5,000 text records/month; paid per Azure pricing | Azure account and resource required |
+
+If you can rewrite the integration and re-tune thresholds, any of the alternatives is reasonable. The drop-in is for code, stored scores and dashboards that depend on Perspective's exact request and response.
 
 ## Supported attributes and languages
 
@@ -476,7 +702,9 @@ Other wrappers that already accept a base URL (for example GateNLP's Perspective
 | `*_EXPERIMENTAL` aliases | ✅ | ✅ | Served by the matching base attribute and returned under the name you requested |
 | FLIRTATION, the NYT models, bridging attributes | ❌ | ❌ | Returns Perspective's own `LANGUAGE_NOT_SUPPORTED_BY_ATTRIBUTE` error |
 
-The language is detected automatically when you leave out `languages`. Other languages get Perspective's standard "does not support request languages" error, so your existing fallback code keeps working. `spanAnnotations`, `scoreThreshold`, `clientToken` and snake_case field names are supported. The limit is 20 KB of text per comment.
+- The language is detected automatically when you leave out `languages`. Other languages get Perspective's standard "does not support request languages" error, so your existing fallback code keeps working.
+- `spanAnnotations`, `scoreThreshold`, `clientToken` and snake_case field names are supported.
+- The limit is 20 KB of text per comment.
 
 ## How the scores compare
 
@@ -488,17 +716,44 @@ The scores come from [Detoxify](https://github.com/unitaryai/detoxify), open mod
 
 ## Pricing
 
-**$1 per 1,000 analyzed comments**, pay per event. Failed requests (4xx) are not charged. There is no subscription, and you can cap spending per run on Apify. When you reach your limit, the API answers `429 RESOURCE_EXHAUSTED`.
+**$1 per 1,000 analyzed comments**, pay per event.
+- Failed requests (4xx) are not charged.
+- There is no subscription.
+- You can cap spending per run on Apify. When you reach your limit, the API answers `429 RESOURCE_EXHAUSTED`.
 
 ## FAQ
 
-**Is this Google?** No. It is an independent service that implements the public `commentanalyzer` v1alpha1 interface.
+### Is the Perspective API shutting down?
 
-**Do you store comments?** No. Text is scored in memory and discarded.
+Yes. Google's Perspective API site says the API will no longer be in service after 2026 (after December 31, 2026). Usage and quota requests were only handled until February 2026.
 
-**Latency?** The model takes about 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts.
+### Does Google offer a migration path for Perspective API?
 
-**Why do I need an Apify token?** Apify hosts the service and bills per call. The token identifies your account. It is the only new thing your code needs.
+No. Google says it will not offer direct migration support. It points to other tools inspired by Perspective, but none of them uses the same API.
+
+### What is the best Perspective API replacement?
+
+If you want to keep your code unchanged, use a wire-compatible drop-in that accepts `POST /v1alpha1/comments:analyze` and returns the same `attributeScores` JSON; this page's Actor does that for $1 per 1,000 comments. If you can rewrite your integration, OpenAI's free moderation endpoint, Azure AI Content Safety or a self-hosted Detoxify model also work, with different categories and scores.
+
+### How do I migrate from Perspective API?
+
+Change the host from `commentanalyzer.googleapis.com` to the Actor's Standby URL and replace `?key=GOOGLE_KEY` with your Apify token (`Authorization: Bearer …`). The request body and the response JSON stay the same. Then re-check your thresholds on a sample of real comments.
+
+### Will my toxicity thresholds still work?
+
+For clear-cut text, yes: abusive comments still score above 0.99 and polite ones below 0.02 in our tests. Borderline comments can score differently, so if you act at low thresholds, test a sample first.
+
+### Is this affiliated with Google?
+
+No. It is an independent service that implements the public `commentanalyzer` v1alpha1 interface.
+
+### Do you store comments?
+
+No. Text is scored in memory and discarded.
+
+### How fast is it?
+
+About 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts.
 
 ## Get started
 
@@ -507,41 +762,158 @@ Open the Actor on the Apify Store, then copy its Standby URL and your token: **[
 
 ---
 
-# whisper-1 alternative with SRT, VTT and word timestamps
+# Perspective API shutdown checklist: migrate before Dec 31, 2026
+
+URL: https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/
+
+
+**Google's Perspective API stops after December 31, 2026, and Google offers no migration support, so every integration has to move before then** ([perspectiveapi.com](https://perspectiveapi.com/)). This checklist takes you from "where do we even call it?" to a tested cutover, whichever replacement you choose.
+
+New Perspective usage and quota requests already ended in February 2026. Treat the quota you have today as the most you will ever get.
+
+## The timeline
+
+| Date | What happens |
+|---|---|
+| February 2026 | Google stops handling new usage and quota-increase requests |
+| Now to mid-December 2026 | Your window to inventory, choose, test and cut over |
+| December 31, 2026 | Last day of service ("no longer be in service after 2026") |
+| January 1, 2027 | Calls to `commentanalyzer.googleapis.com` fail |
+
+## Checklist
+
+### 1. Find every caller
+
+- Search your code for `commentanalyzer.googleapis.com`, `comments:analyze`, `perspective-api-client`, `peRspective`, `discourse-perspective-api` and `GOOGLE_API_DOMAIN`.
+- Check plugins and bots you did not write: Discourse, Discord moderation bots, CMS comment plugins.
+- Check offline uses: research scripts, dashboards and stored scores that assume Perspective's 0–1 TOXICITY scale.
+
+### 2. Write down what each caller depends on
+
+- Which attributes (TOXICITY, SEVERE_TOXICITY, INSULT, THREAT, IDENTITY_ATTACK, PROFANITY, SEXUALLY_EXPLICIT, or the experimental ones).
+- Which languages.
+- Which thresholds trigger an action (hide, queue for review, block).
+- Whether anything parses `spanScores`, `languages` or `clientToken`.
+
+### 3. Choose a replacement
+
+| If you need… | Choose |
+|---|---|
+| No code changes; same request and JSON | A wire-compatible drop-in such as the [Perspective drop-in on Apify](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/) ($1 per 1,000 comments) |
+| Free, and you can rewrite the call and re-tune | OpenAI's moderation endpoint (`omni-moderation-latest`, free) |
+| You already run on Azure | Azure AI Content Safety (free tier 5,000 text records a month) |
+| Full control, no third party | Self-host the open [Detoxify](https://github.com/unitaryai/detoxify) models |
+
+Only the first option keeps the Perspective request and response. The others use different categories and score scales, so thresholds and stored data need re-mapping.
+
+### 4. Re-tune on your own comments
+
+- Export a sample of a few hundred real comments, including borderline ones.
+- Score them with both Perspective, while it still works, and the replacement.
+- Compare decisions at your current thresholds, not just raw scores. Adjust thresholds until the hide/review/allow decisions match what you want.
+
+### 5. Cut over safely
+
+- Put the endpoint and credentials in configuration, not code.
+- Run both side by side (shadow mode) for a week if you can.
+- Switch before mid-December, not on December 31: holiday change freezes and the final-day rush are real risks.
+- Keep the old code path behind a flag until January, then delete it.
+
+### 6. After January 1, 2027
+
+- Confirm nothing still calls `commentanalyzer.googleapis.com`. Watch your logs for its errors.
+- Update documentation and runbooks that mention Perspective.
+
+## Minimal change with the drop-in
+
+With the drop-in, step 5 is a two-line diff: the host and the credential.
+
+```diff
+- POST https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_API_KEY
++ POST https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze
++ Authorization: Bearer $APIFY_TOKEN
+```
+
+Full curl, Python and Node.js examples are on the [Perspective API replacement page](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/).
+
+## FAQ
+
+### When exactly does the Perspective API stop working?
+
+Google says the API will no longer be in service after 2026, meaning after December 31, 2026. Plan for requests to fail from January 1, 2027.
+
+### Can I still request a Perspective API key or more quota?
+
+No. Google handled usage and quota requests only until February 2026.
+
+### Do I have to change my code to replace Perspective?
+
+Only if you switch to a different API, such as OpenAI moderation or Azure AI Content Safety. With a wire-compatible drop-in, you change the host and the credential, and the request and response stay the same.
+
+### Will scores be identical after the migration?
+
+No replacement reproduces Google's private models exactly. Open Detoxify models agree on clear cases but can differ on borderline comments. Re-tune your thresholds on a sample of real comments before you cut over.
+
+### What happens if I do nothing?
+
+From January 1, 2027, calls to the Perspective API fail. Depending on your error handling, comments may then be published without screening or not published at all.
+
+
+---
+
+# whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps
 
 URL: https://alidaram99.github.io/api-alternatives/whisper-1-alternative/
 
 
-OpenAI's [deprecations page](https://developers.openai.com/api/docs/deprecations) schedules **`whisper-1` for removal on February 26, 2027**. Its successors are not drop-in. Apps built on whisper-1 features have to change: subtitles through `response_format=srt` or `vtt`, `timestamp_granularities[]=word` and `segment`, and `/v1/audio/translations`.
+**Yes: OpenAI announced on August 26, 2026 that `whisper-1` will be removed from the API on February 26, 2027, and it recommends `gpt-transcribe` or `gpt-live-transcribe` instead** ([OpenAI deprecations](https://developers.openai.com/api/docs/deprecations)). If your app depends on whisper-1's subtitle formats, word timestamps or `/v1/audio/translations`, a whisper-1-compatible endpoint such as our [whisper-1 drop-in on Apify](https://apify.com/dropin-apis/whisper-compat) keeps that code working: you change `base_url` and `api_key` in the official OpenAI SDK, at $0.006 per minute.
 
-This page shows how to keep exactly that API: `POST /v1/audio/transcriptions` and `/v1/audio/translations`, the same multipart fields, and the same `json`, `text`, `srt`, `vtt` and `verbose_json` responses. It works with the **official OpenAI SDKs**. You change `base_url` and `api_key`, and nothing else.
+The same OpenAI notice also removes `gpt-4o-transcribe`, `gpt-4o-mini-transcribe` and `gpt-4o-transcribe-diarize` on the same date. See [OpenAI's 2027 transcription model removals](https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/) for what to do with those.
 
-## Python: official `openai` SDK
+## What changes on February 26, 2027
 
-```python
-import os
-from openai import OpenAI
+- Requests with `model="whisper-1"` to `https://api.openai.com/v1/audio/transcriptions` and `/v1/audio/translations` stop working.
+- OpenAI's [speech-to-text guide](https://developers.openai.com/api/docs/guides/speech-to-text) documents these features **only for whisper-1**:
+  - `timestamp_granularities[]` (word and segment timestamps);
+  - the `srt`, `vtt` and `verbose_json` response formats;
+  - the `/v1/audio/translations` endpoint (any language → English).
+- Subtitle generators, caption pipelines and tools that align words to video need a replacement for those features, not just a new model name.
 
-client = OpenAI(
-    base_url="https://dropin-apis--whisper-compat.apify.actor/v1",   # was: default api.openai.com
-    api_key=os.environ["APIFY_TOKEN"],           # your Apify token, sent as Authorization: Bearer
-)
+## The minimal migration: base_url and api_key only
 
-with open("armstrong.ogg", "rb") as f:
-    srt = client.audio.transcriptions.create(model="whisper-1", file=f, response_format="srt")
-print(srt)
+The new endpoint is the Actor's Standby URL plus `/v1`: `https://dropin-apis--whisper-compat.apify.actor/v1`. Use your [Apify API token](https://console.apify.com/settings/integrations) as the API key; the OpenAI SDKs send it as `Authorization: Bearer …`, which is how Apify authenticates. Keep `model="whisper-1"` and everything else.
 
-with open("armstrong.ogg", "rb") as f:
-    verbose = client.audio.transcriptions.create(
-        model="whisper-1", file=f, response_format="verbose_json",
-        timestamp_granularities=["word", "segment"],
-    )
-for w in verbose.words[:5]:
-    print(f"{w.start:6.2f}-{w.end:6.2f}  {w.word}")
-print(len(verbose.segments), "segments,", verbose.duration, "seconds")
+### Python (official `openai` SDK)
+
+```diff
+  from openai import OpenAI
+- client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
++ client = OpenAI(base_url="https://dropin-apis--whisper-compat.apify.actor/v1", api_key=os.environ["APIFY_TOKEN"])
+  srt = client.audio.transcriptions.create(model="whisper-1", file=open("talk.mp3", "rb"), response_format="srt")
 ```
 
-Real output on NASA's public-domain Apollo 11 clip ("one small step"):
+### Node.js (official `openai` SDK)
+
+```diff
+  import OpenAI from 'openai';
+- const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
++ const client = new OpenAI({ baseURL: 'https://dropin-apis--whisper-compat.apify.actor/v1', apiKey: process.env.APIFY_TOKEN });
+  const vtt = await client.audio.transcriptions.create({ model: 'whisper-1', file: fs.createReadStream('talk.mp3'), response_format: 'vtt' });
+```
+
+### curl
+
+```diff
+- curl -s https://api.openai.com/v1/audio/transcriptions -H "Authorization: Bearer $OPENAI_API_KEY" \
++ curl -s https://dropin-apis--whisper-compat.apify.actor/v1/audio/transcriptions -H "Authorization: Bearer $APIFY_TOKEN" \
+    -F model=whisper-1 -F response_format=verbose_json -F 'timestamp_granularities[]=word' -F file=@talk.mp3
+```
+
+> Pass the token only as `api_key`. If you append `?token=…` to `base_url`, the SDK adds the route after the query string and the request goes to the wrong URL.
+
+## Real output
+
+SRT and word timestamps from NASA's public-domain Apollo 11 clip ("one small step"), using the Python SDK as above:
 
 ```text
 1
@@ -564,41 +936,21 @@ One giant leap for mankind.
 3 segments, 24.11 seconds
 ```
 
-(Armstrong said "the LEM". The small model heard "limb", which is the kind of error to expect, see Limits below.)
+(Armstrong said "the LEM". The small model heard "limb", which is the kind of error to expect; see Limits below.)
 
-> Pass the token only as `api_key`. If you append `?token=…` to `base_url`, the SDK adds the route after the query string and the request goes to the wrong URL.
+The `verbose_json` response has OpenAI's shape: `task`, `language` (`"english"`), `duration`, `text`, `words[]` (`word`, `start`, `end`), `segments[]` and `usage` (`{"type":"duration","seconds":25}`).
 
-## Node.js: official `openai` SDK
+## Your options compared
 
-```js
-import fs from 'node:fs';
-import OpenAI from 'openai';
+| Option | whisper-1 request and formats (SRT, VTT, word timestamps, translations)? | Price | Notes |
+|---|---|---|---|
+| **whisper-1 drop-in on Apify (this page)** | **Yes**: official SDK, change `base_url` and `api_key` | **$0.006/min**, billed per started 15 s | Whisper *small* model (about 4% word error on clean English); up to 10 min / 25 MB per file |
+| OpenAI `gpt-transcribe` | OpenAI's guide documents those features only for whisper-1 | $0.0045/min | OpenAI's recommended successor; more accurate model. Check its formats before relying on subtitles |
+| OpenAI `gpt-live-transcribe` | Realtime model; different usage | $0.017/min | For live audio |
+| `gpt-4o-transcribe` / `gpt-4o-mini-transcribe` | No | ~$0.006 / ~$0.003 per min (token-based) | **Also removed on February 26, 2027** |
+| Self-host [faster-whisper](https://github.com/SYSTRAN/faster-whisper) or [whisper.cpp](https://github.com/ggml-org/whisper.cpp) | Formats yes (your code); OpenAI-compatible API only if you add a server layer | Free (MIT) + your hardware | Any Whisper size, including large models; you run and scale it |
 
-const client = new OpenAI({
-  baseURL: 'https://dropin-apis--whisper-compat.apify.actor/v1',
-  apiKey: process.env.APIFY_TOKEN,
-});
-
-const vtt = await client.audio.transcriptions.create({
-  model: 'whisper-1',
-  file: fs.createReadStream('armstrong.ogg'),
-  response_format: 'vtt',
-});
-console.log(vtt); // WEBVTT ... 00:00:15.000 --> 00:00:18.000  That's one small step for man.
-```
-
-## curl: word timestamps
-
-```bash
-curl -s "https://dropin-apis--whisper-compat.apify.actor/v1/audio/transcriptions" \
-  -H "Authorization: Bearer $APIFY_TOKEN" \
-  -F model=whisper-1 \
-  -F response_format=verbose_json \
-  -F 'timestamp_granularities[]=word' \
-  -F file=@armstrong.ogg
-```
-
-The response is OpenAI's `verbose_json` shape: `task`, `language` (`"english"`), `duration`, `text`, `words[]` (`word`, `start`, `end`) and `usage` (`{"type":"duration","seconds":25}`). `segments[]` is included when you request `segment` granularity, which is the default.
+OpenAI prices are from [OpenAI's pricing page](https://developers.openai.com/api/docs/pricing) as of October 2026.
 
 ## Compatibility
 
@@ -612,22 +964,54 @@ The response is OpenAI's `verbose_json` shape: `task`, `language` (`"english"`),
 
 ## Limits: read before switching
 
-- **Model:** Whisper **small** (multilingual) running with faster-whisper/CTranslate2 int8 on CPU, beam size 5. OpenAI's whisper-1 is the much larger Whisper V2. On clean English (LibriSpeech) we measured **about 4% word error rate**. Expect more errors on noisy audio, heavy accents and less common languages.
+- **Model:** Whisper **small** (multilingual), run with faster-whisper/CTranslate2 int8 on CPU, beam size 5. OpenAI's whisper-1 is the much larger Whisper V2.
+  - On clean English (LibriSpeech) we measured **about 4% word error rate**.
+  - Expect more errors on noisy audio, heavy accents and less common languages.
 - **Length:** up to **10 minutes and 25 MB per request**. Longer files get `400 audio_too_long`, so split them first, for example `ffmpeg -i in.mp3 -f segment -segment_time 540 out%03d.mp3`.
-- **Speed:** about 4 seconds of audio per second of compute. A 1-minute file takes about 12 s and a 10-minute file about 2.5 min. Each instance handles one file at a time. A busy instance answers `429 rate_limit_exceeded`, which the OpenAI SDKs retry automatically.
+- **Speed:** about 4 seconds of audio per second of compute. A 1-minute file takes about 12 s and a 10-minute file about 2.5 min.
+- **Concurrency:** each instance handles one file at a time. A busy instance answers `429 rate_limit_exceeded`, which the OpenAI SDKs retry automatically.
 - **Cold start:** after about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds extra.
 
 ## Pricing
 
-**$0.006 per minute, billed per started 15 seconds** ($0.0015 per 15 s). OpenAI billed whisper-1 at $0.006 per minute rounded to the second, so the two prices match on whole 15-second blocks. A clip under 15 seconds costs $0.0015 here instead of about $0.001. Failed requests are not charged. If you set a spending cap, a file the remaining budget can't cover is refused *before* it is transcribed (`429 insufficient_quota`).
+**$0.006 per minute, billed per started 15 seconds** ($0.0015 per 15 s).
+- OpenAI billed whisper-1 at $0.006 per minute rounded to the second, so the two prices match on whole 15-second blocks. A clip under 15 seconds costs $0.0015 here instead of about $0.001.
+- Failed requests are not charged.
+- If you set a spending cap, a file the remaining budget can't cover is refused *before* it is transcribed (`429 insufficient_quota`).
 
 ## FAQ
 
-**Is this OpenAI?** No. It is an independent service that runs OpenAI's open-source Whisper model (MIT license) behind the same API shape.
+### Is whisper-1 being deprecated?
 
-**Do you keep my audio?** No. Audio is decoded in memory, transcribed and discarded.
+Yes. OpenAI notified developers on August 26, 2026 that whisper-1 will be removed from the API on February 26, 2027.
 
-**Languages?** All 99 Whisper languages, with auto-detection. Passing `language` (ISO-639-1) improves speed and accuracy.
+### What should I use instead of whisper-1?
+
+OpenAI recommends `gpt-transcribe` (or `gpt-live-transcribe` for realtime). If you need whisper-1's exact API, including SRT, VTT, word timestamps and `/v1/audio/translations`, use a whisper-1-compatible endpoint such as this page's drop-in, and change only `base_url` and `api_key`.
+
+### Is gpt-4o-transcribe a safe replacement for whisper-1?
+
+No. OpenAI's same notice removes `gpt-4o-transcribe` and `gpt-4o-mini-transcribe` on February 26, 2027, together with whisper-1.
+
+### How do I keep SRT and VTT subtitles after whisper-1 is removed?
+
+Point the OpenAI SDK at a whisper-1-compatible endpoint and keep `response_format="srt"` or `"vtt"`. This page's drop-in returns the same SRT and VTT output as whisper-1 did.
+
+### Will transcripts be as accurate as whisper-1?
+
+Not quite. The drop-in runs the open Whisper *small* model, which measured about 4% word error rate on clean English, and is weaker than OpenAI's larger model on noisy audio and rare languages.
+
+### Is this OpenAI?
+
+No. It is an independent service that runs OpenAI's open-source Whisper model (MIT license) behind the same API shape.
+
+### Do you keep my audio?
+
+No. Audio is decoded in memory, transcribed and discarded.
+
+### Which languages are supported?
+
+All 99 Whisper languages, with auto-detection. Passing `language` (ISO-639-1) improves speed and accuracy.
 
 ## Get started
 

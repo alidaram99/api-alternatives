@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027</title>
+<meta name="description" content="whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize leave the OpenAI API on Feb 26, 2027. Which replacement to use, and what each one keeps.">
+<meta name="keywords" content="gpt-4o-transcribe deprecated, gpt-4o-mini-transcribe deprecation, whisper-1 removal date, openai transcription deprecation 2027, gpt-transcribe vs whisper-1, gpt-4o-transcribe-diarize deprecation">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">
+<meta property="og:description" content="whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize leave the OpenAI API on Feb 26, 2027. Which replacement to use, and what each one keeps.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"OpenAI whisper-1 Alternative — Speech-to-Text API","description":"whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize leave the OpenAI API on Feb 26, 2027. Which replacement to use, and what each one keeps.","url":"https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0015,"priceCurrency":"USD","description":"Billed per event: 15 seconds of audio"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"OpenAI's transcription models removed on 26 February 2027, and what to use instead","description":"whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize leave the OpenAI API on Feb 26, 2027. Which replacement to use, and what each one keeps.","url":"https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is gpt-4o-transcribe being deprecated?","acceptedAnswer":{"@type":"Answer","text":"Yes. OpenAI's August 26, 2026 notice removes gpt-4o-transcribe, together with gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize and whisper-1, from the API on February 26, 2027."}},{"@type":"Question","name":"What replaces gpt-4o-transcribe and whisper-1?","acceptedAnswer":{"@type":"Answer","text":"OpenAI recommends gpt-transcribe, or gpt-live-transcribe for realtime audio."}},{"@type":"Question","name":"When exactly are OpenAI's old transcription models removed?","acceptedAnswer":{"@type":"Answer","text":"February 26, 2027, for all four models."}},{"@type":"Question","name":"Does gpt-transcribe support SRT, VTT and word timestamps?","acceptedAnswer":{"@type":"Answer","text":"OpenAI's speech-to-text guide documents timestamp_granularities[] and the translations endpoint only for whisper-1. Test the subtitle formats you need on gpt-transcribe before migrating, or use a whisper-1-compatible endpoint."}},{"@type":"Question","name":"Is gpt-transcribe cheaper than whisper-1?","acceptedAnswer":{"@type":"Answer","text":"Yes, on OpenAI's October 2026 price list: $0.0045 per minute versus $0.006 per minute for whisper-1."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027","item":"https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" class="active" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>OpenAI&#39;s transcription models removed on 26 February 2027, and what to use instead</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  <p class="deadline">⏳ 146 days left — the old API shuts down February 26, 2027.</p>
+  <p><strong>On August 26, 2026, OpenAI told developers that <code>whisper-1</code>, <code>gpt-4o-transcribe</code>, <code>gpt-4o-mini-transcribe</code> and <code>gpt-4o-transcribe-diarize</code> will all be removed from the API on February 26, 2027, and recommended <code>gpt-transcribe</code> or <code>gpt-live-transcribe</code> instead</strong> (<a href="https://developers.openai.com/api/docs/deprecations">OpenAI deprecations, &quot;2026-08-26: Transcription models&quot;</a>). Plain transcription can usually move to <code>gpt-transcribe</code> by changing the model name. Apps that rely on whisper-1-only features (SRT/VTT subtitles, word timestamps, <code>/v1/audio/translations</code>) need either a rewrite or a <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1-compatible endpoint</a>.</p>
+<h2 id="what-is-removed-on-february-26-2027">What is removed on February 26, 2027</h2>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Removed</th><th>OpenAI&#39;s recommended replacement</th></tr></thead><tbody><tr><td><code>whisper-1</code></td><td>February 26, 2027</td><td><code>gpt-transcribe</code> or <code>gpt-live-transcribe</code></td></tr><tr><td><code>gpt-4o-transcribe</code></td><td>February 26, 2027</td><td><code>gpt-transcribe</code> or <code>gpt-live-transcribe</code></td></tr><tr><td><code>gpt-4o-mini-transcribe</code></td><td>February 26, 2027</td><td><code>gpt-transcribe</code> or <code>gpt-live-transcribe</code></td></tr><tr><td><code>gpt-4o-transcribe-diarize</code></td><td>February 26, 2027</td><td><code>gpt-transcribe</code> or <code>gpt-live-transcribe</code></td></tr></tbody></table></div>
+<p>Related: OpenAI&#39;s deprecations page also lists <code>tts-1</code> and <code>tts-1-hd</code> (text-to-speech) for removal on January 6, 2027, with <code>gpt-realtime-2.1-mini</code> recommended.</p>
+<h2 id="which-replacement-fits-your-use">Which replacement fits your use</h2>
+<div class="table-wrap"><table><thead><tr><th>You use the model for…</th><th>Simplest path</th><th>What to check</th></tr></thead><tbody><tr><td>Plain text transcripts (<code>json</code> / <code>text</code>)</td><td>Change <code>model</code> to <code>gpt-transcribe</code></td><td>Accuracy and cost on your audio</td></tr><tr><td>Subtitles (<code>srt</code>, <code>vtt</code>) or word/segment timestamps</td><td>A whisper-1-compatible endpoint, such as the <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1 drop-in on Apify</a></td><td>OpenAI&#39;s speech-to-text guide documents <code>timestamp_granularities[]</code> only for whisper-1</td></tr><tr><td>Translation to English (<code>/v1/audio/translations</code>)</td><td>A whisper-1-compatible endpoint</td><td>OpenAI&#39;s guide documents <code>/v1/audio/translations</code> only with whisper-1</td></tr><tr><td>Live captions</td><td><code>gpt-live-transcribe</code></td><td>Realtime API usage differs from file upload</td></tr><tr><td>Speaker labels (<code>diarized_json</code>)</td><td>Re-test on <code>gpt-transcribe</code>, or a separate diarization step</td><td>Output shape changes</td></tr></tbody></table></div>
+<h2 id="prices">Prices</h2>
+<div class="table-wrap"><table><thead><tr><th>Model</th><th>Price (OpenAI pricing page, October 2026)</th><th>Status</th></tr></thead><tbody><tr><td><code>whisper-1</code></td><td>$0.006 / minute</td><td>Removed Feb 26, 2027</td></tr><tr><td><code>gpt-4o-transcribe</code></td><td>token-based, estimated $0.006 / minute</td><td>Removed Feb 26, 2027</td></tr><tr><td><code>gpt-4o-mini-transcribe</code></td><td>token-based, estimated $0.003 / minute</td><td>Removed Feb 26, 2027</td></tr><tr><td><code>gpt-transcribe</code></td><td>$0.0045 / minute</td><td>Recommended</td></tr><tr><td><code>gpt-live-transcribe</code></td><td>$0.017 / minute</td><td>Recommended (realtime)</td></tr><tr><td>whisper-1 drop-in on Apify</td><td>$0.006 / minute, billed per started 15 s</td><td>Independent; Whisper <em>small</em> model</td></tr></tbody></table></div>
+<p>Source: <a href="https://developers.openai.com/api/docs/pricing">OpenAI pricing</a>.</p>
+<h2 id="keeping-whisper-1s-api-the-two-line-change">Keeping whisper-1&#39;s API: the two-line change</h2>
+<p>If you need whisper-1&#39;s exact request and response formats after February 26, 2027, keep <code>model=&quot;whisper-1&quot;</code> and point the official SDK at a compatible endpoint:</p>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- client = OpenAI(api_key=os.environ[&quot;OPENAI_API_KEY&quot;])
++ client = OpenAI(base_url=&quot;https://dropin-apis--whisper-compat.apify.actor/v1&quot;, api_key=os.environ[&quot;APIFY_TOKEN&quot;])</code></pre></div>
+<p>The full guide, with Node.js and curl examples, real SRT output and limits, is on the <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/">whisper-1 replacement page</a>.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-gpt-4o-transcribe-being-deprecated">Is gpt-4o-transcribe being deprecated?</h3>
+<p>Yes. OpenAI&#39;s August 26, 2026 notice removes <code>gpt-4o-transcribe</code>, together with <code>gpt-4o-mini-transcribe</code>, <code>gpt-4o-transcribe-diarize</code> and <code>whisper-1</code>, from the API on February 26, 2027.</p>
+<h3 id="what-replaces-gpt-4o-transcribe-and-whisper-1">What replaces gpt-4o-transcribe and whisper-1?</h3>
+<p>OpenAI recommends <code>gpt-transcribe</code>, or <code>gpt-live-transcribe</code> for realtime audio.</p>
+<h3 id="when-exactly-are-openais-old-transcription-models-removed">When exactly are OpenAI&#39;s old transcription models removed?</h3>
+<p>February 26, 2027, for all four models.</p>
+<h3 id="does-gpt-transcribe-support-srt-vtt-and-word-timestamps">Does gpt-transcribe support SRT, VTT and word timestamps?</h3>
+<p>OpenAI&#39;s speech-to-text guide documents <code>timestamp_granularities[]</code> and the translations endpoint only for whisper-1. Test the subtitle formats you need on <code>gpt-transcribe</code> before migrating, or use a whisper-1-compatible endpoint.</p>
+<h3 id="is-gpt-transcribe-cheaper-than-whisper-1">Is gpt-transcribe cheaper than whisper-1?</h3>
+<p>Yes, on OpenAI&#39;s October 2026 price list: $0.0045 per minute versus $0.006 per minute for whisper-1.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

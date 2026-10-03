@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azure Content Moderator vs Content Safety: what changes (2027)</title>
+<meta name="description" content="Content Moderator retires March 15, 2027. Field-by-field: what ProcessText/Screen returned, what Content Safety&#39;s text:analyze returns, and what has no equivalent.">
+<meta name="keywords" content="azure content moderator vs content safety, migrate content moderator to content safety, content moderator ProcessText Screen to text:analyze, content safety severity levels, azure content moderator migration guide">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Azure Content Moderator vs Content Safety: what changes (2027)">
+<meta property="og:description" content="Content Moderator retires March 15, 2027. Field-by-field: what ProcessText/Screen returned, what Content Safety&#39;s text:analyze returns, and what has no equivalent.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Azure Content Moderator Alternative — Profanity Filter","description":"Content Moderator retires March 15, 2027. Field-by-field: what ProcessText/Screen returned, what Content Safety's text:analyze returns, and what has no equivalent.","url":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Text screened"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Content Moderator to Content Safety: what changes before 15 March 2027","description":"Content Moderator retires March 15, 2027. Field-by-field: what ProcessText/Screen returned, what Content Safety's text:analyze returns, and what has no equivalent.","url":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Azure Content Safety the same API as Content Moderator?","acceptedAnswer":{"@type":"Answer","text":"No. Content Safety uses POST /contentsafety/text:analyze with a JSON body and returns severity levels for Hate, Sexual, Violence and SelfHarm. Content Moderator's ProcessText/Screen took a raw text body and returned Terms, PII and Classification scores."}},{"@type":"Question","name":"Does Content Safety detect PII like Content Moderator did?","acceptedAnswer":{"@type":"Answer","text":"Not in text:analyze. Content Moderator's PII output (email, phone, IP, address, SSN) has no equivalent there, so you need a separate PII detection service or a wire-compatible replacement."}},{"@type":"Question","name":"How do Content Moderator categories map to Content Safety?","acceptedAnswer":{"@type":"Answer","text":"Roughly: Category1 (sexually explicit) and Category2 (suggestive) relate to Sexual, and Category3 (offensive) overlaps with Hate and Violence. The scales differ (0–1 scores versus severity levels), so thresholds must be re-tuned on your own data."}},{"@type":"Question","name":"When does Azure Content Moderator stop working?","acceptedAnswer":{"@type":"Answer","text":"Microsoft says it retires on March 15, 2027. Microsoft's lifecycle table lists April 1, 2027; plan for March 15."}},{"@type":"Question","name":"Can I keep using ProcessText/Screen after the retirement?","acceptedAnswer":{"@type":"Answer","text":"Not on Azure. A wire-compatible replacement accepts the same ProcessText/Screen request and returns the same JSON from a new host."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Azure Content Moderator vs Content Safety: what changes (2027)","item":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement (Mar 15, 2027): drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" class="active" title="Azure Content Moderator vs Content Safety: what changes (2027)">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="OpenAI removes whisper-1 and gpt-4o-transcribe on Feb 26, 2027">OpenAI removes</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown checklist: migrate before Dec 31, 2026">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 deprecation (Feb 26, 2027): keep SRT, VTT, timestamps">whisper-1 deprecation</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Content Moderator to Content Safety: what changes before 15 March 2027</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  <p class="deadline">⏳ 163 days left — the old API shuts down March 15, 2027.</p>
+  <p><strong>Azure AI Content Safety is not a new version of Content Moderator&#39;s API: it has a different endpoint (<code>text:analyze</code>), JSON body and result (severity levels for Hate, Sexual, Violence and SelfHarm), so migrating means rewriting the call and re-mapping your thresholds</strong> (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview">Microsoft Learn</a>). Content Moderator retires on March 15, 2027. If you would rather not rewrite before then, a <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">wire-compatible Content Moderator replacement</a> keeps <code>ProcessText/Screen</code> working with only a host and key change.</p>
+<h2 id="the-two-requests-side-by-side">The two requests side by side</h2>
+<p><strong>Content Moderator (retiring):</strong></p>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -X POST &quot;https://&lt;region&gt;.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
+  -H &quot;Ocp-Apim-Subscription-Key: $KEY&quot; -H &quot;Content-Type: text/plain&quot; \
+  --data-binary &#39;Is this a crap email abcdef@abcd.com?&#39;</code></pre></div>
+<p><strong>Content Safety (Microsoft&#39;s replacement),</strong> per Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/quickstart-text">text quickstart</a>:</p>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -X POST &quot;&lt;endpoint&gt;/contentsafety/text:analyze?api-version=2024-09-01&quot; \
+  -H &quot;Ocp-Apim-Subscription-Key: $KEY&quot; -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;text&quot;: &quot;Is this a crap email abcdef@abcd.com?&quot;, &quot;categories&quot;: [&quot;Hate&quot;, &quot;Sexual&quot;, &quot;SelfHarm&quot;, &quot;Violence&quot;], &quot;outputType&quot;: &quot;FourSeverityLevels&quot;}&#39;</code></pre></div>
+<p>Content Safety returns <code>categoriesAnalysis</code> (for example <code>{&quot;category&quot;: &quot;Hate&quot;, &quot;severity&quot;: 2}</code>) and <code>blocklistsMatch</code>. Severities are <code>0, 2, 4, 6</code> (four levels) or <code>0–7</code> (eight levels).</p>
+<h2 id="field-by-field-mapping">Field-by-field mapping</h2>
+<div class="table-wrap"><table><thead><tr><th>Content Moderator <code>ProcessText/Screen</code></th><th>Content Safety <code>text:analyze</code></th><th>Notes</th></tr></thead><tbody><tr><td>Raw text body (<code>text/plain</code>, <code>html</code>, <code>xml</code>, <code>markdown</code>)</td><td>JSON <code>{&quot;text&quot;: &quot;...&quot;}</code></td><td>Body format changes</td></tr><tr><td>Query <code>language</code>, <code>classify</code>, <code>PII</code>, <code>autocorrect</code>, <code>listId</code></td><td>JSON <code>categories</code>, <code>blocklistNames</code>, <code>haltOnBlocklistHit</code>, <code>outputType</code></td><td>Different parameters</td></tr><tr><td><code>Terms[]</code> (built-in profanity list, <code>ListId 0</code>, with <code>Index</code>/<code>OriginalIndex</code>)</td><td><code>blocklistsMatch[]</code> from <strong>your own</strong> blocklists</td><td>No built-in profanity list with offsets</td></tr><tr><td><code>PII</code> (Email, IPA, Phone, Address, SSN with indexes)</td><td>None</td><td>Use a separate PII service, such as Azure AI Language PII detection</td></tr><tr><td><code>Classification.Category1</code> (explicit), <code>Category2</code> (suggestive), <code>Category3</code> (offensive), each 0–1</td><td><code>Sexual</code>, <code>Hate</code>, <code>Violence</code>, <code>SelfHarm</code> severity levels</td><td>No 1:1 mapping; re-tune thresholds</td></tr><tr><td><code>Classification.ReviewRecommended</code></td><td>None</td><td>Derive from your own severity thresholds</td></tr><tr><td><code>NormalizedText</code>, <code>AutoCorrectedText</code>, <code>Misrepresentation</code></td><td>None</td><td></td></tr><tr><td><code>Status.Code 3000</code>, <code>TrackingId</code></td><td>HTTP status and error body</td><td>Error handling changes</td></tr><tr><td>Image, video moderation</td><td>Image analysis (separate endpoint)</td><td></td></tr></tbody></table></div>
+<h2 id="which-way-to-go">Which way to go</h2>
+<div class="table-wrap"><table><thead><tr><th>Situation</th><th>Path</th></tr></thead><tbody><tr><td>You can rewrite the call and re-tune thresholds before March 2027</td><td>Move to Content Safety (Microsoft&#39;s supported path; free tier of 5,000 text records a month)</td></tr><tr><td>Your code, stored results or dashboards depend on <code>Terms</code>, <code>PII</code> or <code>Category1/2/3</code></td><td>Keep the format with a <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">wire-compatible replacement</a> ($1 per 1,000 texts) and migrate later on your own schedule</td></tr><tr><td>You only need a free generic moderation signal</td><td>OpenAI&#39;s <code>omni-moderation-latest</code> (free), also with a different API</td></tr></tbody></table></div>
+<p>The minimal change with the wire-compatible replacement:</p>
+<div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- POST https://&lt;region&gt;.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True
+- Ocp-Apim-Subscription-Key: $AZURE_KEY
++ POST https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True
++ Authorization: Bearer $APIFY_TOKEN</code></pre></div>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-azure-content-safety-the-same-api-as-content-moderator">Is Azure Content Safety the same API as Content Moderator?</h3>
+<p>No. Content Safety uses <code>POST /contentsafety/text:analyze</code> with a JSON body and returns severity levels for Hate, Sexual, Violence and SelfHarm. Content Moderator&#39;s <code>ProcessText/Screen</code> took a raw text body and returned <code>Terms</code>, <code>PII</code> and <code>Classification</code> scores.</p>
+<h3 id="does-content-safety-detect-pii-like-content-moderator-did">Does Content Safety detect PII like Content Moderator did?</h3>
+<p>Not in <code>text:analyze</code>. Content Moderator&#39;s <code>PII</code> output (email, phone, IP, address, SSN) has no equivalent there, so you need a separate PII detection service or a wire-compatible replacement.</p>
+<h3 id="how-do-content-moderator-categories-map-to-content-safety">How do Content Moderator categories map to Content Safety?</h3>
+<p>Roughly: Category1 (sexually explicit) and Category2 (suggestive) relate to Sexual, and Category3 (offensive) overlaps with Hate and Violence. The scales differ (0–1 scores versus severity levels), so thresholds must be re-tuned on your own data.</p>
+<h3 id="when-does-azure-content-moderator-stop-working">When does Azure Content Moderator stop working?</h3>
+<p>Microsoft says it retires on March 15, 2027. Microsoft&#39;s lifecycle table lists April 1, 2027; plan for March 15.</p>
+<h3 id="can-i-keep-using-processtextscreen-after-the-retirement">Can I keep using ProcessText/Screen after the retirement?</h3>
+<p>Not on Azure. A wire-compatible replacement accepts the same <code>ProcessText/Screen</code> request and returns the same JSON from a new host.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
