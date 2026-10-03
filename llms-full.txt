@@ -7,7 +7,7 @@ URL: https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-package
 
 ## Why agents need this
 
-A USENIX Security 2025 study generated 2.23 million code samples with 16 models. **19.7% referenced at least one package that does not exist**, and 43% of the invented names came back on every rerun of the same prompt ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)). Because the names are predictable, attackers can register them with malware. This is called *slopsquatting*.
+A USENIX Security 2025 study (Spracklen et al.) had 16 models write **576,000 code samples**. Of the **2.23 million package recommendations** in them, **440,445 (19.7%) named packages that do not exist**, 205,474 unique names. In a separate test, the authors re-ran 500 prompts that had produced a hallucination 10 times each, and 43% of those hallucinated names came back in all 10 runs ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)). Because the names are predictable, attackers can register them with malware. This is called *slopsquatting*.
 
 A rule in `CLAUDE.md` or `AGENTS.md` saying "never invent packages" is text the model may ignore. A hook is code that runs on every install.
 
@@ -38,7 +38,7 @@ Many hallucinations are real packages used wrongly. `useActionState` does not ex
 - npm: `.d.ts` declarations, read with the TypeScript compiler.
 - Python: wheels, parsed statically and never executed.
 
-Status: awaiting publication on the Apify Store; until the Store page loads, the MCP URL answers only its owner.
+Status: live on the Apify Store since October 3, 2026. Calls need your Apify API token.
 
 It is an MCP server billed per check:
 - `check_symbols`: $0.002 per symbol.
@@ -442,7 +442,7 @@ URL: https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/
 
 ## Why this exists
 
-A USENIX Security 2025 study of 2.23 million AI-generated code samples found **19.7% referenced at least one package that does not exist**; 43% of those invented names recurred on every rerun, which is what makes "slopsquatting" (registering the invented name with malware) practical ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)).
+A USENIX Security 2025 study (Spracklen et al.) had 16 models write **576,000 code samples**. Of the **2.23 million package recommendations** in them, **440,445 (19.7%) named packages that do not exist**, 205,474 unique names. In a separate test, the authors re-ran 500 prompts that had produced a hallucination 10 times each, and 43% of those hallucinated names came back in all 10 runs ([paper](https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen)). Predictable names are what make "slopsquatting" (registering the invented name with malware) practical.
 
 The quieter failure is calling a real API that isn't in *your* version — `useActionState` exists in React 19 but not React 18; `numpy.asfarray` was removed in NumPy 2.0. The code looks right, passes review, and breaks at runtime.
 
@@ -519,7 +519,7 @@ Attackers publish malware under package names AI models tend to invent. When an 
 
 ### How is this different from Context7?
 
-Context7 puts documentation text into the prompt. This API answers a yes/no question from the published artifact itself — does a given symbol exist in a given version — and blocks or flags the result.
+Context7 puts documentation text into the prompt. This API answers a yes/no question from the published artifact itself — does a given symbol exist in a given version — and returns a verdict (`ok`, `warn` or `block`). It does not intercept installs itself; the free local ExactGround hook is what refuses an install in your agent.
 
 ### Which languages are supported?
 
@@ -704,7 +704,7 @@ Related: OpenAI's deprecations page also lists `tts-1` and `tts-1-hd` (text-to-s
 
 | Model | Price (OpenAI pricing page, October 2026) | Status |
 |---|---|---|
-| `whisper-1` | $0.006 / minute | Removed Feb 26, 2027 |
+| `whisper-1` (listed as "Whisper") | $0.006 / minute | Removed Feb 26, 2027 |
 | `gpt-4o-transcribe` | token-based, estimated $0.006 / minute | Removed Feb 26, 2027 |
 | `gpt-4o-mini-transcribe` | token-based, estimated $0.003 / minute | Removed Feb 26, 2027 |
 | `gpt-transcribe` | $0.0045 / minute | Recommended |
