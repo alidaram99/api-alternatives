@@ -1279,7 +1279,7 @@ URL: https://alidaram99.github.io/api-alternatives/tts-1-alternative/
 
 ## What changes on 2027-01-06
 
-OpenAI's own [deprecations page](https://developers.openai.com/api/docs/deprecations) states: *"The following text-to-speech models are deprecated and will be removed from the API on January 6, 2027, with at least three months' notice."* Announced 1 October 2026, the four models removed are `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` and `gpt-4o-mini-tts-2025-12-15`. OpenAI's recommended replacement is `gpt-realtime-2.1-mini` — but that model prices audio by the **token** ($20 per 1M audio output tokens), not by the simple per-character rate `tts-1` had, so it is not a drop-in price comparison, only a drop-in *capability* successor aimed more at realtime voice agents than one-shot text-to-speech calls. After 6 January 2027, any code still calling `tts-1`/`tts-1-hd`/`gpt-4o-mini-tts` will fail outright, not degrade gracefully.
+OpenAI's [deprecations page](https://developers.openai.com/api/docs/deprecations), rechecked 3 October 2026, lists `tts-1`, `tts-1-hd`, `gpt-4o-mini-tts-2025-03-20` and `gpt-4o-mini-tts-2025-12-15` for removal on 6 January 2027 following its 1 October announcement. The recommended replacement, `gpt-realtime-2.1-mini`, uses the Realtime API and token-based audio pricing; that recommendation is not a guarantee that existing `/audio/speech` clients work unchanged. Plan and test the API migration before the removed models stop accepting requests.
 
 ## Minimal migration diff
 
