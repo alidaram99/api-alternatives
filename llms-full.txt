@@ -5,7 +5,7 @@ URL: https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-package
 
 **Check that a package exists on the registry before an AI agent installs it. Code models invent plausible package names, and attackers can register those names. [ExactGround](https://github.com/alidaram99/exactground)'s free hook blocks installs of names that do not exist in Claude Code, Codex, Gemini CLI and Cursor, and its hosted API answers the stricter question: does this function exist in the exact version you use?**
 
-*Facts on this page were checked against the linked sources and ExactGround v0.1.4 on October 3, 2026.*
+*Facts on this page were checked against the linked sources and ExactGround v0.1.5 on October 3, 2026.*
 
 ## How often agents invent packages
 
@@ -32,7 +32,7 @@ A package that exists can still be malicious, or a legitimate package can be com
 ## Try it in one line
 
 ```console
-$ npx -y github:alidaram99/exactground#v0.1.4 check pypi:requests pypi:reqeusts react@99.0.0
+$ npx -y github:alidaram99/exactground#v0.1.5 check pypi:requests pypi:reqeusts react@99.0.0
 OK      pypi:requests
 BLOCK   pypi:reqeusts — "reqeusts" does not exist on PyPI; did you mean "requests"? (it is 1 edit away)
 BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest is 19.3.0)
@@ -41,7 +41,7 @@ BLOCK   react@99.0.0 — version 99.0.0 of "react" was never published (latest i
 ## Install it in your agent
 
 - **Claude Code:** `claude plugin marketplace add alidaram99/exactground`, then `claude plugin install exactground@exactground-marketplace`.
-- **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.4`, then trust the hook in `/hooks`.
+- **Codex:** `codex plugin marketplace add alidaram99/exactground --ref v0.1.5`, then trust the hook in `/hooks`.
 - **Gemini CLI and Cursor:** `exactground init gemini --write` or `exactground init cursor --write` in your project.
 
 What the hook covers:
@@ -49,7 +49,7 @@ What the hook covers:
 - Bare installs such as `npm install`, `uv sync` and `poetry install`, checked against the lockfile, so a dependency the agent wrote into `package.json` or `pyproject.toml` is caught too.
 - Private packages: list them in `.exactground.json` and approve that file with `exactground trust` in a terminal. The hook ignores a policy file that no human approved.
 
-Commands it cannot check are denied, not waved through. That covers installs inside `node -e`, `python -c`, `$(...)` and `eval`, program names built at run time (such as `& ('np'+'m')`), and loops that run a package manager. If the registry or the checker fails, the hook denies too.
+Commands it cannot check are denied, not waved through. That covers installs inside `node -e`, `python -c`, `$(...)` and `eval`, program names built at run time (such as `& ('np'+'m')`), and loops or installs whose program or package name is a variable. A loop with a literal `npm`, `npx` or `pip` in its body is checked like any other command. If the registry or the checker fails, the hook denies too.
 
 **Out of scope, on purpose.** ExactGround is a cooperative guardrail, not a sandbox. It stops an agent that hallucinates or mistypes a name in a normal install command. An agent running as your user that deliberately obfuscates its commands can defeat any hook-based guard, including this one. Examples include writing its own scripts, or building names and paths at run time in ways no rule anticipates. For an agent you treat as adversarial, use an OS sandbox or container, or a separate OS user ([SECURITY.md](https://github.com/alidaram99/exactground/blob/main/SECURITY.md)).
 
