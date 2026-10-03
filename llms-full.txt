@@ -536,6 +536,98 @@ No. It is an independent tool.
 
 ---
 
+# Extract All URLs From a Sitemap — indexes, gzip, robots.txt
+
+URL: https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/
+
+
+**Give this Actor a domain or sitemap URL, and it returns one row per page URL from the site's public sitemap** — it does not open or crawl those pages, only the sitemap files themselves. It follows sitemap indexes, unpacks `.xml.gz`, and checks `robots.txt` for `Sitemap:` lines.
+
+## What it looks up
+
+Given a domain, it checks (in order): `robots.txt` (every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if not already listed. A start URL that already ends in `.xml` or `.xml.gz` is fetched directly. An index is followed one child file at a time until `maxUrls` is reached; a file starting with the gzip magic bytes is unpacked automatically.
+
+## Example input
+
+```json
+{
+  "startUrls": [{ "url": "https://www.sitemaps.org" }],
+  "maxUrls": 10
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `startUrls` | required | A domain or a sitemap URL (`.xml` or `.xml.gz`) |
+| `includeRegex` / `excludeRegex` | optional | Case-insensitive regex to keep or drop matching URLs |
+| `lastmodSince` | optional | ISO date — URLs with an older `lastmod` are dropped; URLs with no `lastmod` are kept |
+| `maxUrls` | integer, default 1000 | Stop after this many unique URLs |
+
+## Example output
+
+```json
+{
+  "url": "https://www.sitemaps.org/",
+  "lastmod": "2016-11-21",
+  "changefreq": null,
+  "priority": null,
+  "sourceSitemap": "https://www.sitemaps.org/sitemap.xml",
+  "domain": "www.sitemaps.org"
+}
+```
+
+Both a real sitemap index (`https://apify.com`) and a gzip child sitemap (`https://www.gnu.org`'s `sitemap0.xml.gz`) were checked against live sites during development.
+
+## Use cases
+
+- **A URL list for another Actor or crawler** that only needs the links, not a fresh crawl of the whole site.
+- **Change detection** — keep rows whose `lastmod` is after a date you pass in.
+- **A scoped export** — keep or drop URLs with a regular expression (`/blog/`, a locale, a file type).
+
+## Limits
+
+Public `http`/`https` sitemaps only, no login; private hosts are refused. At most 50 sitemap files per run and 20 MB per file after unpacking. At most 5 fetches in flight, with retries on HTTP 429/5xx, and `Crawl-delay` in robots.txt honored up to 5 seconds. A path disallowed for `User-agent: *` is not fetched. The run **fails** if every input produces zero URLs, so an empty success is never silently reported as a finished dataset.
+
+## Run it from code
+
+```bash
+curl -X POST "https://api.apify.com/v2/acts/dropin-apis~sitemap-url-extractor/run-sync-get-dataset-items" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"startUrls":[{"url":"https://www.sitemaps.org"}],"maxUrls":10}'
+```
+
+## Pricing
+
+Pay per event — the primary event is `apify-default-dataset-item` at **$0.0004 per URL ($0.40 per 1,000)**, charged when a row is saved. No monthly fee.
+
+**[Open Sitemap URL Extractor & Scraper on Apify](https://apify.com/dropin-apis/sitemap-url-extractor)**
+
+## FAQ
+
+### Does this crawl the pages listed in the sitemap?
+
+No. It only downloads sitemap files and returns the URLs listed inside them — it never fetches the pages those URLs point to.
+
+### What if the site publishes a sitemap index or a `.gz` file?
+
+A sitemap index is followed one child file at a time until `maxUrls` is reached. A file that starts with the gzip magic bytes is unpacked automatically — both paths were checked against real live sites, not only synthetic fixtures.
+
+### What does a plain domain input actually fetch?
+
+`/robots.txt` first (reading every `Sitemap:` line), then `/sitemap.xml` and `/sitemap_index.xml` if those weren't already listed there. A start URL ending in `.xml` or `.xml.gz` is fetched directly, skipping the robots.txt step.
+
+### Why did the run fail with "0 URL(s)"?
+
+None of the inputs had a readable public sitemap. A missing `/sitemap_index.xml` on its own is normal and not a failure — the failure only triggers when every candidate sitemap was missing or wasn't valid sitemap XML.
+
+### What does it cost?
+
+$0.0004 per extracted URL ($0.40 per 1,000 rows), pay per event, with no subscription.
+
+
+---
+
 # Drop-in replacements for retiring APIs, plus data tools
 
 URL: https://alidaram99.github.io/api-alternatives/
