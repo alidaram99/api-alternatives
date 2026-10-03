@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF to Markdown for RAG: text layer or OCR?</title>
+<meta name="description" content="Choose text-layer extraction or OCR before indexing a PDF for RAG. Document to Markdown has no OCR; inspect page warnings, layout and chunk offsets.">
+<meta name="keywords" content="PDF to Markdown API for RAG, scanned PDF to Markdown, PDF text layer check, PDF OCR or text extraction, document RAG chunks">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PDF to Markdown for RAG: text layer or OCR?">
+<meta property="og:description" content="Choose text-layer extraction or OCR before indexing a PDF for RAG. Document to Markdown has no OCR; inspect page warnings, layout and chunk offsets.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PDF & Document to Markdown — DOCX, HTML for RAG","description":"Choose text-layer extraction or OCR before indexing a PDF for RAG. Document to Markdown has no OCR; inspect page warnings, layout and chunk offsets.","url":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0045,"priceCurrency":"USD","description":"Billed per event: Page converted"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"PDF to Markdown for RAG: check the text layer before choosing OCR","description":"Choose text-layer extraction or OCR before indexing a PDF for RAG. Document to Markdown has no OCR; inspect page warnings, layout and chunk offsets.","url":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can this Actor turn a scanned PDF into Markdown?","acceptedAnswer":{"@type":"Answer","text":"It cannot recognize image-only scans. Pages with no extractable text return warnings and no page-conversion units. Use OCR separately before indexing recognized text."}},{"@type":"Question","name":"Does a successful run mean every PDF page was extracted?","acceptedAnswer":{"@type":"Answer","text":"No. maxPages can truncate a PDF, scanned pages can be empty, failed URLs can be skipped, and a spending cap can stop the batch. Compare requested URLs, inspected pages and warnings before ingesting results."}},{"@type":"Question","name":"Are RAG chunk offsets tokens or PDF page coordinates?","acceptedAnswer":{"@type":"Answer","text":"Neither. start and end count Unicode code points in the returned Markdown, with an exclusive end. Preserve that Markdown so you can reconstruct the chunk text."}},{"@type":"Question","name":"Do overlapping chunks increase the bill?","acceptedAnswer":{"@type":"Answer","text":"No. PDF billing counts pages with extracted text; other documents count started 2,000-word blocks. Chunk overlap adds no conversion event."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"PDF to Markdown for RAG: text layer or OCR?","item":"https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" class="active" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>PDF to Markdown for RAG: check the text layer before choosing OCR</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Document to Markdown extracts an existing PDF text layer and converts public digital documents into Markdown with optional overlapping RAG chunks. It has no OCR: route image-only scans to a separate OCR workflow, then check the recognized text before indexing it.</strong></p>
+<p><em>Verified on October 4, 2026 against the Actor&#39;s converter, layout logic, options, billing tests, real PDF/DOCX fixtures, README and pricing configuration.</em></p>
+<p><strong>No OCR is performed on scanned pages or embedded images.</strong> A returned row or successful run does not establish that all pages contain usable text.</p>
+<h2 id="decide-before-ingestion">Decide before ingestion</h2>
+<p>Selecting and copying a few lines in a PDF viewer is a useful first check, not a guarantee: a scanned PDF can have a poor hidden OCR layer, and selectable text can still be in the wrong order. Compare extracted words and page order with the original.</p>
+<div class="table-wrap"><table><thead><tr><th>Source condition</th><th>Recommended next step</th></tr></thead><tbody><tr><td>Digital PDF with readable selectable text</td><td>Try text-layer extraction; review headings, order and tables</td></tr><tr><td>Image-only scan with no selectable text</td><td>OCR first using a separate product; this Actor cannot recognize the image</td></tr><tr><td>Mixed PDF with text pages and scans</td><td>Inspect every page warning; text pages do not make the scanned pages recoverable</td></tr><tr><td>Scan with a hidden OCR layer</td><td>Check recognition errors and logical order; this Actor reads that layer without re-OCR</td></tr><tr><td>DOCX or structured HTML is available</td><td>Prefer the structured source when layout fidelity matters</td></tr><tr><td>Tables, multiple columns or Arabic with suspect glyphs</td><td>Use the <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/">layout and Arabic verification guide</a> before embedding</td></tr></tbody></table></div>
+<p>PDF.js exposes document/page text for extraction; recovering an image&#39;s characters requires another recognition step. The Actor builds Markdown from PDF.js text items and coordinates, as reflected in <a href="https://mozilla.github.io/pdf.js/examples/">PDF.js documentation</a>. Reported <a href="https://github.com/pdfminer/pdfminer.six/issues/539">multi-column extraction problems</a> also show why readable characters and correct reading order are separate checks.</p>
+<h2 id="convert-a-small-sample-first">Convert a small sample first</h2>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl --fail-with-body -X POST &quot;https://api.apify.com/v2/acts/dropin-apis~document-to-markdown/run-sync-get-dataset-items&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;urls&quot;:[&quot;https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&quot;],&quot;maxPages&quot;:2,&quot;includeImagesAlt&quot;:false,&quot;chunkSize&quot;:1200,&quot;chunkOverlap&quot;:100}&#39;</code></pre></div>
+<p>This is a batch Actor using Apify&#39;s synchronous run-and-dataset endpoint, not a persistent conversion service. For slow jobs, start a run asynchronously and retrieve its dataset after completion. The <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/">PDF API overview</a> covers the full workflow.</p>
+<div class="table-wrap"><table><thead><tr><th>Format</th><th>Current conversion</th></tr></thead><tbody><tr><td>PDF</td><td>PDF.js text layer; inferred headings, lists and simple aligned tables</td></tr><tr><td>DOCX</td><td>Mammoth document structure, including headings, lists and tables</td></tr><tr><td>HTML</td><td>Static HTML article/main extraction with Readability and Turndown; no browser rendering</td></tr><tr><td>TXT</td><td>UTF-8 text, with HTML characters escaped</td></tr><tr><td>Markdown</td><td>Text retained with Unicode normalization</td></tr></tbody></table></div>
+<p>HTML/DOCX image alt text can be retained through <code>includeImagesAlt</code>; PDF image alt text is not extracted. The Actor does not load page scripts or external document resources.</p>
+<h2 id="what-the-output-proves">What the output proves</h2>
+<p>Each row contains <code>url</code>, <code>contentType</code>, <code>title</code>, <code>markdown</code>, <code>pages</code>, <code>wordCount</code>, <code>chunks</code> and <code>warnings</code>. <code>pages</code> counts inspected PDF pages, including blank/scanned ones; it is <code>null</code> for non-PDF formats.</p>
+<p>A textless PDF page generates a warning that the page has no extractable text and OCR is unavailable. An entirely image-only fixture returns empty Markdown, zero words, zero custom page units and an explicit warning. It is a valid empty extraction, not an OCR success.</p>
+<p>Every PDF carries a warning that headings, reading order and tables are inferred. If <code>maxPages</code> cuts the source short, a separate warning gives the source page count and selected cap. Do not discard warnings merely because some Markdown was returned.</p>
+<h2 id="chunks-do-not-repair-extraction">Chunks do not repair extraction</h2>
+<p><code>chunkSize: 0</code> disables splitting. Otherwise, choose <strong>200–20,000 Unicode code points</strong>, with <code>chunkOverlap</code> at most half the chunk size. The default overlap is the smaller of 100 or 20% of the chosen size.</p>
+<p>Each chunk has <code>index</code>, <code>start</code>, <code>end</code> and <code>text</code>. Offsets refer to Unicode code points in the <strong>returned Markdown</strong>, with <code>end</code> exclusive; they are not byte offsets, PDF coordinates or token counts. Fixed-size splitting can cut across a table or heading, so inspect chunk boundaries for documents where those structures matter.</p>
+<p>Preserve source URL, document title, warnings and extraction date alongside embeddings. Keep the full Markdown as the offset reference. Neither a word count nor a chunk array proves that retrieval will return a correct answer.</p>
+<h2 id="bounds-and-price">Bounds and price</h2>
+<div class="table-wrap"><table><thead><tr><th>Limit</th><th>Current value</th></tr></thead><tbody><tr><td>URLs</td><td>1–20 public HTTP(S) URLs per run, sequential; duplicate URLs/fragments removed</td></tr><tr><td>PDF pages</td><td>First 20 by default; <code>maxPages</code> from 1–200 per PDF</td></tr><tr><td>Document bytes</td><td>50 MiB transferred/decompressed, including bounded DOCX ZIP expansion</td></tr><tr><td>Network/conversion deadlines</td><td>60 seconds for document fetch/DNS/retries; 45 seconds for conversion in an isolated worker</td></tr><tr><td>Output</td><td>Two million Markdown characters and 8 MiB per result item</td></tr><tr><td>Default whole-run timeout</td><td>240 seconds; slow batches should be split</td></tr></tbody></table></div>
+<p>Fetching obeys robots rules, validates redirect destinations and pins public DNS addresses. It can reject a public URL when robots rules are denied or unavailable. It does not bypass logins or CAPTCHAs. Extracted text remains untrusted data for any downstream agent.</p>
+<p>Pricing is <strong>$0.0045 per <code>page-converted</code> unit</strong>, plus <strong>$0.0005 per Actor start at the default 512 MB</strong>; the start charge scales with selected memory. PDF units count inspected pages containing extracted text. Blank/scanned pages and failed conversions have no conversion event, but the run-start charge still applies.</p>
+<p>DOCX, HTML, TXT and Markdown use one unit per started 2,000-word block <strong>per document</strong>. Chunk overlap adds no event. <code>pages</code> and chunk count are therefore not billing-unit counts. At default memory, two text PDF pages cost $0.0095 including the start; an image-only scan has no page-conversion charge and still gets no recognized text.</p>
+<p><strong><a href="https://apify.com/dropin-apis/document-to-markdown">Run Document to Markdown on Apify</a></strong> for a digital document sample; choose a separate OCR service for scans.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-this-actor-turn-a-scanned-pdf-into-markdown">Can this Actor turn a scanned PDF into Markdown?</h3>
+<p>It cannot recognize image-only scans. Pages with no extractable text return warnings and no page-conversion units. Use OCR separately before indexing recognized text.</p>
+<h3 id="does-a-successful-run-mean-every-pdf-page-was-extracted">Does a successful run mean every PDF page was extracted?</h3>
+<p>No. maxPages can truncate a PDF, scanned pages can be empty, failed URLs can be skipped, and a spending cap can stop the batch. Compare requested URLs, inspected pages and warnings before ingesting results.</p>
+<h3 id="are-rag-chunk-offsets-tokens-or-pdf-page-coordinates">Are RAG chunk offsets tokens or PDF page coordinates?</h3>
+<p>Neither. start and end count Unicode code points in the returned Markdown, with an exclusive end. Preserve that Markdown so you can reconstruct the chunk text.</p>
+<h3 id="do-overlapping-chunks-increase-the-bill">Do overlapping chunks increase the bill?</h3>
+<p>No. PDF billing counts pages with extracted text; other documents count started 2,000-word blocks. Chunk overlap adds no conversion event.</p>
+<h2 id="related">Related</h2>
+<ul><li>Parent: <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/">PDF to Markdown API and supported formats</a>.</li><li>Adjacent: <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/">PDF tables, columns and Arabic: what can be preserved</a>.</li><li>Other content: <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/">Direct media files to SRT/VTT</a>.</li><li>Discovery: <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/">Extract document URLs from a sitemap</a>.</li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

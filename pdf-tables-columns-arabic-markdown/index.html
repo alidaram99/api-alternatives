@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF tables, columns and Arabic: Markdown limits</title>
+<meta name="description" content="Check PDF table associations, column reading order and Arabic glyphs before RAG. See tested conversion cases, known limits and a practical review checklist.">
+<meta name="keywords" content="Arabic PDF to Markdown, multi column PDF reading order, PDF table to Markdown API, Arabic PDF glyph extraction, PDF RAG layout verification">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PDF tables, columns and Arabic: Markdown limits">
+<meta property="og:description" content="Check PDF table associations, column reading order and Arabic glyphs before RAG. See tested conversion cases, known limits and a practical review checklist.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PDF & Document to Markdown — DOCX, HTML for RAG","description":"Check PDF table associations, column reading order and Arabic glyphs before RAG. See tested conversion cases, known limits and a practical review checklist.","url":"https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.0045,"priceCurrency":"USD","description":"Billed per event: Page converted"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"PDF tables, columns and Arabic: what Markdown conversion can preserve","description":"Check PDF table associations, column reading order and Arabic glyphs before RAG. See tested conversion cases, known limits and a practical review checklist.","url":"https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does Arabic PDF support mean perfect Arabic reading order?","acceptedAnswer":{"@type":"Answer","text":"No. The Actor preserves Unicode text without reversing strings, but PDF glyph maps and positioned runs can still produce incorrect words or order. Review a known phrase and the mixed numbers/code in your own document."}},{"@type":"Question","name":"Are Arabic PDF tables converted into Markdown tables?","acceptedAnswer":{"@type":"Answer","text":"The current PDF table detector excludes right-to-left rows. Arabic text can be extracted, but structured table recovery is not promised. Arabic DOCX tables have separate positive fixture evidence."}},{"@type":"Question","name":"Can a two-column page be mistaken for a table?","acceptedAnswer":{"@type":"Answer","text":"Yes. Aligned text runs drive the PDF heuristic, so columns can interleave or resemble table cells. Compare paragraph transitions with the original before indexing."}},{"@type":"Question","name":"Does chunking fix a broken table or OCR layer?","acceptedAnswer":{"@type":"Answer","text":"No. Chunks split the Markdown already extracted. Correct source text and layout first, then verify that chunk boundaries preserve the context needed for retrieval."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"PDF tables, columns and Arabic: Markdown limits","item":"https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" class="active" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>PDF tables, columns and Arabic: what Markdown conversion can preserve</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Document to Markdown can infer headings, lists and simple aligned tables from digital PDF text, and retain Arabic Unicode text without reversing character strings. Complex columns, table associations and source glyph mappings remain best-effort, so compare the conversion with the original before using it for RAG or publishing it.</strong></p>
+<p><em>Verified on October 4, 2026 against the Actor&#39;s layout/conversion implementation, actual PDF and DOCX fixture tests, fixture provenance, live verification record, README and pricing configuration.</em></p>
+<p><strong>No OCR is included.</strong> Start with the <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/">text-layer or OCR decision guide</a> if a PDF is scanned or has an unreliable hidden text layer.</p>
+<h2 id="what-is-established-and-what-is-inferred">What is established, and what is inferred</h2>
+<div class="table-wrap"><table><thead><tr><th>Layout feature</th><th>Current behavior</th><th>What to verify</th></tr></thead><tbody><tr><td>Headings and lists</td><td>PDF font sizes and line markers drive Markdown heuristics</td><td>Heading hierarchy, missing bullets and false headings</td></tr><tr><td>Simple aligned PDF tables</td><td>Consecutive left-to-right rows with matching cell alignment become a Markdown table; first row becomes the header</td><td>Header meaning, column association, units and totals</td></tr><tr><td>Arabic PDF tables</td><td>The current PDF table detector excludes right-to-left rows</td><td>Arabic text can remain without being a structured Markdown table</td></tr><tr><td>Multiple columns</td><td>Lines/runs are ordered geometrically; there is no full semantic column reconstruction</td><td>Whether adjacent columns interleave sentences or become a false table</td></tr><tr><td>Arabic text</td><td>Runs use direction/coordinates; strings are not reversed, and presentation forms are normalized</td><td>Source word order, missing glyphs and mixed numbers/code</td></tr><tr><td>Rotated pages</td><td>Extracted with an additional rotation warning</td><td>Reading order and orientation</td></tr><tr><td>PDF images</td><td>No OCR or PDF image-alt extraction</td><td>Whether essential table or figure content exists only as pixels</td></tr><tr><td>DOCX/HTML tables</td><td>Explicit document table structure is converted; a table without header cells uses its first row as header and emits a warning</td><td>Merged cells, nested content and whether the first row is really a header</td></tr></tbody></table></div>
+<p>This distinction matters for other converters too. Maintainers have received reports of <a href="https://github.com/pymupdf/pymupdf4llm/issues/359">tables being treated as images</a>, <a href="https://github.com/pdfminer/pdfminer.six/issues/539">multi-column order problems</a>, and <a href="https://github.com/microsoft/markitdown/issues/2336">Arabic logical-order and table-association failures</a>. Those reports establish concrete failure modes, not comparative benchmarks or proof this Actor solves all of them.</p>
+<h2 id="evidence-from-actual-fixtures">Evidence from actual fixtures</h2>
+<p>The Actor&#39;s existing test suite uses real document parsers and genuine PDF/OOXML files. Synthetic fixtures test known content; they do not measure accuracy on arbitrary documents.</p>
+<div class="table-wrap"><table><thead><tr><th>Tested case</th><th>Observed evidence</th><th>Boundary</th></tr></thead><tbody><tr><td>Synthetic two-page English PDF</td><td>Heading, bullet list, <code>Item / Count</code> table and second-page sentinel are recovered</td><td>One simple digital layout, not a general complex-table benchmark</td></tr><tr><td>The same PDF with <code>maxPages: 1</code></td><td>Second-page text is excluded, a truncation warning appears and only one conversion unit is counted</td><td>A bounded conversion intentionally omits later pages</td></tr><tr><td>Image-only/blank PDF fixture</td><td>Empty Markdown, no-OCR warning, zero page units</td><td>Checks absence of text; does not test OCR accuracy</td></tr><tr><td>Mozilla Arabic CID-font PDF</td><td>Arabic words survive without string reversal or replacement glyphs; forms are normalized</td><td>The known source/font mapping imperfection remains</td></tr><tr><td>Genuine Arabic DOCX</td><td><code>مرحباً بالعالم</code>, <code>الإصدار API 2026</code>, heading/list structure and an Arabic table remain in logical order</td><td>This stronger structured-source evidence is for DOCX, not arbitrary Arabic PDFs</td></tr><tr><td>Arabic mixed numeric/currency runs</td><td>A coordinate-level regression keeps the Arabic phrase with its numeric content in the expected order</td><td>A focused layout control, not a full-document benchmark</td></tr></tbody></table></div>
+<p>The live Arabic PDF conversion recorded on October 2, 2026 returned four repeated lines including <code>انواع اخلطوط العربية</code> from Mozilla&#39;s <a href="https://raw.githubusercontent.com/mozilla/pdf.js/v6.3.289/test/pdfs/ArabicCIDTrueType.pdf">ArabicCIDTrueType.pdf fixture</a>. The imperfect word <code>اخلطوط</code> is not silently corrected to <code>الخطوط</code>. This is a known extraction/source-mapping limitation, and the layout warning remains.</p>
+<p>Arabic DOCX and HTML use logical document text, whereas PDF text relies on glyph maps and positioned runs. A correct RTL preview cannot repair wrong characters or lost table relationships in the underlying text.</p>
+<h2 id="sample-the-difficult-pages">Sample the difficult pages</h2>
+<p>Run the source PDF with a page cap that includes the pages you want to inspect. <code>maxPages</code> selects the first pages; it does not offer arbitrary page ranges.</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;urls&quot;: [&quot;https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&quot;],
+  &quot;maxPages&quot;: 20,
+  &quot;includeImagesAlt&quot;: false,
+  &quot;chunkSize&quot;: 0
+}</code></pre></div>
+<p>This W3C PDF is a connectivity/text-layer smoke test, not a table or Arabic benchmark. Replace it with a trusted public document representative of your own layout, and retain the full Markdown while reviewing it.</p>
+<ol><li>For tables, compare each header, row label, value and unit with the source. A misplaced column can make a plausible sentence factually wrong.</li><li>For columns, read the final line of one paragraph and the first line of the next. Check sidebars, footnotes and page transitions for interleaving.</li><li>For Arabic, compare known phrases and proper names, then mixed Latin identifiers, numbers and punctuation. Check actual characters as well as their visual direction.</li><li>Inspect every warning and the PDF <code>pages</code> count. Look for scanned/empty pages, rotation and <code>maxPages</code> truncation.</li><li>Enable chunks only after conversion passes review. Verify that retrieval keeps labels with values; fixed-size chunks can split tables even when conversion was correct.</li></ol>
+<p>Use <a href="https://alidaram99.github.io/waraqmd/ar/">Waraq&#39;s Arabic Markdown editor</a> to read the output locally alongside the source. Its RTL display helps review; it does not certify PDF reading order or fix glyph mapping.</p>
+<p>For agent-driven ingestion, <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">DoneLatch&#39;s evidence workflow</a> can require a recorded check after the final change. Useful checks assert a known header/value relationship or phrase order and include a negative example that would fail if columns were swapped; a simple “Markdown is nonempty” check misses these failures.</p>
+<h2 id="limits-and-cost-remain-the-same">Limits and cost remain the same</h2>
+<p>The Actor accepts 1–20 public document URLs; PDF extraction defaults to the first 20 pages and allows <code>maxPages</code> from 1–200. Each document transfer/decompressed content is capped at 50 MiB. There is no special table-repair or Arabic-OCR option.</p>
+<p>PDF pricing is <strong>$0.0045 per inspected page containing extracted text</strong>, plus <strong>$0.0005 per run at the default 512 MB</strong>, with the start event scaling by memory. Blank/scanned pages and failed conversions have no page event. DOCX/HTML/TXT/Markdown use one event per started 2,000-word block per document. A readable but imperfect page can still incur a conversion unit; the fee does not certify semantic fidelity.</p>
+<p><strong><a href="https://apify.com/dropin-apis/document-to-markdown">Try Document to Markdown on Apify</a></strong> and review a representative table, column boundary and Arabic phrase before ingesting the full collection.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-arabic-pdf-support-mean-perfect-arabic-reading-order">Does Arabic PDF support mean perfect Arabic reading order?</h3>
+<p>No. The Actor preserves Unicode text without reversing strings, but PDF glyph maps and positioned runs can still produce incorrect words or order. Review a known phrase and the mixed numbers/code in your own document.</p>
+<h3 id="are-arabic-pdf-tables-converted-into-markdown-tables">Are Arabic PDF tables converted into Markdown tables?</h3>
+<p>The current PDF table detector excludes right-to-left rows. Arabic text can be extracted, but structured table recovery is not promised. Arabic DOCX tables have separate positive fixture evidence.</p>
+<h3 id="can-a-two-column-page-be-mistaken-for-a-table">Can a two-column page be mistaken for a table?</h3>
+<p>Yes. Aligned text runs drive the PDF heuristic, so columns can interleave or resemble table cells. Compare paragraph transitions with the original before indexing.</p>
+<h3 id="does-chunking-fix-a-broken-table-or-ocr-layer">Does chunking fix a broken table or OCR layer?</h3>
+<p>No. Chunks split the Markdown already extracted. Correct source text and layout first, then verify that chunk boundaries preserve the context needed for retrieval.</p>
+<h2 id="related">Related</h2>
+<ul><li>Parent: <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/">PDF to Markdown API</a>.</li><li>Adjacent: <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/">Text layer or OCR before RAG ingestion</a>.</li><li>Review tool: <a href="https://alidaram99.github.io/waraqmd/ar/">Waraq Arabic landing page</a>.</li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

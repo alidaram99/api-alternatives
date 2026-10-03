@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Migrate Perspective attributeScores with the same client</title>
+<meta name="description" content="Keep Perspective comments:analyze and attributeScores fields, change host and auth, then validate independent model scores and moderation thresholds.">
+<meta name="keywords" content="Perspective API attributeScores replacement, TOXICITY score API compatible, Perspective API response format, comments analyze migration">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Migrate Perspective attributeScores with the same client">
+<meta property="og:description" content="Keep Perspective comments:analyze and attributeScores fields, change host and auth, then validate independent model scores and moderation thresholds.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Perspective API alternative — comments:analyze drop-in","description":"Keep Perspective comments:analyze and attributeScores fields, change host and auth, then validate independent model scores and moderation thresholds.","url":"https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Comment analyzed"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Migrate Perspective attributeScores without rewriting your parser","description":"Keep Perspective comments:analyze and attributeScores fields, change host and auth, then validate independent model scores and moderation thresholds.","url":"https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Can I keep reading attributeScores.TOXICITY.summaryScore.value?","acceptedAnswer":{"@type":"Answer","text":"Yes for a returned supported attribute. The path and PROBABILITY shape remain available, but scoreThreshold can omit an attribute. Check that the key exists and revalidate decisions because the scores come from an independent model."}},{"@type":"Question","name":"Can I reuse my Google API key?","acceptedAnswer":{"@type":"Answer","text":"No. Authenticate with an Apify token using a Bearer header or Apify's token query parameter. The Google key parameter is ignored."}},{"@type":"Question","name":"Will the same threshold make the same moderation decision?","acceptedAnswer":{"@type":"Answer","text":"Not necessarily. Scores are independent Detoxify probabilities, and PROFANITY uses an obscene-label approximation. Tune thresholds against labeled comments and measure disagreement before switching."}},{"@type":"Question","name":"Does suggesting scores update the model?","acceptedAnswer":{"@type":"Answer","text":"No. The compatible suggestscore endpoint acknowledges the request but does not persist feedback or train the model."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Migrate Perspective attributeScores with the same client","item":"https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" class="active" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Migrate Perspective attributeScores without rewriting your parser</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  <p class="deadline">⏳ 89 days left — the old API shuts down December 31, 2026.</p>
+  <p><strong>Keep <code>POST /v1alpha1/comments:analyze</code> and the <code>attributeScores</code> fields your client consumes by changing the host and authentication to the Perspective-compatible Actor. Its scores are independent Detoxify model probabilities, not Google&#39;s scores, so validate moderation decisions on your own comments before carrying thresholds across.</strong></p>
+<p><em>Verified on October 4, 2026 against Google&#39;s sunset announcement and the Actor&#39;s current handlers, contract tests, README and pricing configuration.</em></p>
+<p>Google says service remains active through December 31, 2026, with no direct migration support; new usage and quota requests stopped after February 2026. Start with the <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">shutdown checklist</a> to inventory callers and plan the switch. <a href="https://perspectiveapi.com/">Google&#39;s announcement</a></p>
+<h2 id="keep-the-request-and-response-contract">Keep the request and response contract</h2>
+<p>The supported path takes a JSON body. Apify authenticates with your Apify token in <code>Authorization: Bearer</code>; an old Google <code>?key=</code> value is accepted but ignored.</p>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl --fail-with-body -X POST &quot;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d &#39;{&quot;comment&quot;:{&quot;text&quot;:&quot;Thanks for the explanation.&quot;,&quot;type&quot;:&quot;PLAIN_TEXT&quot;},&quot;languages&quot;:[&quot;en&quot;],&quot;requestedAttributes&quot;:{&quot;TOXICITY&quot;:{},&quot;INSULT&quot;:{}},&quot;spanAnnotations&quot;:true,&quot;clientToken&quot;:&quot;migration-sample-1&quot;}&#39;</code></pre></div>
+<p>This request asks for <code>TOXICITY</code> and <code>INSULT</code>; the parser can keep reading <code>response.attributeScores.TOXICITY.summaryScore.value</code>. Do not expect a particular numeric result from the example.</p>
+<div class="table-wrap"><table><thead><tr><th>Field or behavior</th><th>Current compatibility implementation</th></tr></thead><tbody><tr><td><code>comment.text</code></td><td>Nonempty plain text, at most 20 KiB of UTF-8 text; this is a byte limit, not 20,480 characters</td></tr><tr><td><code>requestedAttributes</code></td><td>Required nonempty map of supported attribute names to options</td></tr><tr><td><code>summaryScore</code></td><td><code>{&quot;value&quot;: number, &quot;type&quot;: &quot;PROBABILITY&quot;}</code> under each returned attribute</td></tr><tr><td><code>scoreType</code></td><td>Only <code>PROBABILITY</code>; other score types are rejected</td></tr><tr><td><code>scoreThreshold</code></td><td>Below-threshold attributes are omitted; a missing key is not a zero score</td></tr><tr><td><code>spanScores</code></td><td>With <code>spanAnnotations: true</code>, sentence spans with Unicode code point <code>begin</code> and <code>end</code> offsets; otherwise one whole-text span</td></tr><tr><td><code>languages</code>, <code>detectedLanguages</code></td><td>Returned arrays; explicit language takes priority for selecting a supported scoring language</td></tr><tr><td><code>clientToken</code></td><td>A string is echoed, allowing request/result correlation</td></tr><tr><td><code>context</code>, <code>doNotStore</code></td><td>Accepted but not used for scoring; context does not change the model result</td></tr></tbody></table></div>
+<p>For example, read an optional attribute without turning an absent score into an allow decision:</p>
+<div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">const score = response.attributeScores?.TOXICITY?.summaryScore?.value;
+if (typeof score !== &#39;number&#39;) {
+  throw new Error(&#39;TOXICITY was not returned; inspect thresholds and request options&#39;);
+}</code></pre></div>
+<h2 id="check-attributes-and-languages-before-switching">Check attributes and languages before switching</h2>
+<div class="table-wrap"><table><thead><tr><th>Attributes</th><th>Supported languages</th></tr></thead><tbody><tr><td><code>TOXICITY</code>, <code>SEVERE_TOXICITY</code>, <code>IDENTITY_ATTACK</code>, <code>INSULT</code>, <code>PROFANITY</code>, <code>THREAT</code></td><td>English, Spanish, French, Italian, Portuguese, Russian, Turkish (<code>en</code>, <code>es</code>, <code>fr</code>, <code>it</code>, <code>pt</code>, <code>ru</code>, <code>tr</code>)</td></tr><tr><td><code>SEXUALLY_EXPLICIT</code></td><td>English only</td></tr><tr><td>The corresponding <code>*_EXPERIMENTAL</code> names</td><td>Aliases of the base attributes, with the requested name retained in the response</td></tr></tbody></table></div>
+<p>Attributes such as <code>SPAM</code>, <code>FLIRTATION</code>, <code>ATTACK_ON_AUTHOR</code> and <code>INFLAMMATORY</code> are not scored. Known unsupported attributes and unsupported attribute/language combinations produce <code>400 INVALID_ARGUMENT</code> with <code>LANGUAGE_NOT_SUPPORTED_BY_ATTRIBUTE</code>. Unknown names and invalid requests also return Google-style error envelopes; some error-detail names are best-effort compatibility, so test every error branch your client parses.</p>
+<p><code>PROFANITY</code> maps to Detoxify&#39;s <code>obscene</code> output. That is an approximation, and experimental names do not select Google&#39;s experimental models. The response shape does not establish model equivalence or calibration on your community.</p>
+<h2 id="keep-a-discovery-based-python-client">Keep a discovery-based Python client</h2>
+<p>The Actor also serves a discovery document. If your client uses <code>google-api-python-client</code>, configure discovery and credentials as follows, keeping the analyze body above:</p>
+<div class="codeblock"><span class="code-lang">python</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-python">import os
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+
+base = &quot;https://dropin-apis--perspective-compat.apify.actor&quot;
+client = build(
+    &quot;commentanalyzer&quot;, &quot;v1alpha1&quot;,
+    discoveryServiceUrl=base + &quot;/$discovery/rest?version={apiVersion}&quot;,
+    static_discovery=False,
+    credentials=Credentials(os.environ[&quot;APIFY_TOKEN&quot;]),
+)
+result = client.comments().analyze(body={
+    &quot;comment&quot;: {&quot;text&quot;: &quot;Thanks for the explanation.&quot;},
+    &quot;requestedAttributes&quot;: {&quot;TOXICITY&quot;: {}},
+    &quot;languages&quot;: [&quot;en&quot;],
+}).execute()</code></pre></div>
+<p>This recipe follows the Actor&#39;s existing Python discovery-client check. Pin and test your actual client version before deploying; compatibility with one client does not prove every wrapper works.</p>
+<h2 id="validate-decisions-errors-and-cost">Validate decisions, errors and cost</h2>
+<ol><li>Run a labeled sample with benign, harmful and borderline comments in every language you use. Compare allow, hide and review decisions while Google is still available.</li><li>Test missing scores, empty text, unsupported attributes, UTF-8 byte limits and span offsets containing emoji. Adjust thresholds based on decisions, not numeric similarity.</li><li>Check spending-cap handling: the Actor returns <code>429 RESOURCE_EXHAUSTED</code> when its configured maximum charge is reached. Keep that path separate from a moderation result.</li><li>Save the sample, selected thresholds and results with your deployment. <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">DoneLatch&#39;s evidence workflow</a> can help an agent record checks after its final change; the checks themselves still need to cover the migration.</li></ol>
+<p>The published event price is <strong>$0.001 per analyzed comment ($1 per 1,000)</strong>, plus Apify&#39;s run-start charge. Validation failures have no <code>comment-analyzed</code> event. <code>comments:suggestscore</code> acknowledges feedback without storing it or training the model.</p>
+<p><strong><a href="https://apify.com/dropin-apis/perspective-compat">Try the Perspective-compatible Actor on Apify</a></strong> with a test sample before sending production traffic.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="can-i-keep-reading-attributescorestoxicitysummaryscorevalue">Can I keep reading attributeScores.TOXICITY.summaryScore.value?</h3>
+<p>Yes for a returned supported attribute. The path and PROBABILITY shape remain available, but scoreThreshold can omit an attribute. Check that the key exists and revalidate decisions because the scores come from an independent model.</p>
+<h3 id="can-i-reuse-my-google-api-key">Can I reuse my Google API key?</h3>
+<p>No. Authenticate with an Apify token using a Bearer header or Apify&#39;s token query parameter. The Google key parameter is ignored.</p>
+<h3 id="will-the-same-threshold-make-the-same-moderation-decision">Will the same threshold make the same moderation decision?</h3>
+<p>Not necessarily. Scores are independent Detoxify probabilities, and PROFANITY uses an obscene-label approximation. Tune thresholds against labeled comments and measure disagreement before switching.</p>
+<h3 id="does-suggesting-scores-update-the-model">Does suggesting scores update the model?</h3>
+<p>No. The compatible suggestscore endpoint acknowledges the request but does not persist feedback or train the model.</p>
+<h2 id="related">Related</h2>
+<ul><li>Parent: <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">Perspective API shutdown checklist</a>.</li><li>Adjacent: <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">Azure Content Moderator alternative and its text contract</a>.</li><li>Product details: <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/">Perspective API alternative</a>.</li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

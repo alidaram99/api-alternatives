@@ -473,6 +473,99 @@ Latin-script text under 40 characters is treated as English. Pass `language=spa`
 
 ---
 
+# Content Moderator: PII, video and review migration
+
+URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/
+
+
+**There is no single endpoint that replaces every Azure Content Moderator feature: text compatibility, PII detection, video analysis and human review require separate migration decisions. Keep supported text-screening fields with the compatibility Actor, or move to Content Safety's different semantics, while routing broader PII to Azure Language and rebuilding video and review workflows.**
+
+*Verified on October 4, 2026 against the linked Microsoft documentation and the Actor's current request parser, PII patterns, handler, README and pricing configuration.*
+
+Microsoft's [Content Moderator documentation](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/export-delete-data) gives **March 15, 2027**, while its [lifecycle table](https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator) gives **April 1, 2027**. Plan for the earlier date and confirm your subscription's notice; the [main migration guide](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/) explains the request and taxonomy changes.
+
+## Route each feature explicitly
+
+Here, “direct” means the supported HTTP route and field shape can remain; it does not mean identical detection results. Microsoft's [migration map](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator) establishes the separate-service routes below.
+
+| Existing feature | Route to evaluate | Migration class | Compatibility Actor boundary |
+|---|---|---|---|
+| Text `ProcessText/Screen` | Keep the text Actor, or adopt Content Safety text analysis | Direct supported contract with Actor; different semantics on Content Safety | Raw text body and old field names; independent models and lists |
+| `PII` detection | Azure AI Language PII detection for a broader entity workflow | Different service and response semantics | Limited pattern-based `Email`, `IPA`, `Phone`, `Address`, `SSN` fields |
+| Custom term lists | Content Safety blocklists | Different management and matching semantics | `listId` does not load your custom lists |
+| Image classification | Content Safety image analysis | Different categories and response | No image endpoint |
+| Image OCR / faces | Azure AI Vision / Azure AI Face respectively | Separate services | Neither supported |
+| Video moderation | Extract frames, analyze images, and screen an audio transcript | No direct video replacement | No video endpoint |
+| Review API / human-review tool | Evaluate Content Safety Studio and your review application | No direct legacy API replacement established | No reviewer queue, callbacks or review storage |
+
+## PII: preserve fields or adopt a separate entity service
+
+The text Actor only includes `PII` when requested with `PII=True`. Its patterns cover email, IPv4/IPv6, US/UK phones, valid-format US SSNs and US street addresses with state/ZIP. They do not constitute a universal entity detector: names, passports, arbitrary national identifiers and worldwide phone/address formats are outside this contract.
+
+```bash
+curl --fail-with-body -X POST "https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&PII=True&classify=True" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: text/plain" \
+  --data-binary 'Please reply to support@example.com.'
+```
+
+The body limit is **1,024 JavaScript string code units**; the parser uses `text.length`, so a supplementary character such as an emoji consumes two. Supported content types are `text/plain`, `text/html`, `text/xml` and `text/markdown`. Apify authenticates the Bearer token; an old `Ocp-Apim-Subscription-Key` header is ignored.
+
+Azure Language's [PII feature](https://learn.microsoft.com/en-us/azure/ai-services/language-service/personally-identifiable-information/overview) provides entity recognition and redaction capabilities. For migration, map its results to your application deliberately: validate entity categories, language coverage, offsets and redacted output on your own samples. An empty match list from either service is evidence about that detector's coverage, not proof a document contains no personal information.
+
+## Video: build and verify a pipeline
+
+Microsoft recommends sampling frames for image analysis and analyzing an audio transcription separately. Its guide does not offer a direct replacement for the old video API. [Microsoft video migration guidance](https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator)
+
+A practical migration needs to retain the source time for each frame and transcript segment, combine those results under your own policy, and route uncertain segments for review. Test a short harmful scene between sampled frames and a harmful audio passage without an accompanying image: coarse frame sampling can miss either case.
+
+The [public-media URL transcription guide](https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/) can supply segment-timed text from a direct media file. Transcription itself is not video moderation, and the text compatibility Actor does not extract frames or combine decisions.
+
+## Human review: a flag is not a review system
+
+Microsoft maps the old Review API to Content Safety Studio as web-based monitoring. Its [Studio overview](https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview) describes testing, moderation workflows and monitoring; that does not establish drop-in support for your old review IDs, reviewer assignments or callbacks.
+
+Inventory those dependencies before switching. Demonstrate how an item enters a queue, who can decide, how a callback or polling client learns the outcome, and how you retain the decision history. Validate these behaviors in the chosen system rather than treating a dashboard as evidence of API compatibility.
+
+The text Actor's `Classification.ReviewRecommended` is just a boolean: for English classification it becomes true when any approximate Category1/2/3 score reaches 0.5. Category2 is a proxy, `max(Category1, 0.3 × obscene)`, and misses flirty but otherwise clean text. Non-English classification is omitted. The Actor never assigns a reviewer or persists a review decision.
+
+## Custom policies and validation
+
+`listId` requests continue with the built-in list; a nonzero custom ID gets an `X-Compat-Warning` header. Custom lists are not migrated. `autocorrect=True` returns `AutoCorrectedText` equal to normalized text, with no spelling correction. Check those headers and behaviors before relying on old policy settings.
+
+Run known positive and negative samples for every retained feature. Separate detector quality from workflow quality: a correct PII match does not prove redaction happened, and a recommended review does not prove a reviewer received the item. [DoneLatch evidence checks](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) can record your tests after an agent's final edit.
+
+For supported text screening, the price is **$0.001 per `text-screened` event ($1 per 1,000)** plus Apify's run-start charge. Validation failures have no text event. At the configured spending cap, the handler returns `429` with `Error.Code: TooManyRequests`.
+
+**[Try the text-compatible Content Moderator Actor](https://apify.com/dropin-apis/content-moderator-compat)** when your requirement is the bounded text contract above.
+
+## FAQ
+
+### Is Azure AI Content Safety a PII replacement?
+
+Its text harm-analysis endpoint does not replace PII detection. Microsoft routes PII to Azure AI Language. The compatibility Actor keeps limited pattern-based PII fields for supported text requests.
+
+### Can I send a video to the compatibility Actor?
+
+No. It only screens text. Microsoft's migration route requires a separate frame/image and audio/transcript pipeline, with your own time mapping and policy decisions.
+
+### Does ReviewRecommended create a human-review task?
+
+No. It is a classification flag. A review queue, reviewer permissions, notifications, decisions and history require a separate workflow.
+
+### Will my Azure custom term list still run?
+
+No. The Actor uses its built-in list, and a nonzero listId returns a compatibility-warning header. Export and migrate your list into the replacement system separately.
+
+## Related
+
+- Parent: [Content Moderator to Content Safety: what changes](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/).
+- Adjacent: [Perspective attributeScores migration](https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/).
+- Product details: [Content Moderator text alternative](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/).
+
+
+---
+
 # Content Moderator to Content Safety: what changes
 
 URL: https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/
@@ -988,6 +1081,109 @@ Yes, on OpenAI's October 2026 price list: $0.0045 per minute versus $0.006 per m
 
 ---
 
+# PDF tables, columns and Arabic: Markdown limits
+
+URL: https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/
+
+
+**Document to Markdown can infer headings, lists and simple aligned tables from digital PDF text, and retain Arabic Unicode text without reversing character strings. Complex columns, table associations and source glyph mappings remain best-effort, so compare the conversion with the original before using it for RAG or publishing it.**
+
+*Verified on October 4, 2026 against the Actor's layout/conversion implementation, actual PDF and DOCX fixture tests, fixture provenance, live verification record, README and pricing configuration.*
+
+**No OCR is included.** Start with the [text-layer or OCR decision guide](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/) if a PDF is scanned or has an unreliable hidden text layer.
+
+## What is established, and what is inferred
+
+| Layout feature | Current behavior | What to verify |
+|---|---|---|
+| Headings and lists | PDF font sizes and line markers drive Markdown heuristics | Heading hierarchy, missing bullets and false headings |
+| Simple aligned PDF tables | Consecutive left-to-right rows with matching cell alignment become a Markdown table; first row becomes the header | Header meaning, column association, units and totals |
+| Arabic PDF tables | The current PDF table detector excludes right-to-left rows | Arabic text can remain without being a structured Markdown table |
+| Multiple columns | Lines/runs are ordered geometrically; there is no full semantic column reconstruction | Whether adjacent columns interleave sentences or become a false table |
+| Arabic text | Runs use direction/coordinates; strings are not reversed, and presentation forms are normalized | Source word order, missing glyphs and mixed numbers/code |
+| Rotated pages | Extracted with an additional rotation warning | Reading order and orientation |
+| PDF images | No OCR or PDF image-alt extraction | Whether essential table or figure content exists only as pixels |
+| DOCX/HTML tables | Explicit document table structure is converted; a table without header cells uses its first row as header and emits a warning | Merged cells, nested content and whether the first row is really a header |
+
+This distinction matters for other converters too. Maintainers have received reports of [tables being treated as images](https://github.com/pymupdf/pymupdf4llm/issues/359), [multi-column order problems](https://github.com/pdfminer/pdfminer.six/issues/539), and [Arabic logical-order and table-association failures](https://github.com/microsoft/markitdown/issues/2336). Those reports establish concrete failure modes, not comparative benchmarks or proof this Actor solves all of them.
+
+## Evidence from actual fixtures
+
+The Actor's existing test suite uses real document parsers and genuine PDF/OOXML files. Synthetic fixtures test known content; they do not measure accuracy on arbitrary documents.
+
+| Tested case | Observed evidence | Boundary |
+|---|---|---|
+| Synthetic two-page English PDF | Heading, bullet list, `Item / Count` table and second-page sentinel are recovered | One simple digital layout, not a general complex-table benchmark |
+| The same PDF with `maxPages: 1` | Second-page text is excluded, a truncation warning appears and only one conversion unit is counted | A bounded conversion intentionally omits later pages |
+| Image-only/blank PDF fixture | Empty Markdown, no-OCR warning, zero page units | Checks absence of text; does not test OCR accuracy |
+| Mozilla Arabic CID-font PDF | Arabic words survive without string reversal or replacement glyphs; forms are normalized | The known source/font mapping imperfection remains |
+| Genuine Arabic DOCX | `مرحباً بالعالم`, `الإصدار API 2026`, heading/list structure and an Arabic table remain in logical order | This stronger structured-source evidence is for DOCX, not arbitrary Arabic PDFs |
+| Arabic mixed numeric/currency runs | A coordinate-level regression keeps the Arabic phrase with its numeric content in the expected order | A focused layout control, not a full-document benchmark |
+
+The live Arabic PDF conversion recorded on October 2, 2026 returned four repeated lines including `انواع اخلطوط العربية` from Mozilla's [ArabicCIDTrueType.pdf fixture](https://raw.githubusercontent.com/mozilla/pdf.js/v6.3.289/test/pdfs/ArabicCIDTrueType.pdf). The imperfect word `اخلطوط` is not silently corrected to `الخطوط`. This is a known extraction/source-mapping limitation, and the layout warning remains.
+
+Arabic DOCX and HTML use logical document text, whereas PDF text relies on glyph maps and positioned runs. A correct RTL preview cannot repair wrong characters or lost table relationships in the underlying text.
+
+## Sample the difficult pages
+
+Run the source PDF with a page cap that includes the pages you want to inspect. `maxPages` selects the first pages; it does not offer arbitrary page ranges.
+
+```json
+{
+  "urls": ["https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"],
+  "maxPages": 20,
+  "includeImagesAlt": false,
+  "chunkSize": 0
+}
+```
+
+This W3C PDF is a connectivity/text-layer smoke test, not a table or Arabic benchmark. Replace it with a trusted public document representative of your own layout, and retain the full Markdown while reviewing it.
+
+1. For tables, compare each header, row label, value and unit with the source. A misplaced column can make a plausible sentence factually wrong.
+2. For columns, read the final line of one paragraph and the first line of the next. Check sidebars, footnotes and page transitions for interleaving.
+3. For Arabic, compare known phrases and proper names, then mixed Latin identifiers, numbers and punctuation. Check actual characters as well as their visual direction.
+4. Inspect every warning and the PDF `pages` count. Look for scanned/empty pages, rotation and `maxPages` truncation.
+5. Enable chunks only after conversion passes review. Verify that retrieval keeps labels with values; fixed-size chunks can split tables even when conversion was correct.
+
+Use [Waraq's Arabic Markdown editor](https://alidaram99.github.io/waraqmd/ar/) to read the output locally alongside the source. Its RTL display helps review; it does not certify PDF reading order or fix glyph mapping.
+
+For agent-driven ingestion, [DoneLatch's evidence workflow](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) can require a recorded check after the final change. Useful checks assert a known header/value relationship or phrase order and include a negative example that would fail if columns were swapped; a simple “Markdown is nonempty” check misses these failures.
+
+## Limits and cost remain the same
+
+The Actor accepts 1–20 public document URLs; PDF extraction defaults to the first 20 pages and allows `maxPages` from 1–200. Each document transfer/decompressed content is capped at 50 MiB. There is no special table-repair or Arabic-OCR option.
+
+PDF pricing is **$0.0045 per inspected page containing extracted text**, plus **$0.0005 per run at the default 512 MB**, with the start event scaling by memory. Blank/scanned pages and failed conversions have no page event. DOCX/HTML/TXT/Markdown use one event per started 2,000-word block per document. A readable but imperfect page can still incur a conversion unit; the fee does not certify semantic fidelity.
+
+**[Try Document to Markdown on Apify](https://apify.com/dropin-apis/document-to-markdown)** and review a representative table, column boundary and Arabic phrase before ingesting the full collection.
+
+## FAQ
+
+### Does Arabic PDF support mean perfect Arabic reading order?
+
+No. The Actor preserves Unicode text without reversing strings, but PDF glyph maps and positioned runs can still produce incorrect words or order. Review a known phrase and the mixed numbers/code in your own document.
+
+### Are Arabic PDF tables converted into Markdown tables?
+
+The current PDF table detector excludes right-to-left rows. Arabic text can be extracted, but structured table recovery is not promised. Arabic DOCX tables have separate positive fixture evidence.
+
+### Can a two-column page be mistaken for a table?
+
+Yes. Aligned text runs drive the PDF heuristic, so columns can interleave or resemble table cells. Compare paragraph transitions with the original before indexing.
+
+### Does chunking fix a broken table or OCR layer?
+
+No. Chunks split the Markdown already extracted. Correct source text and layout first, then verify that chunk boundaries preserve the context needed for retrieval.
+
+## Related
+
+- Parent: [PDF to Markdown API](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/).
+- Adjacent: [Text layer or OCR before RAG ingestion](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/).
+- Review tool: [Waraq Arabic landing page](https://alidaram99.github.io/waraqmd/ar/).
+
+
+---
+
 # PDF to Markdown API for RAG — DOCX & HTML too
 
 URL: https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/
@@ -1086,6 +1282,116 @@ $0.0045 per converted page for PDF (only pages with extracted text are charged),
 ### Is this a persistent API I can call anytime?
 
 It's a batch Actor: start a run with your URLs, then read the dataset. It needs no subscription, external OCR key, or separately hosted server, and works from the Apify Console, the run API above, or an MCP-connected agent.
+
+
+---
+
+# PDF to Markdown for RAG: text layer or OCR?
+
+URL: https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/
+
+
+**Document to Markdown extracts an existing PDF text layer and converts public digital documents into Markdown with optional overlapping RAG chunks. It has no OCR: route image-only scans to a separate OCR workflow, then check the recognized text before indexing it.**
+
+*Verified on October 4, 2026 against the Actor's converter, layout logic, options, billing tests, real PDF/DOCX fixtures, README and pricing configuration.*
+
+**No OCR is performed on scanned pages or embedded images.** A returned row or successful run does not establish that all pages contain usable text.
+
+## Decide before ingestion
+
+Selecting and copying a few lines in a PDF viewer is a useful first check, not a guarantee: a scanned PDF can have a poor hidden OCR layer, and selectable text can still be in the wrong order. Compare extracted words and page order with the original.
+
+| Source condition | Recommended next step |
+|---|---|
+| Digital PDF with readable selectable text | Try text-layer extraction; review headings, order and tables |
+| Image-only scan with no selectable text | OCR first using a separate product; this Actor cannot recognize the image |
+| Mixed PDF with text pages and scans | Inspect every page warning; text pages do not make the scanned pages recoverable |
+| Scan with a hidden OCR layer | Check recognition errors and logical order; this Actor reads that layer without re-OCR |
+| DOCX or structured HTML is available | Prefer the structured source when layout fidelity matters |
+| Tables, multiple columns or Arabic with suspect glyphs | Use the [layout and Arabic verification guide](https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/) before embedding |
+
+PDF.js exposes document/page text for extraction; recovering an image's characters requires another recognition step. The Actor builds Markdown from PDF.js text items and coordinates, as reflected in [PDF.js documentation](https://mozilla.github.io/pdf.js/examples/). Reported [multi-column extraction problems](https://github.com/pdfminer/pdfminer.six/issues/539) also show why readable characters and correct reading order are separate checks.
+
+## Convert a small sample first
+
+```bash
+curl --fail-with-body -X POST "https://api.apify.com/v2/acts/dropin-apis~document-to-markdown/run-sync-get-dataset-items" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"urls":["https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"],"maxPages":2,"includeImagesAlt":false,"chunkSize":1200,"chunkOverlap":100}'
+```
+
+This is a batch Actor using Apify's synchronous run-and-dataset endpoint, not a persistent conversion service. For slow jobs, start a run asynchronously and retrieve its dataset after completion. The [PDF API overview](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/) covers the full workflow.
+
+| Format | Current conversion |
+|---|---|
+| PDF | PDF.js text layer; inferred headings, lists and simple aligned tables |
+| DOCX | Mammoth document structure, including headings, lists and tables |
+| HTML | Static HTML article/main extraction with Readability and Turndown; no browser rendering |
+| TXT | UTF-8 text, with HTML characters escaped |
+| Markdown | Text retained with Unicode normalization |
+
+HTML/DOCX image alt text can be retained through `includeImagesAlt`; PDF image alt text is not extracted. The Actor does not load page scripts or external document resources.
+
+## What the output proves
+
+Each row contains `url`, `contentType`, `title`, `markdown`, `pages`, `wordCount`, `chunks` and `warnings`. `pages` counts inspected PDF pages, including blank/scanned ones; it is `null` for non-PDF formats.
+
+A textless PDF page generates a warning that the page has no extractable text and OCR is unavailable. An entirely image-only fixture returns empty Markdown, zero words, zero custom page units and an explicit warning. It is a valid empty extraction, not an OCR success.
+
+Every PDF carries a warning that headings, reading order and tables are inferred. If `maxPages` cuts the source short, a separate warning gives the source page count and selected cap. Do not discard warnings merely because some Markdown was returned.
+
+## Chunks do not repair extraction
+
+`chunkSize: 0` disables splitting. Otherwise, choose **200–20,000 Unicode code points**, with `chunkOverlap` at most half the chunk size. The default overlap is the smaller of 100 or 20% of the chosen size.
+
+Each chunk has `index`, `start`, `end` and `text`. Offsets refer to Unicode code points in the **returned Markdown**, with `end` exclusive; they are not byte offsets, PDF coordinates or token counts. Fixed-size splitting can cut across a table or heading, so inspect chunk boundaries for documents where those structures matter.
+
+Preserve source URL, document title, warnings and extraction date alongside embeddings. Keep the full Markdown as the offset reference. Neither a word count nor a chunk array proves that retrieval will return a correct answer.
+
+## Bounds and price
+
+| Limit | Current value |
+|---|---|
+| URLs | 1–20 public HTTP(S) URLs per run, sequential; duplicate URLs/fragments removed |
+| PDF pages | First 20 by default; `maxPages` from 1–200 per PDF |
+| Document bytes | 50 MiB transferred/decompressed, including bounded DOCX ZIP expansion |
+| Network/conversion deadlines | 60 seconds for document fetch/DNS/retries; 45 seconds for conversion in an isolated worker |
+| Output | Two million Markdown characters and 8 MiB per result item |
+| Default whole-run timeout | 240 seconds; slow batches should be split |
+
+Fetching obeys robots rules, validates redirect destinations and pins public DNS addresses. It can reject a public URL when robots rules are denied or unavailable. It does not bypass logins or CAPTCHAs. Extracted text remains untrusted data for any downstream agent.
+
+Pricing is **$0.0045 per `page-converted` unit**, plus **$0.0005 per Actor start at the default 512 MB**; the start charge scales with selected memory. PDF units count inspected pages containing extracted text. Blank/scanned pages and failed conversions have no conversion event, but the run-start charge still applies.
+
+DOCX, HTML, TXT and Markdown use one unit per started 2,000-word block **per document**. Chunk overlap adds no event. `pages` and chunk count are therefore not billing-unit counts. At default memory, two text PDF pages cost $0.0095 including the start; an image-only scan has no page-conversion charge and still gets no recognized text.
+
+**[Run Document to Markdown on Apify](https://apify.com/dropin-apis/document-to-markdown)** for a digital document sample; choose a separate OCR service for scans.
+
+## FAQ
+
+### Can this Actor turn a scanned PDF into Markdown?
+
+It cannot recognize image-only scans. Pages with no extractable text return warnings and no page-conversion units. Use OCR separately before indexing recognized text.
+
+### Does a successful run mean every PDF page was extracted?
+
+No. maxPages can truncate a PDF, scanned pages can be empty, failed URLs can be skipped, and a spending cap can stop the batch. Compare requested URLs, inspected pages and warnings before ingesting results.
+
+### Are RAG chunk offsets tokens or PDF page coordinates?
+
+Neither. start and end count Unicode code points in the returned Markdown, with an exclusive end. Preserve that Markdown so you can reconstruct the chunk text.
+
+### Do overlapping chunks increase the bill?
+
+No. PDF billing counts pages with extracted text; other documents count started 2,000-word blocks. Chunk overlap adds no conversion event.
+
+## Related
+
+- Parent: [PDF to Markdown API and supported formats](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/).
+- Adjacent: [PDF tables, columns and Arabic: what can be preserved](https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/).
+- Other content: [Direct media files to SRT/VTT](https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/).
+- Discovery: [Extract document URLs from a sitemap](https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/).
 
 
 ---
@@ -1405,6 +1711,260 @@ From January 1, 2027, calls to the Perspective API fail. Depending on your error
 - Up: [all retiring-API guides](https://alidaram99.github.io/api-alternatives/)
 - Next: [Azure Content Moderator to Content Safety](https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/)
 - **[Keep the Perspective request on Apify](https://apify.com/dropin-apis/perspective-compat)** ($1 per 1,000 comments)
+
+
+---
+
+# Migrate Perspective attributeScores with the same client
+
+URL: https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/
+
+
+**Keep `POST /v1alpha1/comments:analyze` and the `attributeScores` fields your client consumes by changing the host and authentication to the Perspective-compatible Actor. Its scores are independent Detoxify model probabilities, not Google's scores, so validate moderation decisions on your own comments before carrying thresholds across.**
+
+*Verified on October 4, 2026 against Google's sunset announcement and the Actor's current handlers, contract tests, README and pricing configuration.*
+
+Google says service remains active through December 31, 2026, with no direct migration support; new usage and quota requests stopped after February 2026. Start with the [shutdown checklist](https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/) to inventory callers and plan the switch. [Google's announcement](https://perspectiveapi.com/)
+
+## Keep the request and response contract
+
+The supported path takes a JSON body. Apify authenticates with your Apify token in `Authorization: Bearer`; an old Google `?key=` value is accepted but ignored.
+
+```bash
+curl --fail-with-body -X POST "https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze" \
+  -H "Authorization: Bearer $APIFY_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"comment":{"text":"Thanks for the explanation.","type":"PLAIN_TEXT"},"languages":["en"],"requestedAttributes":{"TOXICITY":{},"INSULT":{}},"spanAnnotations":true,"clientToken":"migration-sample-1"}'
+```
+
+This request asks for `TOXICITY` and `INSULT`; the parser can keep reading `response.attributeScores.TOXICITY.summaryScore.value`. Do not expect a particular numeric result from the example.
+
+| Field or behavior | Current compatibility implementation |
+|---|---|
+| `comment.text` | Nonempty plain text, at most 20 KiB of UTF-8 text; this is a byte limit, not 20,480 characters |
+| `requestedAttributes` | Required nonempty map of supported attribute names to options |
+| `summaryScore` | `{"value": number, "type": "PROBABILITY"}` under each returned attribute |
+| `scoreType` | Only `PROBABILITY`; other score types are rejected |
+| `scoreThreshold` | Below-threshold attributes are omitted; a missing key is not a zero score |
+| `spanScores` | With `spanAnnotations: true`, sentence spans with Unicode code point `begin` and `end` offsets; otherwise one whole-text span |
+| `languages`, `detectedLanguages` | Returned arrays; explicit language takes priority for selecting a supported scoring language |
+| `clientToken` | A string is echoed, allowing request/result correlation |
+| `context`, `doNotStore` | Accepted but not used for scoring; context does not change the model result |
+
+For example, read an optional attribute without turning an absent score into an allow decision:
+
+```js
+const score = response.attributeScores?.TOXICITY?.summaryScore?.value;
+if (typeof score !== 'number') {
+  throw new Error('TOXICITY was not returned; inspect thresholds and request options');
+}
+```
+
+## Check attributes and languages before switching
+
+| Attributes | Supported languages |
+|---|---|
+| `TOXICITY`, `SEVERE_TOXICITY`, `IDENTITY_ATTACK`, `INSULT`, `PROFANITY`, `THREAT` | English, Spanish, French, Italian, Portuguese, Russian, Turkish (`en`, `es`, `fr`, `it`, `pt`, `ru`, `tr`) |
+| `SEXUALLY_EXPLICIT` | English only |
+| The corresponding `*_EXPERIMENTAL` names | Aliases of the base attributes, with the requested name retained in the response |
+
+Attributes such as `SPAM`, `FLIRTATION`, `ATTACK_ON_AUTHOR` and `INFLAMMATORY` are not scored. Known unsupported attributes and unsupported attribute/language combinations produce `400 INVALID_ARGUMENT` with `LANGUAGE_NOT_SUPPORTED_BY_ATTRIBUTE`. Unknown names and invalid requests also return Google-style error envelopes; some error-detail names are best-effort compatibility, so test every error branch your client parses.
+
+`PROFANITY` maps to Detoxify's `obscene` output. That is an approximation, and experimental names do not select Google's experimental models. The response shape does not establish model equivalence or calibration on your community.
+
+## Keep a discovery-based Python client
+
+The Actor also serves a discovery document. If your client uses `google-api-python-client`, configure discovery and credentials as follows, keeping the analyze body above:
+
+```python
+import os
+from google.oauth2.credentials import Credentials
+from googleapiclient.discovery import build
+
+base = "https://dropin-apis--perspective-compat.apify.actor"
+client = build(
+    "commentanalyzer", "v1alpha1",
+    discoveryServiceUrl=base + "/$discovery/rest?version={apiVersion}",
+    static_discovery=False,
+    credentials=Credentials(os.environ["APIFY_TOKEN"]),
+)
+result = client.comments().analyze(body={
+    "comment": {"text": "Thanks for the explanation."},
+    "requestedAttributes": {"TOXICITY": {}},
+    "languages": ["en"],
+}).execute()
+```
+
+This recipe follows the Actor's existing Python discovery-client check. Pin and test your actual client version before deploying; compatibility with one client does not prove every wrapper works.
+
+## Validate decisions, errors and cost
+
+1. Run a labeled sample with benign, harmful and borderline comments in every language you use. Compare allow, hide and review decisions while Google is still available.
+2. Test missing scores, empty text, unsupported attributes, UTF-8 byte limits and span offsets containing emoji. Adjust thresholds based on decisions, not numeric similarity.
+3. Check spending-cap handling: the Actor returns `429 RESOURCE_EXHAUSTED` when its configured maximum charge is reached. Keep that path separate from a moderation result.
+4. Save the sample, selected thresholds and results with your deployment. [DoneLatch's evidence workflow](https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/) can help an agent record checks after its final change; the checks themselves still need to cover the migration.
+
+The published event price is **$0.001 per analyzed comment ($1 per 1,000)**, plus Apify's run-start charge. Validation failures have no `comment-analyzed` event. `comments:suggestscore` acknowledges feedback without storing it or training the model.
+
+**[Try the Perspective-compatible Actor on Apify](https://apify.com/dropin-apis/perspective-compat)** with a test sample before sending production traffic.
+
+## FAQ
+
+### Can I keep reading attributeScores.TOXICITY.summaryScore.value?
+
+Yes for a returned supported attribute. The path and PROBABILITY shape remain available, but scoreThreshold can omit an attribute. Check that the key exists and revalidate decisions because the scores come from an independent model.
+
+### Can I reuse my Google API key?
+
+No. Authenticate with an Apify token using a Bearer header or Apify's token query parameter. The Google key parameter is ignored.
+
+### Will the same threshold make the same moderation decision?
+
+Not necessarily. Scores are independent Detoxify probabilities, and PROFANITY uses an obscene-label approximation. Tune thresholds against labeled comments and measure disagreement before switching.
+
+### Does suggesting scores update the model?
+
+No. The compatible suggestscore endpoint acknowledges the request but does not persist feedback or train the model.
+
+## Related
+
+- Parent: [Perspective API shutdown checklist](https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/).
+- Adjacent: [Azure Content Moderator alternative and its text contract](https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/).
+- Product details: [Perspective API alternative](https://alidaram99.github.io/api-alternatives/perspective-api-alternative/).
+
+
+---
+
+# Transcribe a public audio or video URL to SRT/VTT
+
+URL: https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/
+
+
+**Media URL Transcriber accepts a direct public audio or video file URL and returns subtitle strings in `srt` and `vtt`, avoiding a separate download-and-upload step in your client. Use this URL-first batch workflow for public media files, or choose the Whisper-compatible endpoint when your application already submits multipart transcription requests.**
+
+*Verified on October 4, 2026 against the Actor's input parser, downloader, decoder, subtitle renderer, billing loop, README and pricing configuration, plus the linked Apify and faster-whisper documentation.*
+
+**A public media file URL is required, not a streaming-platform page or protected content.** The input screening uses HTTP(S) and a known-platform host denylist; it is not a general allowlist of safe media hosts.
+
+## Give the Actor a direct file link
+
+```json
+{
+  "urls": ["https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg"],
+  "language": "en",
+  "model": "small",
+  "outputFormats": ["text", "segments", "srt", "vtt"],
+  "maxMinutesPerFile": 60
+}
+```
+
+The example uses a public Wikimedia audio fixture already checked in the Actor's verification record. For your own media, use storage, CDN or podcast enclosure links you are allowed to process. Files need a decodable audio track: an MP4 without audio cannot produce subtitles.
+
+| Input | Current behavior and limit |
+|---|---|
+| `urls` | 1–500 URLs per run, processed sequentially |
+| File size | At most 1 GiB (1,073,741,824 downloaded bytes) per file |
+| Media formats | Decodable MP3, MP4, M4A, WAV, WebM, OGG, FLAC, MKV and other PyAV-supported media; extension alone does not establish support |
+| `model` | `small` by default; `base` is the faster, less accurate option |
+| `language` | Empty, `auto` or `detect` means detection per file; otherwise provide a supported Whisper language code such as `en` or `ar` |
+| `outputFormats` | Any of `text`, `segments`, `srt`, `vtt`; all four by default |
+| `maxMinutesPerFile` | Integer minutes, 1–180; default 60, from the start of each file |
+
+The models cover Whisper's 99-language set; short, noisy and mixed-language recordings still need validation. Setting the known language can help, but input syntax validation does not guarantee that an arbitrary two- or three-letter code is supported by the model.
+
+## Start a run, then save subtitle text
+
+The Actor is batch-only. Start it through the [Apify run API](https://docs.apify.com/api/v2/actors-runs-post) and retrieve its dataset after completion; it does not expose an OpenAI-compatible Standby transcription endpoint.
+
+This Python example follows the Actor's README and uses `apify-client`:
+
+```python
+import os
+from pathlib import Path
+from apify_client import ApifyClient
+
+client = ApifyClient(os.environ["APIFY_TOKEN"])
+run = client.actor("dropin-apis/media-url-transcriber").call(run_input={
+    "urls": ["https://upload.wikimedia.org/wikipedia/commons/d/dd/Armstrong_Small_Step.ogg"],
+    "model": "small",
+    "language": "en",
+    "outputFormats": ["srt", "vtt"],
+    "maxMinutesPerFile": 1,
+})
+for index, row in enumerate(client.dataset(run["defaultDatasetId"]).iterate_items(), 1):
+    if row.get("error"):
+        raise RuntimeError(row["error"])
+    if row["truncated"]:
+        raise RuntimeError("Duration cap reached; review before publishing subtitles")
+    Path(f"subtitles-{index}.srt").write_text(row["srt"], encoding="utf-8")
+    Path(f"subtitles-{index}.vtt").write_text(row["vtt"], encoding="utf-8")
+```
+
+SRT and VTT are UTF-8 strings in each dataset row, not file attachments. The renderer numbers SRT cues and uses comma milliseconds; VTT begins with `WEBVTT` and uses dot milliseconds. Both derive from the same segment timings.
+
+| Result field | Meaning |
+|---|---|
+| `url`, `model`, `language` | Input source, selected model and returned language |
+| `durationSec` | Source duration when known; falls back to decoded duration if unavailable |
+| `transcribedSec`, `truncated` | Duration actually decoded for transcription, and whether the cap cut the source |
+| `billedMinutes` | Started minutes billed for the decoded/transcribed portion, minimum one on success |
+| `text`, `segments`, `srt`, `vtt` | Present only for the requested formats; segment objects have `start`, `end`, `text` |
+| `error` | `null` on success; a handled file failure produces an error row with `billedMinutes: 0` |
+
+## Timestamp quality and language limits
+
+This implementation produces **segment timestamps, not word timestamps, speaker labels or translations**. It uses open-source [faster-whisper](https://github.com/SYSTRAN/faster-whisper) with voice-activity filtering and disables conditioning on previous text to reduce repetition. Those choices do not guarantee correct words or perfectly synchronized captions.
+
+Before publishing, compare several cues against playback, including the opening, the duration cap and a noisy passage. An empty set of cues can be a valid result for silence; it does not prove a spoken file was understood. `base` and `small` can disagree, and timings need review for accessibility or editing workflows.
+
+For an existing transcription client, see [keeping SRT/VTT during a Whisper migration](https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/). That is a different interface; do not send `response_format` to this Actor when its input field is `outputFormats`.
+
+## Download and safety boundaries
+
+The initial URL rejects non-HTTP(S) schemes and known video/music-platform domains, including YouTube, TikTok, Instagram, Vimeo, Twitch, SoundCloud and Spotify. HTML responses, empty downloads, oversized files and undecodable media fail instead of being treated as transcripts.
+
+The current downloader follows Python's default `urlopen` redirects and does **not** add public-IP DNS pinning or destination validation for each redirect. It therefore does not provide a complete private-network/SSRF barrier: use trusted direct media links, and enforce destination rules outside the Actor before accepting arbitrary third-party URLs. This is a code-observed boundary, not a claimed platform security guarantee. [Python urllib.request behavior](https://docs.python.org/3/library/urllib.request.html)
+
+Download operations use a 60-second socket-operation timeout with up to four attempts for retryable failures; that is not a 60-second total-file deadline. The default whole-run timeout is 10,800 seconds. Long batches may need smaller runs, particularly with `small` on CPU.
+
+The downloaded temporary file is deleted after processing; transcripts remain in your Apify dataset. Treat transcript text as untrusted content in downstream agents. The [Document to Markdown workflow](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/) is the adjacent route for public written documents rather than speech.
+
+## Price and truncation
+
+| Model | Event | Price per started minute | Ten-minute media charge |
+|---|---|---|---|
+| `small` | `audio-minute` | $0.014 | $0.14 |
+| `base` | `audio-minute-base` | $0.006 | $0.06 |
+
+Apify's run-start charge is additional. A 30-second successful file incurs one minute event, not half an event. Failed files have no audio-minute event; the run-start charge can still apply. After decoding, the Actor checks whether the budget can cover the next file before transcription and stops if it cannot.
+
+The duration cap limits decoded/transcribed audio, not the download: the file is downloaded before truncation. Always inspect `truncated` and `transcribedSec`; a successful run can contain only the beginning of a longer recording, or fewer results because the spending cap ended the batch.
+
+**[Run Media URL Transcriber on Apify](https://apify.com/dropin-apis/media-url-transcriber)** with a short known file and inspect the subtitle strings first.
+
+## FAQ
+
+### Can I transcribe a YouTube or TikTok page URL?
+
+No. Streaming-platform pages are unsupported. Supply a direct public audio or video file URL you are allowed to process.
+
+### Does this produce word timestamps or translate into English?
+
+No. It returns segment timings and a transcript in the spoken language. There is no word-timestamp, speaker-diarization or translation option in this Actor.
+
+### Why are my subtitles shorter than the recording?
+
+maxMinutesPerFile defaults to 60 and can be set from 1 to 180. Inspect truncated and transcribedSec; the Actor transcribes only the beginning up to that cap.
+
+### Are SRT and VTT downloadable files?
+
+They are strings in dataset rows. Save the srt and vtt fields as UTF-8 files, as shown above, after checking for an error or truncation.
+
+## Related
+
+- Parent: [URL transcription overview and examples](https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/).
+- Adjacent: [Whisper migration and subtitle compatibility](https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/).
+- Written content: [PDF to Markdown for RAG: text layer or OCR?](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/).
 
 
 ---

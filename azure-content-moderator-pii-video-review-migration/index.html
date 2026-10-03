@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Moderator: PII, video and review migration</title>
+<meta name="description" content="Map Content Moderator PII to Azure Language, video to a frame/audio pipeline, and human review to a new workflow. Text compatibility has clear limits.">
+<meta name="keywords" content="Content Moderator PII replacement, Azure video moderation retirement, Content Moderator Review API alternative, Content Moderator migration map">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Content Moderator: PII, video and review migration">
+<meta property="og:description" content="Map Content Moderator PII to Azure Language, video to a frame/audio pipeline, and human review to a new workflow. Text compatibility has clear limits.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Azure Content Moderator Alternative — Profanity Filter","description":"Map Content Moderator PII to Azure Language, video to a frame/audio pipeline, and human review to a new workflow. Text compatibility has clear limits.","url":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.001,"priceCurrency":"USD","description":"Billed per event: Text screened"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Azure Content Moderator PII, video and human-review migration map","description":"Map Content Moderator PII to Azure Language, video to a frame/audio pipeline, and human review to a new workflow. Text compatibility has clear limits.","url":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is Azure AI Content Safety a PII replacement?","acceptedAnswer":{"@type":"Answer","text":"Its text harm-analysis endpoint does not replace PII detection. Microsoft routes PII to Azure AI Language. The compatibility Actor keeps limited pattern-based PII fields for supported text requests."}},{"@type":"Question","name":"Can I send a video to the compatibility Actor?","acceptedAnswer":{"@type":"Answer","text":"No. It only screens text. Microsoft's migration route requires a separate frame/image and audio/transcript pipeline, with your own time mapping and policy decisions."}},{"@type":"Question","name":"Does ReviewRecommended create a human-review task?","acceptedAnswer":{"@type":"Answer","text":"No. It is a classification flag. A review queue, reviewer permissions, notifications, decisions and history require a separate workflow."}},{"@type":"Question","name":"Will my Azure custom term list still run?","acceptedAnswer":{"@type":"Answer","text":"No. The Actor uses its built-in list, and a nonzero listId returns a compatibility-warning header. Export and migrate your list into the replacement system separately."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Content Moderator: PII, video and review migration","item":"https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" class="active" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Azure Content Moderator PII, video and human-review migration map</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>There is no single endpoint that replaces every Azure Content Moderator feature: text compatibility, PII detection, video analysis and human review require separate migration decisions. Keep supported text-screening fields with the compatibility Actor, or move to Content Safety&#39;s different semantics, while routing broader PII to Azure Language and rebuilding video and review workflows.</strong></p>
+<p><em>Verified on October 4, 2026 against the linked Microsoft documentation and the Actor&#39;s current request parser, PII patterns, handler, README and pricing configuration.</em></p>
+<p>Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/export-delete-data">Content Moderator documentation</a> gives <strong>March 15, 2027</strong>, while its <a href="https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator">lifecycle table</a> gives <strong>April 1, 2027</strong>. Plan for the earlier date and confirm your subscription&#39;s notice; the <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/">main migration guide</a> explains the request and taxonomy changes.</p>
+<h2 id="route-each-feature-explicitly">Route each feature explicitly</h2>
+<p>Here, “direct” means the supported HTTP route and field shape can remain; it does not mean identical detection results. Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator">migration map</a> establishes the separate-service routes below.</p>
+<div class="table-wrap"><table><thead><tr><th>Existing feature</th><th>Route to evaluate</th><th>Migration class</th><th>Compatibility Actor boundary</th></tr></thead><tbody><tr><td>Text <code>ProcessText/Screen</code></td><td>Keep the text Actor, or adopt Content Safety text analysis</td><td>Direct supported contract with Actor; different semantics on Content Safety</td><td>Raw text body and old field names; independent models and lists</td></tr><tr><td><code>PII</code> detection</td><td>Azure AI Language PII detection for a broader entity workflow</td><td>Different service and response semantics</td><td>Limited pattern-based <code>Email</code>, <code>IPA</code>, <code>Phone</code>, <code>Address</code>, <code>SSN</code> fields</td></tr><tr><td>Custom term lists</td><td>Content Safety blocklists</td><td>Different management and matching semantics</td><td><code>listId</code> does not load your custom lists</td></tr><tr><td>Image classification</td><td>Content Safety image analysis</td><td>Different categories and response</td><td>No image endpoint</td></tr><tr><td>Image OCR / faces</td><td>Azure AI Vision / Azure AI Face respectively</td><td>Separate services</td><td>Neither supported</td></tr><tr><td>Video moderation</td><td>Extract frames, analyze images, and screen an audio transcript</td><td>No direct video replacement</td><td>No video endpoint</td></tr><tr><td>Review API / human-review tool</td><td>Evaluate Content Safety Studio and your review application</td><td>No direct legacy API replacement established</td><td>No reviewer queue, callbacks or review storage</td></tr></tbody></table></div>
+<h2 id="pii-preserve-fields-or-adopt-a-separate-entity-service">PII: preserve fields or adopt a separate entity service</h2>
+<p>The text Actor only includes <code>PII</code> when requested with <code>PII=True</code>. Its patterns cover email, IPv4/IPv6, US/UK phones, valid-format US SSNs and US street addresses with state/ZIP. They do not constitute a universal entity detector: names, passports, arbitrary national identifiers and worldwide phone/address formats are outside this contract.</p>
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl --fail-with-body -X POST &quot;https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;PII=True&amp;classify=True&quot; \
+  -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
+  -H &quot;Content-Type: text/plain&quot; \
+  --data-binary &#39;Please reply to support@example.com.&#39;</code></pre></div>
+<p>The body limit is <strong>1,024 JavaScript string code units</strong>; the parser uses <code>text.length</code>, so a supplementary character such as an emoji consumes two. Supported content types are <code>text/plain</code>, <code>text/html</code>, <code>text/xml</code> and <code>text/markdown</code>. Apify authenticates the Bearer token; an old <code>Ocp-Apim-Subscription-Key</code> header is ignored.</p>
+<p>Azure Language&#39;s <a href="https://learn.microsoft.com/en-us/azure/ai-services/language-service/personally-identifiable-information/overview">PII feature</a> provides entity recognition and redaction capabilities. For migration, map its results to your application deliberately: validate entity categories, language coverage, offsets and redacted output on your own samples. An empty match list from either service is evidence about that detector&#39;s coverage, not proof a document contains no personal information.</p>
+<h2 id="video-build-and-verify-a-pipeline">Video: build and verify a pipeline</h2>
+<p>Microsoft recommends sampling frames for image analysis and analyzing an audio transcription separately. Its guide does not offer a direct replacement for the old video API. <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator">Microsoft video migration guidance</a></p>
+<p>A practical migration needs to retain the source time for each frame and transcript segment, combine those results under your own policy, and route uncertain segments for review. Test a short harmful scene between sampled frames and a harmful audio passage without an accompanying image: coarse frame sampling can miss either case.</p>
+<p>The <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/">public-media URL transcription guide</a> can supply segment-timed text from a direct media file. Transcription itself is not video moderation, and the text compatibility Actor does not extract frames or combine decisions.</p>
+<h2 id="human-review-a-flag-is-not-a-review-system">Human review: a flag is not a review system</h2>
+<p>Microsoft maps the old Review API to Content Safety Studio as web-based monitoring. Its <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/overview">Studio overview</a> describes testing, moderation workflows and monitoring; that does not establish drop-in support for your old review IDs, reviewer assignments or callbacks.</p>
+<p>Inventory those dependencies before switching. Demonstrate how an item enters a queue, who can decide, how a callback or polling client learns the outcome, and how you retain the decision history. Validate these behaviors in the chosen system rather than treating a dashboard as evidence of API compatibility.</p>
+<p>The text Actor&#39;s <code>Classification.ReviewRecommended</code> is just a boolean: for English classification it becomes true when any approximate Category1/2/3 score reaches 0.5. Category2 is a proxy, <code>max(Category1, 0.3 × obscene)</code>, and misses flirty but otherwise clean text. Non-English classification is omitted. The Actor never assigns a reviewer or persists a review decision.</p>
+<h2 id="custom-policies-and-validation">Custom policies and validation</h2>
+<p><code>listId</code> requests continue with the built-in list; a nonzero custom ID gets an <code>X-Compat-Warning</code> header. Custom lists are not migrated. <code>autocorrect=True</code> returns <code>AutoCorrectedText</code> equal to normalized text, with no spelling correction. Check those headers and behaviors before relying on old policy settings.</p>
+<p>Run known positive and negative samples for every retained feature. Separate detector quality from workflow quality: a correct PII match does not prove redaction happened, and a recommended review does not prove a reviewer received the item. <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">DoneLatch evidence checks</a> can record your tests after an agent&#39;s final edit.</p>
+<p>For supported text screening, the price is <strong>$0.001 per <code>text-screened</code> event ($1 per 1,000)</strong> plus Apify&#39;s run-start charge. Validation failures have no text event. At the configured spending cap, the handler returns <code>429</code> with <code>Error.Code: TooManyRequests</code>.</p>
+<p><strong><a href="https://apify.com/dropin-apis/content-moderator-compat">Try the text-compatible Content Moderator Actor</a></strong> when your requirement is the bounded text contract above.</p>
+<h2 id="faq">FAQ</h2>
+<h3 id="is-azure-ai-content-safety-a-pii-replacement">Is Azure AI Content Safety a PII replacement?</h3>
+<p>Its text harm-analysis endpoint does not replace PII detection. Microsoft routes PII to Azure AI Language. The compatibility Actor keeps limited pattern-based PII fields for supported text requests.</p>
+<h3 id="can-i-send-a-video-to-the-compatibility-actor">Can I send a video to the compatibility Actor?</h3>
+<p>No. It only screens text. Microsoft&#39;s migration route requires a separate frame/image and audio/transcript pipeline, with your own time mapping and policy decisions.</p>
+<h3 id="does-reviewrecommended-create-a-human-review-task">Does ReviewRecommended create a human-review task?</h3>
+<p>No. It is a classification flag. A review queue, reviewer permissions, notifications, decisions and history require a separate workflow.</p>
+<h3 id="will-my-azure-custom-term-list-still-run">Will my Azure custom term list still run?</h3>
+<p>No. The Actor uses its built-in list, and a nonzero listId returns a compatibility-warning header. Export and migrate your list into the replacement system separately.</p>
+<h2 id="related">Related</h2>
+<ul><li>Parent: <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/">Content Moderator to Content Safety: what changes</a>.</li><li>Adjacent: <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/">Perspective attributeScores migration</a>.</li><li>Product details: <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/">Content Moderator text alternative</a>.</li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>
