@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Extract LocalBusiness Data Without Guessing</title>
+<meta name="description" content="Extract a public business name, category, city and hours with evidence per field, explicit nulls, and contact redaction instead of inferred details.">
+<meta name="keywords" content="localbusiness schema extractor api, website to business json, extract business hours with evidence, local business data provenance">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Extract LocalBusiness Data Without Guessing">
+<meta property="og:description" content="Extract a public business name, category, city and hours with evidence per field, explicit nulls, and contact redaction instead of inferred details.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-04">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Structured Data to JSON — JSON-LD & Schema.org","description":"Extract a public business name, category, city and hours with evidence per field, explicit nulls, and contact redaction instead of inferred details.","url":"https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.009,"priceCurrency":"USD","description":"Billed per event: Validated page"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Extract LocalBusiness data from a public website without guessing","description":"Extract a public business name, category, city and hours with evidence per field, explicit nulls, and contact redaction instead of inferred details.","url":"https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/","datePublished":"2026-10-04","dateModified":"2026-10-04","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does it return a business phone number or email address?","acceptedAnswer":{"@type":"Answer","text":"No. Version 1 has no contact fields. Contact fragments inside otherwise supported text or evidence are replaced with [redacted contact] and marked as redacted."}},{"@type":"Question","name":"Does it find a street address?","acceptedAnswer":{"@type":"Answer","text":"No. The LocalBusiness contract returns city, not a street address. The other fields are name, category and opening hours."}},{"@type":"Question","name":"Will it guess the business category from any description?","acceptedAnswer":{"@type":"Answer","text":"No. Its page-text fallback recognizes a small, documented set of service phrases; otherwise category is taken from declared markup or returned as null."}},{"@type":"Question","name":"Can an agent treat the output as verified truth about the business?","acceptedAnswer":{"@type":"Answer","text":"No. Evidence shows where the publisher page stated a value. It does not independently verify that the business claim is accurate or still current."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Extract LocalBusiness Data Without Guessing","item":"https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/" title="Does This Function Exist in This Package Version?">Does This Function</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/" class="active" title="Extract LocalBusiness Data Without Guessing">Extract LocalBusiness</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-product-json-ld-price-availability/" title="Extract Product Price and Stock from JSON-LD">Extract Product Price</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/" title="MCP Registry vs Live Reliability Scorecards">MCP Registry vs Live</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/" title="Passing Tests Need a Negative Control">Passing Tests Need a</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/" title="Structured Data API — JSON-LD &amp; Schema.org, with Evidence">Structured Data API —</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Extract LocalBusiness data from a public website without guessing</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
+  
+  <p><strong>Extract only the LocalBusiness facts a public page actually establishes, and keep a pointer and snippet beside every returned value. Structured Data to JSON returns a fixed <code>name</code>, <code>category</code>, <code>city</code> and <code>openingHours</code> object; a missing field stays <code>null</code>, and version 1 returns no phone, email, street address or profile field.</strong></p>
+<p><em>Facts and examples on this page were checked against the Actor source, saved fixtures, and Google&#39;s current LocalBusiness documentation on October 4, 2026.</em></p>
+<h2 id="what-without-guessing-means">What “without guessing” means</h2>
+<p>Google&#39;s LocalBusiness guidance recommends the most specific applicable subtype and documents business name, address and opening hours among the structured properties a publisher can declare (<a href="https://developers.google.com/search/docs/appearance/structured-data/local-business">Google Search Central</a>). That guidance tells publishers how to mark up their own pages; it does not make an extractor&#39;s unsupported inferences true.</p>
+<p>This Actor therefore uses a smaller version-1 contract:</p>
+<div class="table-wrap"><table><thead><tr><th>Field</th><th>Meaning</th><th>Evidence sources</th></tr></thead><tbody><tr><td><code>name</code></td><td>Grounded business name</td><td>JSON-LD, microdata, page title, then heading</td></tr><tr><td><code>category</code></td><td>Declared subtype or a restrained supported service phrase</td><td>Supported page text, JSON-LD type, then microdata</td></tr><tr><td><code>city</code></td><td>Locality named by the page</td><td>JSON-LD <code>addressLocality</code>, microdata, then a bounded city/state text pattern</td></tr><tr><td><code>openingHours</code></td><td>Declared or visibly printed hours</td><td>JSON-LD, microdata, then a bounded visible-hours pattern</td></tr></tbody></table></div>
+<p>It does not geocode, infer an owner, enrich a lead, or convert a vague description into a plausible address.</p>
+<h2 id="input-and-tested-output">Input and tested output</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;urls&quot;: [&quot;https://example.com/bright-paws&quot;],
+  &quot;schemaType&quot;: &quot;localBusiness&quot;
+}</code></pre></div>
+<p>The saved fixture declares the name, city and hours in microdata and says “Independent pet grooming in Austin, TX” in its description. Its tested result is:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;schemaType&quot;: &quot;localBusiness&quot;,
+  &quot;data&quot;: {
+    &quot;name&quot;: &quot;Bright Paws&quot;,
+    &quot;category&quot;: &quot;pet grooming&quot;,
+    &quot;city&quot;: &quot;Austin&quot;,
+    &quot;openingHours&quot;: &quot;Monday-Friday 9:00 am-5:00 pm&quot;
+  },
+  &quot;evidence&quot;: {
+    &quot;name&quot;: {
+      &quot;method&quot;: &quot;microdata&quot;,
+      &quot;pointer&quot;: &quot;[itemprop=\&quot;name\&quot;]&quot;,
+      &quot;snippet&quot;: &quot;Bright Paws&quot;
+    },
+    &quot;category&quot;: {
+      &quot;method&quot;: &quot;page-text&quot;,
+      &quot;pointer&quot;: &quot;category-keyphrase&quot;,
+      &quot;snippet&quot;: &quot;pet grooming&quot;
+    },
+    &quot;city&quot;: {
+      &quot;method&quot;: &quot;microdata&quot;,
+      &quot;pointer&quot;: &quot;[itemprop=\&quot;addressLocality\&quot;]&quot;,
+      &quot;snippet&quot;: &quot;Austin&quot;
+    },
+    &quot;openingHours&quot;: {
+      &quot;method&quot;: &quot;microdata&quot;,
+      &quot;pointer&quot;: &quot;[itemprop=\&quot;openingHours\&quot;]&quot;,
+      &quot;snippet&quot;: &quot;Monday-Friday 9:00 am-5:00 pm&quot;
+    }
+  },
+  &quot;absentFields&quot;: []
+}</code></pre></div>
+<p>Every field gets evidence, including missing fields. The result also records the requested URL, the safety-checked final URL, content type, byte count and a SHA-256 hash of the fetched body.</p>
+<h2 id="what-happens-when-the-page-is-incomplete">What happens when the page is incomplete</h2>
+<p>The business name is the identity field. Without a grounded name, the page is refused instead of producing a paid empty item. With a name but no hours, the result stays usable and honest:</p>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;data&quot;: { &quot;name&quot;: &quot;Bright Paws&quot;, &quot;category&quot;: null, &quot;city&quot;: &quot;Austin&quot;, &quot;openingHours&quot;: null },
+  &quot;evidence&quot;: {
+    &quot;openingHours&quot;: { &quot;method&quot;: &quot;absent&quot;, &quot;pointer&quot;: null, &quot;snippet&quot;: null }
+  },
+  &quot;absentFields&quot;: [&quot;category&quot;, &quot;openingHours&quot;]
+}</code></pre></div>
+<p>Do not replace those nulls with an agent&#39;s best guess. An absent record is the evidence that the fetched page did not establish the value under this contract.</p>
+<h2 id="contact-boundary">Contact boundary</h2>
+<p>Version 1 has no telephone, email, street-address, contact-person or social-profile output field, even though Schema.org and Google&#39;s publisher guidance define some of those properties. Emails, phone-like numbers and obvious personal/profile URLs found inside any copied field or evidence snippet are replaced with <code>[redacted contact]</code>; the evidence gets <code>&quot;redactedContact&quot;: true</code>. Business contacts are redacted too because this contract permits no contact data.</p>
+<p>That makes this an evidence-backed page extractor, not a prospecting or identity-enrichment tool.</p>
+<h2 id="access-and-billing-boundary">Access and billing boundary</h2>
+<ul><li>Public HTML only; no accounts, cookies, form submission, CAPTCHA solving or challenge bypass.</li><li><code>robots.txt</code> is respected. Private and reserved IP destinations are refused before connection and after every redirect.</li><li>Password forms and common login/challenge markers produce a non-billable skipped result.</li><li>JavaScript is not rendered, so client-only business facts remain absent.</li><li>A page is charged <strong>$0.009</strong> only after a schema-valid item with a grounded business name is written; Apify&#39;s documented platform start event also applies.</li></ul>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-it-return-a-business-phone-number-or-email-address">Does it return a business phone number or email address?</h3>
+<p>No. Version 1 has no contact fields. Contact fragments inside otherwise supported text or evidence are replaced with <code>[redacted contact]</code> and marked as redacted.</p>
+<h3 id="does-it-find-a-street-address">Does it find a street address?</h3>
+<p>No. The LocalBusiness contract returns city, not a street address. The other fields are name, category and opening hours.</p>
+<h3 id="will-it-guess-the-business-category-from-any-description">Will it guess the business category from any description?</h3>
+<p>No. Its page-text fallback recognizes a small, documented set of service phrases; otherwise category is taken from declared markup or returned as <code>null</code>.</p>
+<h3 id="can-an-agent-treat-the-output-as-verified-truth-about-the-business">Can an agent treat the output as verified truth about the business?</h3>
+<p>No. Evidence shows where the publisher page stated a value. It does not independently verify that the business claim is accurate or still current.</p>
+<h2 id="related">Related</h2>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/">Structured Data to JSON — all six schemas</a></li><li>Previous: <a href="https://alidaram99.github.io/api-alternatives/extract-product-json-ld-price-availability/">extract Product price and availability with provenance</a></li><li>Discover pages first: <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/">extract URLs from a sitemap</a></li><li><strong><a href="https://apify.com/dropin-apis/structured-data-to-json">Open Structured Data to JSON on Apify</a></strong></li></ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

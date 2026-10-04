@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Structured Data API — JSON-LD &amp; Schema.org, with Evidence</title>
+<meta name="description" content="Turn a public product, article, event, org, local-business or docs page into validated JSON with evidence per field — no LLM, no invented values. $0.009/page.">
+<meta name="keywords" content="extract json-ld from url, schema.org product data to json api, structured data extractor api, web page to json without llm, ai web scraper alternative cheaper, product data extraction api">
+<link rel="canonical" href="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Structured Data API — JSON-LD &amp; Schema.org, with Evidence">
+<meta property="og:description" content="Turn a public product, article, event, org, local-business or docs page into validated JSON with evidence per field — no LLM, no invented values. $0.009/page.">
+<meta property="og:url" content="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/">
+<meta property="og:site_name" content="API Alternatives">
+<meta property="article:modified_time" content="2026-10-03">
+
+<link rel="stylesheet" href="https://alidaram99.github.io/api-alternatives/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Structured Data to JSON — JSON-LD & Schema.org","description":"Turn a public product, article, event, org, local-business or docs page into validated JSON with evidence per field — no LLM, no invented values. $0.009/page.","url":"https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/","applicationCategory":"DeveloperApplication","operatingSystem":"Any (HTTP API)","offers":{"@type":"Offer","price":0.009,"priceCurrency":"USD","description":"Billed per event: Validated page"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Extract structured data from a URL — six fixed schemas, every value backed by evidence","description":"Turn a public product, article, event, org, local-business or docs page into validated JSON with evidence per field — no LLM, no invented values. $0.009/page.","url":"https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/","mainEntityOfPage":"https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/","datePublished":"2026-10-03","dateModified":"2026-10-03","author":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"publisher":{"@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/"},"inLanguage":"en"}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does it extract any field I describe in a prompt?","acceptedAnswer":{"@type":"Answer","text":"No. It supports the six documented schemas only (product, article, event, organization, local business, documentation). Use a general AI scraper for arbitrary prompts or custom fields."}},{"@type":"Question","name":"Does it just copy all the JSON-LD from a page?","acceptedAnswer":{"@type":"Answer","text":"No. It selects and normalizes only the documented fields for the chosen schema, supplements them from grounded page metadata (microdata, OpenGraph, semantic HTML) when JSON-LD is incomplete, validates the final object against a fixed schema, and attaches an evidence record to every field."}},{"@type":"Question","name":"What happens when a value is missing from the page?","acceptedAnswer":{"@type":"Answer","text":"The field comes back null, its evidence method is \"absent\", and it's listed in absentFields. The Actor does not guess or fill in a plausible-looking value."}},{"@type":"Question","name":"Can it scrape private or logged-in pages?","acceptedAnswer":{"@type":"Answer","text":"No. Public pages only — no credentials, cookies, or login flows are accepted or attempted."}},{"@type":"Question","name":"Is this affiliated with Schema.org or the sites it reads?","acceptedAnswer":{"@type":"Answer","text":"No. Schema.org names describe a public vocabulary of types; this is an independent Apify Actor with no affiliation to Schema.org or any site it extracts from."}},{"@type":"Question","name":"Can an AI agent use this through Apify MCP?","acceptedAnswer":{"@type":"Answer","text":"Yes. An agent can find and call this Actor through Apify's MCP server, then inspect data, evidence and absentFields before trusting a value — the fixed, validated contract is deliberately easier for an agent to check than free-form prompt-generated JSON."}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://alidaram99.github.io/api-alternatives/"},{"@type":"ListItem","position":2,"name":"Structured Data API — JSON-LD & Schema.org, with Evidence","item":"https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/"}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Drop-in APIs","url":"https://alidaram99.github.io/api-alternatives/","description":"Wire-compatible drop-in replacements for retiring developer APIs, and real-data scrapers, published on the Apify Store.","sameAs":["https://apify.com/dropin-apis"]}</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="https://alidaram99.github.io/api-alternatives/">API Alternatives</a>
+    <nav>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-agent-hallucinated-packages/" title="Stop AI coding agents installing hallucinated packages">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/" title="Stop AI coding agents claiming &quot;done&quot; without evidence">Stop AI coding agents</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-differ-by-country/" title="Why App Store Review Counts Differ by Country">Why App Store Review</a>
+        <a href="https://alidaram99.github.io/api-alternatives/app-store-reviews-scraper/" title="App Store Reviews Scraper: any app, no Connect key">App Store Reviews</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-alternative/" title="Azure Content Moderator retirement 2027: drop-in API">Azure Content</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-pii-video-review-migration/" title="Content Moderator: PII, video and review migration">Content Moderator</a>
+        <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/" title="Content Moderator to Content Safety: what changes">Content Moderator to</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-function-exists-package-version/" title="Does This Function Exist in This Package Version?">Does This Function</a>
+        <a href="https://alidaram99.github.io/api-alternatives/check-npm-package-exists-api/" title="Check if an npm or PyPI Package Exists — API &amp; MCP">Check if an npm or</a>
+        <a href="https://alidaram99.github.io/api-alternatives/competitor-app-store-reviews-no-connect-key/" title="Get Competitor App Store Reviews, No Connect Key">Get Competitor App</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/" title="Extract LocalBusiness Data Without Guessing">Extract LocalBusiness</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-product-json-ld-price-availability/" title="Extract Product Price and Stock from JSON-LD">Extract Product Price</a>
+        <a href="https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/" title="Extract All URLs From a Sitemap — indexes, gzip, robots.txt">Extract All URLs From</a>
+        <a href="https://alidaram99.github.io/api-alternatives/" title="Drop-in replacements for retiring APIs, plus data tools">Home</a>
+        <a href="https://alidaram99.github.io/api-alternatives/mcp-server-reliability/" title="Which MCP server actually works today? How to check">Which MCP server</a>
+        <a href="https://alidaram99.github.io/api-alternatives/official-mcp-registry-vs-live-scorecard/" title="MCP Registry vs Live Reliability Scorecards">MCP Registry vs Live</a>
+        <a href="https://alidaram99.github.io/api-alternatives/openai-transcription-models-deprecation-2027/" title="whisper-1 and gpt-4o-transcribe removed Feb 26, 2027">whisper-1 and</a>
+        <a href="https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/" title="Parse Nested, Compressed Sitemap Indexes (gzip)">Parse Nested,</a>
+        <a href="https://alidaram99.github.io/api-alternatives/passing-tests-negative-control/" title="Passing Tests Need a Negative Control">Passing Tests Need a</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-tables-columns-arabic-markdown/" title="PDF tables, columns and Arabic: Markdown limits">PDF tables, columns</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-api/" title="PDF to Markdown API for RAG — DOCX &amp; HTML too">PDF to Markdown API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/" title="PDF to Markdown for RAG: text layer or OCR?">PDF to Markdown for</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-alternative/" title="Perspective API shutdown (Dec 31, 2026): drop-in replacement">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/" title="Perspective API shutdown: replacement checklist (2026)">Perspective API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/perspective-attributescores-migration/" title="Migrate Perspective attributeScores with the same client">Migrate Perspective</a>
+        <a href="https://alidaram99.github.io/api-alternatives/public-media-url-to-srt-vtt/" title="Transcribe a public audio or video URL to SRT/VTT">Transcribe a public</a>
+        <a href="https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/" class="active" title="Structured Data API — JSON-LD &amp; Schema.org, with Evidence">Structured Data API —</a>
+        <a href="https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/" title="Transcribe Audio URL to SRT — Whisper Speech to Text">Transcribe Audio URL</a>
+        <a href="https://alidaram99.github.io/api-alternatives/tts-1-alternative/" title="tts-1 alternative: migrate before January 6, 2027">tts-1 alternative</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-alternative/" title="whisper-1 removed Feb 26, 2027: keep SRT, VTT, timestamps">whisper-1 removed Feb</a>
+        <a href="https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/" title="Does whisper-1 retirement break SRT and VTT output?">Does whisper-1</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-api/" title="Woolworths API: Australian grocery prices as JSON">Woolworths API</a>
+        <a href="https://alidaram99.github.io/api-alternatives/woolworths-scraper-empty-requests-beautifulsoup/" title="Woolworths Scraper Returns Empty with requests/BS4">Woolworths Scraper</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <h1>Extract structured data from a URL — six fixed schemas, every value backed by evidence</h1>
+  <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
+  
+  <p><strong>This API turns a public page into validated JSON with proof for every field — not a raw JSON-LD dump, and not a prompt-based AI scraper that can quietly invent a value.</strong> It supports six fixed schemas (product, article, event, organization, local business, documentation), checks JSON-LD first, then microdata, OpenGraph and restrained page-text rules, and never calls an LLM.</p>
+<h2 id="example-input">Example input</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;urls&quot;: [
+    &quot;https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html&quot;
+  ],
+  &quot;schemaType&quot;: &quot;product&quot;
+}</code></pre></div>
+<p>Send 1–20 public HTML URLs <strong>of the same schema type</strong> per run — mixed page types need separate runs.</p>
+<h2 id="example-output-real-result">Example output (real result)</h2>
+<div class="codeblock"><span class="code-lang">json</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-json">{
+  &quot;url&quot;: &quot;https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html&quot;,
+  &quot;schemaType&quot;: &quot;product&quot;,
+  &quot;data&quot;: {
+    &quot;name&quot;: &quot;A Light in the Attic&quot;,
+    &quot;price&quot;: &quot;£51.77&quot;,
+    &quot;currency&quot;: &quot;GBP&quot;,
+    &quot;availability&quot;: &quot;In stock&quot;
+  },
+  &quot;evidence&quot;: {
+    &quot;name&quot;: { &quot;method&quot;: &quot;html&quot;, &quot;pointer&quot;: &quot;article h1, main h1, h1&quot;, &quot;snippet&quot;: &quot;A Light in the Attic&quot; }
+  },
+  &quot;absentFields&quot;: [],
+  &quot;source&quot;: { &quot;contentType&quot;: &quot;text/html; charset=utf-8&quot;, &quot;bytes&quot;: 6812, &quot;sha256&quot;: &quot;...&quot; }
+}</code></pre></div>
+<p>Every field — found or not — gets an evidence record. A field the page genuinely doesn&#39;t have comes back <code>null</code> with <code>{&quot;method&quot;:&quot;absent&quot;,&quot;pointer&quot;:null,&quot;snippet&quot;:null}</code>, listed in <code>absentFields</code>, rather than a guessed value. Evidence shows which publisher text or metadata produced a value; it does not independently verify the publisher&#39;s claim is <em>true</em>.</p>
+<h2 id="what-it-extracts">What it extracts</h2>
+<div class="table-wrap"><table><thead><tr><th>Schema</th><th>Fixed fields</th></tr></thead><tbody><tr><td><code>product</code></td><td>name, price, currency, availability</td></tr><tr><td><code>article</code></td><td>headline, datePublished, description, section</td></tr><tr><td><code>event</code></td><td>name, startDate, endDate, location</td></tr><tr><td><code>organization</code></td><td>name, description, organizationType, location</td></tr><tr><td><code>localBusiness</code></td><td>name, category, city, openingHours</td></tr><tr><td><code>documentation</code></td><td>title, description, product, language</td></tr></tbody></table></div>
+<h2 id="how-it-compares">How it compares</h2>
+<div class="table-wrap"><table><thead><tr><th>Option</th><th>Price</th><th>What you get</th></tr></thead><tbody><tr><td><strong>This Actor</strong></td><td>$0.009 per validated page</td><td>Six fixed, schema-validated contracts with per-field evidence; deterministic, no LLM; charged only on a successful, grounded result</td></tr><tr><td><a href="https://apify.com/apify/ai-web-scraper"><code>apify/ai-web-scraper</code></a></td><td>$0.03/page on its FREE tier ($0.02–0.025 on higher tiers)</td><td>Arbitrary prompts and arbitrary schemas — more flexible, no evidence contract, no fixed validation</td></tr><tr><td><a href="https://apify.com/ninhothedev/json-ld-extractor"><code>ninhothedev/json-ld-extractor</code></a></td><td>$0.0005/result + $0.00005 start</td><td>Raw JSON-LD copy — cheaper, but no normalization, no non-JSON-LD fallback (microdata/OpenGraph), no evidence, no <code>null</code>-on-missing discipline</td></tr><tr><td><a href="https://apify.com/logiover/json-ld-schema-meta-tag-extractor"><code>logiover/json-ld-schema-meta-tag-extractor</code></a></td><td>$0.005/result FREE ($0.0035–0.0045 higher tiers)</td><td>Similar raw-extraction tier to the above</td></tr><tr><td>Writing your own parser</td><td>Your time</td><td>Full control, but you maintain JSON-LD/microdata/OpenGraph fallback logic and schema validation yourself</td></tr></tbody></table></div>
+<p>This Actor sits deliberately between the two tiers: <strong>70% below</strong> the general AI Web Scraper&#39;s FREE-tier page price, because it answers a narrower question (one of six documented schemas, not any prompt) with a guarantee raw JSON-LD extraction doesn&#39;t make (checked, validated output with evidence, not just &quot;whatever JSON-LD happened to be on the page&quot;). Full competitor pricing sourced from the public Apify Store search API — see <code>actors/structured-data-to-json/VERIFY.md</code> for the complete table and methodology.</p>
+<h2 id="why-not-a-universal-ai-scraper">Why not a universal AI scraper?</h2>
+<p>A 20-page measurement gate (6 schema types, 80 fields, hand-labeled ground truth) found <strong>97.5% field accuracy from deterministic extraction alone</strong> — JSON-LD, microdata, OpenGraph and restrained text rules, no model. A local quantized model was tested on the same fixtures and added <strong>zero</strong> correct fields while only increasing latency, so it&#39;s not included in this version. This isn&#39;t &quot;AI-powered&quot; marketing; it&#39;s the opposite finding, reported honestly.</p>
+<h2 id="limits">Limits</h2>
+<ul><li><strong>Six supported schema types only</strong> — no arbitrary prompts, no custom schema. Use a general AI scraper if you need either.</li><li><strong>No JavaScript rendering.</strong> A fact that only exists after client-side rendering stays <code>null</code>, or the page can fail its identity check.</li><li><strong>Public pages only.</strong> No cookies, login, form submission, CAPTCHA solving, Cloudflare bypass or browser fingerprinting. <code>robots.txt</code> is respected, with policy-fetch errors failing closed (no access on an unreadable robots file, not open access).</li><li><strong>No personal data.</strong> No person email, phone, profile or similar personal-data fields are extracted by this Actor.</li><li>Up to 2 MiB per page after decompression; DNS resolved and private/reserved addresses refused before connecting, rechecked on every redirect.</li></ul>
+<h2 id="pricing">Pricing</h2>
+<p><strong>$0.009 per successfully validated page</strong>, pay per event. A page is charged only when it produces a dataset item with a grounded identity field and schema-valid output — invalid URLs, private destinations, robots denials, login/challenge pages, HTTP failures and empty results are never charged. Apify&#39;s standard small Actor-start event applies on top.</p>
+<p><strong><a href="https://apify.com/dropin-apis/structured-data-to-json">Open Structured Data to JSON on Apify</a></strong></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="does-it-extract-any-field-i-describe-in-a-prompt">Does it extract any field I describe in a prompt?</h3>
+<p>No. It supports the six documented schemas only (product, article, event, organization, local business, documentation). Use a general AI scraper for arbitrary prompts or custom fields.</p>
+<h3 id="does-it-just-copy-all-the-json-ld-from-a-page">Does it just copy all the JSON-LD from a page?</h3>
+<p>No. It selects and normalizes only the documented fields for the chosen schema, supplements them from grounded page metadata (microdata, OpenGraph, semantic HTML) when JSON-LD is incomplete, validates the final object against a fixed schema, and attaches an evidence record to every field.</p>
+<h3 id="what-happens-when-a-value-is-missing-from-the-page">What happens when a value is missing from the page?</h3>
+<p>The field comes back <code>null</code>, its evidence method is <code>&quot;absent&quot;</code>, and it&#39;s listed in <code>absentFields</code>. The Actor does not guess or fill in a plausible-looking value.</p>
+<h3 id="can-it-scrape-private-or-logged-in-pages">Can it scrape private or logged-in pages?</h3>
+<p>No. Public pages only — no credentials, cookies, or login flows are accepted or attempted.</p>
+<h3 id="is-this-affiliated-with-schemaorg-or-the-sites-it-reads">Is this affiliated with Schema.org or the sites it reads?</h3>
+<p>No. Schema.org names describe a public vocabulary of types; this is an independent Apify Actor with no affiliation to Schema.org or any site it extracts from.</p>
+<h3 id="can-an-ai-agent-use-this-through-apify-mcp">Can an AI agent use this through Apify MCP?</h3>
+<p>Yes. An agent can find and call this Actor through Apify&#39;s MCP server, then inspect <code>data</code>, <code>evidence</code> and <code>absentFields</code> before trusting a value — the fixed, validated contract is deliberately easier for an agent to check than free-form prompt-generated JSON.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Built and run on <a href="https://apify.com">Apify</a>. Pay per use, no subscription. Nothing you send is stored unless a page says otherwise.</p>
+  </div>
+</footer>
+<script src="https://alidaram99.github.io/api-alternatives/assets/copy.js" defer></script>
+</body>
+</html>

@@ -1052,6 +1052,263 @@ That page covers the full Actor: inputs, output shapes, pricing, and the general
 
 ---
 
+# Extract LocalBusiness Data Without Guessing
+
+URL: https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/
+
+
+**Extract only the LocalBusiness facts a public page actually establishes, and keep a pointer and snippet beside every returned value. Structured Data to JSON returns a fixed `name`, `category`, `city` and `openingHours` object; a missing field stays `null`, and version 1 returns no phone, email, street address or profile field.**
+
+*Facts and examples on this page were checked against the Actor source, saved fixtures, and Google's current LocalBusiness documentation on October 4, 2026.*
+
+## What “without guessing” means
+
+Google's LocalBusiness guidance recommends the most specific applicable subtype and documents business name, address and opening hours among the structured properties a publisher can declare ([Google Search Central](https://developers.google.com/search/docs/appearance/structured-data/local-business)). That guidance tells publishers how to mark up their own pages; it does not make an extractor's unsupported inferences true.
+
+This Actor therefore uses a smaller version-1 contract:
+
+| Field | Meaning | Evidence sources |
+|---|---|---|
+| `name` | Grounded business name | JSON-LD, microdata, page title, then heading |
+| `category` | Declared subtype or a restrained supported service phrase | Supported page text, JSON-LD type, then microdata |
+| `city` | Locality named by the page | JSON-LD `addressLocality`, microdata, then a bounded city/state text pattern |
+| `openingHours` | Declared or visibly printed hours | JSON-LD, microdata, then a bounded visible-hours pattern |
+
+It does not geocode, infer an owner, enrich a lead, or convert a vague description into a plausible address.
+
+## Input and tested output
+
+```json
+{
+  "urls": ["https://example.com/bright-paws"],
+  "schemaType": "localBusiness"
+}
+```
+
+The saved fixture declares the name, city and hours in microdata and says “Independent pet grooming in Austin, TX” in its description. Its tested result is:
+
+```json
+{
+  "schemaType": "localBusiness",
+  "data": {
+    "name": "Bright Paws",
+    "category": "pet grooming",
+    "city": "Austin",
+    "openingHours": "Monday-Friday 9:00 am-5:00 pm"
+  },
+  "evidence": {
+    "name": {
+      "method": "microdata",
+      "pointer": "[itemprop=\"name\"]",
+      "snippet": "Bright Paws"
+    },
+    "category": {
+      "method": "page-text",
+      "pointer": "category-keyphrase",
+      "snippet": "pet grooming"
+    },
+    "city": {
+      "method": "microdata",
+      "pointer": "[itemprop=\"addressLocality\"]",
+      "snippet": "Austin"
+    },
+    "openingHours": {
+      "method": "microdata",
+      "pointer": "[itemprop=\"openingHours\"]",
+      "snippet": "Monday-Friday 9:00 am-5:00 pm"
+    }
+  },
+  "absentFields": []
+}
+```
+
+Every field gets evidence, including missing fields. The result also records the requested URL, the safety-checked final URL, content type, byte count and a SHA-256 hash of the fetched body.
+
+## What happens when the page is incomplete
+
+The business name is the identity field. Without a grounded name, the page is refused instead of producing a paid empty item. With a name but no hours, the result stays usable and honest:
+
+```json
+{
+  "data": { "name": "Bright Paws", "category": null, "city": "Austin", "openingHours": null },
+  "evidence": {
+    "openingHours": { "method": "absent", "pointer": null, "snippet": null }
+  },
+  "absentFields": ["category", "openingHours"]
+}
+```
+
+Do not replace those nulls with an agent's best guess. An absent record is the evidence that the fetched page did not establish the value under this contract.
+
+## Contact boundary
+
+Version 1 has no telephone, email, street-address, contact-person or social-profile output field, even though Schema.org and Google's publisher guidance define some of those properties. Emails, phone-like numbers and obvious personal/profile URLs found inside any copied field or evidence snippet are replaced with `[redacted contact]`; the evidence gets `"redactedContact": true`. Business contacts are redacted too because this contract permits no contact data.
+
+That makes this an evidence-backed page extractor, not a prospecting or identity-enrichment tool.
+
+## Access and billing boundary
+
+- Public HTML only; no accounts, cookies, form submission, CAPTCHA solving or challenge bypass.
+- `robots.txt` is respected. Private and reserved IP destinations are refused before connection and after every redirect.
+- Password forms and common login/challenge markers produce a non-billable skipped result.
+- JavaScript is not rendered, so client-only business facts remain absent.
+- A page is charged **$0.009** only after a schema-valid item with a grounded business name is written; Apify's documented platform start event also applies.
+
+## FAQ
+
+### Does it return a business phone number or email address?
+
+No. Version 1 has no contact fields. Contact fragments inside otherwise supported text or evidence are replaced with `[redacted contact]` and marked as redacted.
+
+### Does it find a street address?
+
+No. The LocalBusiness contract returns city, not a street address. The other fields are name, category and opening hours.
+
+### Will it guess the business category from any description?
+
+No. Its page-text fallback recognizes a small, documented set of service phrases; otherwise category is taken from declared markup or returned as `null`.
+
+### Can an agent treat the output as verified truth about the business?
+
+No. Evidence shows where the publisher page stated a value. It does not independently verify that the business claim is accurate or still current.
+
+## Related
+
+- Up: [Structured Data to JSON — all six schemas](https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/)
+- Previous: [extract Product price and availability with provenance](https://alidaram99.github.io/api-alternatives/extract-product-json-ld-price-availability/)
+- Discover pages first: [extract URLs from a sitemap](https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/)
+- **[Open Structured Data to JSON on Apify](https://apify.com/dropin-apis/structured-data-to-json)**
+
+
+---
+
+# Extract Product Price and Stock from JSON-LD
+
+URL: https://alidaram99.github.io/api-alternatives/extract-product-json-ld-price-availability/
+
+
+**A Product extractor should return `name`, `price`, `currency` and `availability` only when the public page supports them, and show the source of every value. Structured Data to JSON checks declared JSON-LD first, then microdata and visible metadata, returning `null` plus an explicit absence record instead of inventing a missing price or stock state.**
+
+*Facts and examples on this page were checked against the Actor source, saved fixtures, and the linked Schema.org and Google documentation on October 4, 2026.*
+
+## Why parsing one JSON-LD block is not enough
+
+A product page can put the product identity in one place and its `Offer` in another. It may use JSON-LD, microdata, OpenGraph, or visible HTML, and a page can simply omit a value. Google's Product documentation treats price and availability as offer data and recommends a three-letter `priceCurrency`; its supported availability values come from Schema.org's `ItemAvailability` vocabulary ([Product structured data](https://developers.google.com/search/docs/appearance/structured-data/product), [Offer details](https://developers.google.com/search/docs/appearance/structured-data/product-snippet#offer-properties)).
+
+Copying the first script tag loses those distinctions. A grounded extraction needs a fixed output contract and a source record for each field.
+
+## Input
+
+```json
+{
+  "urls": ["https://example.com/products/field-lantern"],
+  "schemaType": "product"
+}
+```
+
+One run accepts 1–20 public HTML URLs of the same schema type. Version 1 does not render JavaScript, accept cookies, or open logged-in pages.
+
+## Output contract
+
+The saved Product fixture contains this `Product` and nested `Offer`:
+
+```json
+{
+  "@type": "Product",
+  "name": "Field Lantern",
+  "offers": {
+    "@type": "Offer",
+    "price": "24.50",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  }
+}
+```
+
+The tested result is:
+
+```json
+{
+  "schemaType": "product",
+  "data": {
+    "name": "Field Lantern",
+    "price": "24.50",
+    "currency": "USD",
+    "availability": "InStock"
+  },
+  "evidence": {
+    "name": {
+      "method": "json-ld",
+      "pointer": "$script[0].name",
+      "snippet": "\"Field Lantern\""
+    },
+    "price": {
+      "method": "json-ld",
+      "pointer": "$script[0].offers.price",
+      "snippet": "\"24.50\""
+    },
+    "currency": {
+      "method": "json-ld",
+      "pointer": "$script[0].offers.priceCurrency",
+      "snippet": "\"USD\""
+    },
+    "availability": {
+      "method": "json-ld",
+      "pointer": "$script[0].offers.availability",
+      "snippet": "\"https://schema.org/InStock\""
+    }
+  },
+  "absentFields": []
+}
+```
+
+The Actor also records the final URL, response content type, byte count and SHA-256 of the fetched body. Evidence identifies the publisher text or markup that produced a value; it does not prove that the publisher's price or stock claim is true or current.
+
+## Deterministic source order
+
+| Field | Checked sources, in order |
+|---|---|
+| `name` | Product JSON-LD → `itemprop="name"` → `og:title` → page heading |
+| `price` | `offers.price` → `offers.priceSpecification.price` → microdata → visible price selector |
+| `currency` | JSON-LD → microdata → currency symbol derived from the grounded price evidence |
+| `availability` | JSON-LD → microdata → visible stock text |
+
+The pipeline does not call an LLM. If the product name is not grounded, the page produces no paid item. If the name is grounded but another field is missing, that field is `null`, its evidence is `{ "method": "absent", "pointer": null, "snippet": null }`, and its name appears in `absentFields`.
+
+## Contact redaction and limits
+
+Version 1 exposes no contact fields. If an email address, a phone-like number, or an obvious personal/profile URL appears inside any copied value or evidence snippet, it is replaced with `[redacted contact]`, and that evidence record gets `"redactedContact": true`. This applies to business and personal contacts alike; it is not a lead-harvesting endpoint.
+
+The Actor accepts public HTML only, respects `robots.txt`, blocks private/reserved network destinations and rechecks redirects. Login or challenge pages, invalid pages and empty results are not charged. A successfully validated page costs **$0.009**, plus Apify's documented platform start event. It supports six documented schemas rather than arbitrary prompts, and Product output is limited to the four fields above.
+
+## FAQ
+
+### Does it return every property in a Product JSON-LD object?
+
+No. It validates a fixed four-field Product contract: name, price, currency and availability. It does not dump arbitrary JSON-LD properties.
+
+### What happens when price or availability is missing?
+
+The field is `null`, its evidence method is `absent`, and it appears in `absentFields`. The Actor does not infer a likely price or stock state.
+
+### Does provenance prove that the price is correct?
+
+No. It proves which part of the fetched publisher page produced the value. Independent price verification and freshness monitoring are separate tasks.
+
+### Can it extract Product data rendered only by JavaScript?
+
+No. Version 1 reads returned HTML without running JavaScript. Client-only facts remain absent.
+
+## Related
+
+- Up: [Structured Data to JSON — all six schemas](https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/)
+- Next: [extract LocalBusiness data without guessing](https://alidaram99.github.io/api-alternatives/extract-localbusiness-data-with-evidence/)
+- Before extraction: [parse nested and compressed sitemap indexes](https://alidaram99.github.io/api-alternatives/parse-nested-compressed-sitemap-index/)
+- **[Open Structured Data to JSON on Apify](https://apify.com/dropin-apis/structured-data-to-json)**
+
+
+---
+
 # Extract All URLs From a Sitemap — indexes, gzip, robots.txt
 
 URL: https://alidaram99.github.io/api-alternatives/extract-urls-from-sitemap/
@@ -2505,6 +2762,118 @@ They are strings in dataset rows. Save the srt and vtt fields as UTF-8 files, as
 - Parent: [URL transcription overview and examples](https://alidaram99.github.io/api-alternatives/transcribe-audio-url-to-srt/).
 - Adjacent: [Whisper migration and subtitle compatibility](https://alidaram99.github.io/api-alternatives/whisper-1-retirement-srt-vtt/).
 - Written content: [PDF to Markdown for RAG: text layer or OCR?](https://alidaram99.github.io/api-alternatives/pdf-to-markdown-text-layer-or-ocr/).
+
+
+---
+
+# Structured Data API — JSON-LD & Schema.org, with Evidence
+
+URL: https://alidaram99.github.io/api-alternatives/structured-data-to-json-api/
+
+
+**This API turns a public page into validated JSON with proof for every field — not a raw JSON-LD dump, and not a prompt-based AI scraper that can quietly invent a value.** It supports six fixed schemas (product, article, event, organization, local business, documentation), checks JSON-LD first, then microdata, OpenGraph and restrained page-text rules, and never calls an LLM.
+
+## Example input
+
+```json
+{
+  "urls": [
+    "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
+  ],
+  "schemaType": "product"
+}
+```
+
+Send 1–20 public HTML URLs **of the same schema type** per run — mixed page types need separate runs.
+
+## Example output (real result)
+
+```json
+{
+  "url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+  "schemaType": "product",
+  "data": {
+    "name": "A Light in the Attic",
+    "price": "£51.77",
+    "currency": "GBP",
+    "availability": "In stock"
+  },
+  "evidence": {
+    "name": { "method": "html", "pointer": "article h1, main h1, h1", "snippet": "A Light in the Attic" }
+  },
+  "absentFields": [],
+  "source": { "contentType": "text/html; charset=utf-8", "bytes": 6812, "sha256": "..." }
+}
+```
+
+Every field — found or not — gets an evidence record. A field the page genuinely doesn't have comes back `null` with `{"method":"absent","pointer":null,"snippet":null}`, listed in `absentFields`, rather than a guessed value. Evidence shows which publisher text or metadata produced a value; it does not independently verify the publisher's claim is *true*.
+
+## What it extracts
+
+| Schema | Fixed fields |
+|---|---|
+| `product` | name, price, currency, availability |
+| `article` | headline, datePublished, description, section |
+| `event` | name, startDate, endDate, location |
+| `organization` | name, description, organizationType, location |
+| `localBusiness` | name, category, city, openingHours |
+| `documentation` | title, description, product, language |
+
+## How it compares
+
+| Option | Price | What you get |
+|---|---|---|
+| **This Actor** | $0.009 per validated page | Six fixed, schema-validated contracts with per-field evidence; deterministic, no LLM; charged only on a successful, grounded result |
+| [`apify/ai-web-scraper`](https://apify.com/apify/ai-web-scraper) | $0.03/page on its FREE tier ($0.02–0.025 on higher tiers) | Arbitrary prompts and arbitrary schemas — more flexible, no evidence contract, no fixed validation |
+| [`ninhothedev/json-ld-extractor`](https://apify.com/ninhothedev/json-ld-extractor) | $0.0005/result + $0.00005 start | Raw JSON-LD copy — cheaper, but no normalization, no non-JSON-LD fallback (microdata/OpenGraph), no evidence, no `null`-on-missing discipline |
+| [`logiover/json-ld-schema-meta-tag-extractor`](https://apify.com/logiover/json-ld-schema-meta-tag-extractor) | $0.005/result FREE ($0.0035–0.0045 higher tiers) | Similar raw-extraction tier to the above |
+| Writing your own parser | Your time | Full control, but you maintain JSON-LD/microdata/OpenGraph fallback logic and schema validation yourself |
+
+This Actor sits deliberately between the two tiers: **70% below** the general AI Web Scraper's FREE-tier page price, because it answers a narrower question (one of six documented schemas, not any prompt) with a guarantee raw JSON-LD extraction doesn't make (checked, validated output with evidence, not just "whatever JSON-LD happened to be on the page"). Full competitor pricing sourced from the public Apify Store search API — see `actors/structured-data-to-json/VERIFY.md` for the complete table and methodology.
+
+## Why not a universal AI scraper?
+
+A 20-page measurement gate (6 schema types, 80 fields, hand-labeled ground truth) found **97.5% field accuracy from deterministic extraction alone** — JSON-LD, microdata, OpenGraph and restrained text rules, no model. A local quantized model was tested on the same fixtures and added **zero** correct fields while only increasing latency, so it's not included in this version. This isn't "AI-powered" marketing; it's the opposite finding, reported honestly.
+
+## Limits
+
+- **Six supported schema types only** — no arbitrary prompts, no custom schema. Use a general AI scraper if you need either.
+- **No JavaScript rendering.** A fact that only exists after client-side rendering stays `null`, or the page can fail its identity check.
+- **Public pages only.** No cookies, login, form submission, CAPTCHA solving, Cloudflare bypass or browser fingerprinting. `robots.txt` is respected, with policy-fetch errors failing closed (no access on an unreadable robots file, not open access).
+- **No personal data.** No person email, phone, profile or similar personal-data fields are extracted by this Actor.
+- Up to 2 MiB per page after decompression; DNS resolved and private/reserved addresses refused before connecting, rechecked on every redirect.
+
+## Pricing
+
+**$0.009 per successfully validated page**, pay per event. A page is charged only when it produces a dataset item with a grounded identity field and schema-valid output — invalid URLs, private destinations, robots denials, login/challenge pages, HTTP failures and empty results are never charged. Apify's standard small Actor-start event applies on top.
+
+**[Open Structured Data to JSON on Apify](https://apify.com/dropin-apis/structured-data-to-json)**
+
+## FAQ
+
+### Does it extract any field I describe in a prompt?
+
+No. It supports the six documented schemas only (product, article, event, organization, local business, documentation). Use a general AI scraper for arbitrary prompts or custom fields.
+
+### Does it just copy all the JSON-LD from a page?
+
+No. It selects and normalizes only the documented fields for the chosen schema, supplements them from grounded page metadata (microdata, OpenGraph, semantic HTML) when JSON-LD is incomplete, validates the final object against a fixed schema, and attaches an evidence record to every field.
+
+### What happens when a value is missing from the page?
+
+The field comes back `null`, its evidence method is `"absent"`, and it's listed in `absentFields`. The Actor does not guess or fill in a plausible-looking value.
+
+### Can it scrape private or logged-in pages?
+
+No. Public pages only — no credentials, cookies, or login flows are accepted or attempted.
+
+### Is this affiliated with Schema.org or the sites it reads?
+
+No. Schema.org names describe a public vocabulary of types; this is an independent Apify Actor with no affiliation to Schema.org or any site it extracts from.
+
+### Can an AI agent use this through Apify MCP?
+
+Yes. An agent can find and call this Actor through Apify's MCP server, then inspect `data`, `evidence` and `absentFields` before trusting a value — the fixed, validated contract is deliberately easier for an agent to check than free-form prompt-generated JSON.
 
 
 ---
