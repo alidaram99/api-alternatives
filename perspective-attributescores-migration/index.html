@@ -65,7 +65,7 @@
 <main class="wrap">
   <h1>Migrate Perspective attributeScores without rewriting your parser</h1>
   <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
-  <p class="deadline">⏳ 88 days left — the old API shuts down December 31, 2026.</p>
+  <p class="deadline">⏳ 87 days left — the old API shuts down December 31, 2026.</p>
   <p><strong>Keep <code>POST /v1alpha1/comments:analyze</code> and the <code>attributeScores</code> fields your client consumes by changing the host and authentication to the Perspective-compatible Actor. Its scores are independent Detoxify model probabilities, not Google&#39;s scores, so validate moderation decisions on your own comments before carrying thresholds across.</strong></p>
 <p><em>Verified on October 4, 2026 against Google&#39;s sunset announcement and the Actor&#39;s current handlers, contract tests, README and pricing configuration.</em></p>
 <p>Google says service remains active through December 31, 2026, with no direct migration support; new usage and quota requests stopped after February 2026. Start with the <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">shutdown checklist</a> to inventory callers and plan the switch. <a href="https://perspectiveapi.com/">Google&#39;s announcement</a></p>

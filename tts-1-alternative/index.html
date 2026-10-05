@@ -65,7 +65,7 @@
 <main class="wrap">
   <h1>tts-1 is removed on 6 January 2027. Here&#39;s a compatible endpoint.</h1>
   <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
-  <p class="deadline">⏳ 94 days left — the old API shuts down January 6, 2027.</p>
+  <p class="deadline">⏳ 93 days left — the old API shuts down January 6, 2027.</p>
   <p><strong>OpenAI is removing <code>tts-1</code>, <code>tts-1-hd</code> and both <code>gpt-4o-mini-tts</code> snapshots from the API on 6 January 2027.</strong> This Actor provides a compatible <code>POST /v1/audio/speech</code> endpoint with independent English voices from <strong>$0.009 per started 1,000 input characters</strong>: change the base URL and API key, keep <code>model</code>, <code>input</code>, <code>voice</code>, <code>response_format</code> and <code>speed</code>, and remove nonempty <code>instructions</code> and SSE <code>stream_format</code>.</p>
 <h2 id="what-changes-on-2027-01-06">What changes on 2027-01-06</h2>
 <p>OpenAI&#39;s <a href="https://developers.openai.com/api/docs/deprecations">deprecations page</a>, rechecked 3 October 2026, lists <code>tts-1</code>, <code>tts-1-hd</code>, <code>gpt-4o-mini-tts-2025-03-20</code> and <code>gpt-4o-mini-tts-2025-12-15</code> for removal on 6 January 2027 following its 1 October announcement. The recommended replacement, <code>gpt-realtime-2.1-mini</code>, uses the Realtime API and token-based audio pricing; that recommendation is not a guarantee that existing <code>/audio/speech</code> clients work unchanged. Plan and test the API migration before the removed models stop accepting requests.</p>
