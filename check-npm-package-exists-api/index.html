@@ -95,7 +95,7 @@
 <p>Also works with Cursor, VS Code, Codex and any MCP-compatible client (<code>mcp.json</code> or <code>~/.codex/config.toml</code>), and can be found by agents on the <a href="https://mcp.apify.com">Apify MCP server</a> via <code>search-actors</code>.</p>
 <h2 id="pricing">Pricing</h2>
 <p>Pay per event, no subscription. A typical agent session (5 package checks, 20 symbol checks, 2 diffs) costs about <strong>$0.06</strong>. Requests that fail (invalid input, registry unreachable) are not charged; setting a maximum total charge stops the API with HTTP 402 once reached.</p>
-<p><strong><a href="https://apify.com/dropin-apis/exactground-api">Open ExactGround on Apify</a></strong> · <a href="https://github.com/alidaram99/exactground">Free local install guard</a></p>
+<p><strong><a href="https://apify.com/store?search=npm%20%26%20PyPI%20Package%20Checker%20for%20AI%20Agents%20%E2%80%94%20ExactGround">Open ExactGround on Apify</a></strong> · <a href="https://github.com/alidaram99/exactground">Free local install guard</a></p>
 <h2 id="faq">FAQ</h2>
 <h3 id="how-do-i-stop-claude-code-or-cursor-from-installing-hallucinated-packages">How do I stop Claude Code or Cursor from installing hallucinated packages?</h3>
 <p>Install the free <a href="https://github.com/alidaram99/exactground">ExactGround hook</a> — it blocks <code>npm</code>/<code>pnpm</code>/<code>yarn</code>/<code>bun</code>/<code>npx</code> and <code>pip</code>/<code>uv</code>/<code>poetry</code>/<code>pdm</code>/<code>pipx</code> installs of names that don&#39;t exist, before they run. This API adds version-exact function/method checks on top.</p>

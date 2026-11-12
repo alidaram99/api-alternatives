@@ -94,7 +94,7 @@
 <p>Fetching obeys robots rules, validates redirect destinations and pins public DNS addresses. It can reject a public URL when robots rules are denied or unavailable. It does not bypass logins or CAPTCHAs. Extracted text remains untrusted data for any downstream agent.</p>
 <p>Pricing is <strong>$0.0045 per <code>page-converted</code> unit</strong>, plus <strong>$0.0005 per Actor start at the default 512 MB</strong>; the start charge scales with selected memory. PDF units count inspected pages containing extracted text. Blank/scanned pages and failed conversions have no conversion event, but the run-start charge still applies.</p>
 <p>DOCX, HTML, TXT and Markdown use one unit per started 2,000-word block <strong>per document</strong>. Chunk overlap adds no event. <code>pages</code> and chunk count are therefore not billing-unit counts. At default memory, two text PDF pages cost $0.0095 including the start; an image-only scan has no page-conversion charge and still gets no recognized text.</p>
-<p><strong><a href="https://apify.com/dropin-apis/document-to-markdown">Run Document to Markdown on Apify</a></strong> for a digital document sample; choose a separate OCR service for scans.</p>
+<p><strong><a href="https://apify.com/store?search=PDF%20%26%20Document%20to%20Markdown%20%E2%80%94%20DOCX%2C%20HTML%20for%20RAG">Run Document to Markdown on Apify</a></strong> for a digital document sample; choose a separate OCR service for scans.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="can-this-actor-turn-a-scanned-pdf-into-markdown">Can this Actor turn a scanned PDF into Markdown?</h3>
 <p>It cannot recognize image-only scans. Pages with no extractable text return warnings and no page-conversion units. Use OCR separately before indexing recognized text.</p>

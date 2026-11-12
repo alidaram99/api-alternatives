@@ -66,22 +66,23 @@
   <h1>Content Moderator retires on 15 March 2027. Keep ProcessText/Screen.</h1>
   <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
   <p class="deadline">⏳ 123 days left — the old API shuts down March 15, 2027.</p>
-  <p><strong>Yes: Microsoft deprecated Azure Content Moderator in February 2024 and retires it on March 15, 2027; its successor, Azure AI Content Safety, is a different API with different requests and results</strong> (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview">Microsoft Learn</a>). To keep code that reads <code>Terms</code>, <code>PII</code> and <code>Classification</code>, point your <code>ProcessText/Screen</code> calls at a wire-compatible endpoint such as our <a href="https://apify.com/dropin-apis/content-moderator-compat">Content Moderator drop-in on Apify</a>: same request, same JSON, $1 per 1,000 texts.</p>
+  <div class="notice">This page's examples show a placeholder Actor URL (<code>https://YOUR-ACTOR-URL.apify.actor</code>) because the real one isn't known at build time yet. Once the owner's Apify account is connected, this page rebuilds automatically with the Actor's real Standby URL — see its Store page in the meantime.</div>
+<p><strong>Yes: Microsoft deprecated Azure Content Moderator in February 2024 and retires it on March 15, 2027; its successor, Azure AI Content Safety, is a different API with different requests and results</strong> (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/overview">Microsoft Learn</a>). To keep code that reads <code>Terms</code>, <code>PII</code> and <code>Classification</code>, point your <code>ProcessText/Screen</code> calls at a wire-compatible endpoint such as our <a href="https://apify.com/store?search=Content%20Moderation%20API%20%E2%80%94%20Azure%20Content%20Moderator%20Alternative">Content Moderator drop-in on Apify</a>: same request, same JSON, $1 per 1,000 texts.</p>
 <p>Microsoft&#39;s <a href="https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator">lifecycle page</a> lists the retirement as April 1, 2027 (06:59 PT). The product notice says March 15, 2027, so plan for <strong>March 15</strong>. If you prefer to move to Content Safety, see <a href="https://alidaram99.github.io/api-alternatives/azure-content-moderator-to-content-safety/">Content Moderator vs Content Safety: what changes</a>.</p>
 <h2 id="what-changes-on-march-15-2027">What changes on March 15, 2027</h2>
 <ul><li>Existing Content Moderator resources stop being supported. Microsoft has deprecated the service since February 2024, so plan no new work on it.</li><li><code>POST https://&lt;region&gt;.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen</code> and the SDKs built on it (<code>Microsoft.Azure.CognitiveServices.ContentModerator</code>, <code>azure-cognitiveservices-vision-contentmoderator</code>) lose their service.</li><li>Code, stored results and dashboards that depend on <code>Terms</code>, <code>PII</code>, <code>Classification.Category1/2/3</code>, <code>ReviewRecommended</code> or <code>Status.Code 3000</code> have no equivalent in Content Safety. It returns severity levels for Hate, Sexual, Violence and SelfHarm instead.</li></ul>
 <h2 id="the-minimal-migration-host-and-key-only">The minimal migration: host and key only</h2>
-<p>The new endpoint is the Actor&#39;s Standby URL, <code>https://dropin-apis--content-moderator-compat.apify.actor</code>. Authenticate with your <a href="https://console.apify.com/settings/integrations">Apify API token</a> as <code>Authorization: Bearer …</code> (or <code>?token=…</code>). An <code>Ocp-Apim-Subscription-Key</code> header is accepted and ignored. Path, query string, raw-text body and response are unchanged.</p>
+<p>The new endpoint is the Actor&#39;s Standby URL, <code>https://YOUR-ACTOR-URL.apify.actor</code>. Authenticate with your <a href="https://console.apify.com/settings/integrations">Apify API token</a> as <code>Authorization: Bearer …</code> (or <code>?token=…</code>). An <code>Ocp-Apim-Subscription-Key</code> header is accepted and ignored. Path, query string, raw-text body and response are unchanged.</p>
 <h3 id="curl">curl</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- curl -s -X POST &quot;https://westus.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
 -   -H &quot;Ocp-Apim-Subscription-Key: $AZURE_KEY&quot; \
-+ curl -s -X POST &quot;https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
++ curl -s -X POST &quot;https://YOUR-ACTOR-URL.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
 +   -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
     -H &#39;Content-Type: text/plain&#39; --data-binary &#39;Is this a crap email abcdef@abcd.com?&#39;</code></pre></div>
 <h3 id="python-requests">Python (<code>requests</code>)</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- BASE = &quot;https://westus.api.cognitive.microsoft.com&quot;
 - AUTH = {&quot;Ocp-Apim-Subscription-Key&quot;: os.environ[&quot;AZURE_KEY&quot;]}
-+ BASE = &quot;https://dropin-apis--content-moderator-compat.apify.actor&quot;
++ BASE = &quot;https://YOUR-ACTOR-URL.apify.actor&quot;
 + AUTH = {&quot;Authorization&quot;: &quot;Bearer &quot; + os.environ[&quot;APIFY_TOKEN&quot;]}
   r = requests.post(f&quot;{BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen&quot;,
                     params={&quot;language&quot;: &quot;eng&quot;, &quot;classify&quot;: &quot;True&quot;, &quot;PII&quot;: &quot;True&quot;},
@@ -89,13 +90,13 @@
 <h3 id="nodejs-fetch">Node.js (<code>fetch</code>)</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- const BASE = &#39;https://westus.api.cognitive.microsoft.com&#39;;
 - const AUTH = { &#39;Ocp-Apim-Subscription-Key&#39;: process.env.AZURE_KEY };
-+ const BASE = &#39;https://dropin-apis--content-moderator-compat.apify.actor&#39;;
++ const BASE = &#39;https://YOUR-ACTOR-URL.apify.actor&#39;;
 + const AUTH = { Authorization: `Bearer ${process.env.APIFY_TOKEN}` };
   const res = await fetch(`${BASE}/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True`, {
     method: &#39;POST&#39;, headers: { &#39;Content-Type&#39;: &#39;text/plain&#39;, ...AUTH }, body: text,
   });</code></pre></div>
 <h2 id="real-output-on-microsofts-own-example">Real output on Microsoft&#39;s own example</h2>
-<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl -s -X POST &quot;https://YOUR-ACTOR-URL.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True&amp;PII=True&quot; \
   -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; -H &#39;Content-Type: text/plain&#39; \
   --data-binary &#39;Is this a crap email abcdef@abcd.com, phone: 6657789887, IP: 255.255.255.255, 1 Microsoft Way, Redmond, WA 98052&#39;</code></pre></div>
 <p>Our response matches Microsoft&#39;s published <code>NormalizedText</code>, the <code>Terms</code> entry (<code>crap</code> at Index 10) and every PII index:</p>
@@ -126,7 +127,7 @@
 using System.Text;
 using System.Text.Json;
 
-var baseUrl = &quot;https://dropin-apis--content-moderator-compat.apify.actor&quot;;
+var baseUrl = &quot;https://YOUR-ACTOR-URL.apify.actor&quot;;
 var token = Environment.GetEnvironmentVariable(&quot;APIFY_TOKEN&quot;)!;
 
 using var http = new HttpClient();
@@ -168,7 +169,7 @@ Console.WriteLine($&quot;Status {root.GetProperty(&quot;Status&quot;).GetPropert
 <h3 id="how-are-short-non-english-texts-handled">How are short non-English texts handled?</h3>
 <p>Latin-script text under 40 characters is treated as English. Pass <code>language=spa</code>, <code>language=deu</code> and so on to use the right profanity list.</p>
 <h2 id="get-started">Get started</h2>
-<p><strong><a href="https://apify.com/dropin-apis/content-moderator-compat">Azure Content Moderator drop-in on Apify</a></strong>: copy its Standby URL and your token, then change the endpoint in your code.</p>
+<p><strong><a href="https://apify.com/store?search=Content%20Moderation%20API%20%E2%80%94%20Azure%20Content%20Moderator%20Alternative">Azure Content Moderator drop-in on Apify</a></strong>: copy its Standby URL and your token, then change the endpoint in your code.</p>
 </main>
 <footer class="site-footer">
   <div class="wrap">

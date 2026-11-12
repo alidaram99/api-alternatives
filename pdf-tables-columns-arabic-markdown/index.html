@@ -92,7 +92,7 @@
 <h2 id="limits-and-cost-remain-the-same">Limits and cost remain the same</h2>
 <p>The Actor accepts 1–20 public document URLs; PDF extraction defaults to the first 20 pages and allows <code>maxPages</code> from 1–200. Each document transfer/decompressed content is capped at 50 MiB. There is no special table-repair or Arabic-OCR option.</p>
 <p>PDF pricing is <strong>$0.0045 per inspected page containing extracted text</strong>, plus <strong>$0.0005 per run at the default 512 MB</strong>, with the start event scaling by memory. Blank/scanned pages and failed conversions have no page event. DOCX/HTML/TXT/Markdown use one event per started 2,000-word block per document. A readable but imperfect page can still incur a conversion unit; the fee does not certify semantic fidelity.</p>
-<p><strong><a href="https://apify.com/dropin-apis/document-to-markdown">Try Document to Markdown on Apify</a></strong> and review a representative table, column boundary and Arabic phrase before ingesting the full collection.</p>
+<p><strong><a href="https://apify.com/store?search=PDF%20%26%20Document%20to%20Markdown%20%E2%80%94%20DOCX%2C%20HTML%20for%20RAG">Try Document to Markdown on Apify</a></strong> and review a representative table, column boundary and Arabic phrase before ingesting the full collection.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="does-arabic-pdf-support-mean-perfect-arabic-reading-order">Does Arabic PDF support mean perfect Arabic reading order?</h3>
 <p>No. The Actor preserves Unicode text without reversing strings, but PDF glyph maps and positioned runs can still produce incorrect words or order. Review a known phrase and the mixed numbers/code in your own document.</p>

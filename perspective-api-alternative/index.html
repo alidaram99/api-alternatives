@@ -66,31 +66,32 @@
   <h1>Perspective API shuts down after 31 December 2026. Keep the same request.</h1>
   <p class="updated">Last updated: <time datetime="2026-10-03">October 3, 2026</time></p>
   <p class="deadline">⏳ 49 days left — the old API shuts down December 31, 2026.</p>
-  <p><strong>Yes: Google&#39;s Perspective API stops serving requests after December 31, 2026, and Google is not offering migration support</strong> (<a href="https://perspectiveapi.com/">perspectiveapi.com</a>). To keep existing <code>comments:analyze</code> code working, point it at a wire-compatible replacement such as our <a href="https://apify.com/dropin-apis/perspective-compat">Perspective drop-in on Apify</a>: it takes the same request and returns the same <code>attributeScores</code> JSON for $1 per 1,000 comments, and you change only the host and the key.</p>
+  <div class="notice">This page's examples show a placeholder Actor URL (<code>https://YOUR-ACTOR-URL.apify.actor</code>) because the real one isn't known at build time yet. Once the owner's Apify account is connected, this page rebuilds automatically with the Actor's real Standby URL — see its Store page in the meantime.</div>
+<p><strong>Yes: Google&#39;s Perspective API stops serving requests after December 31, 2026, and Google is not offering migration support</strong> (<a href="https://perspectiveapi.com/">perspectiveapi.com</a>). To keep existing <code>comments:analyze</code> code working, point it at a wire-compatible replacement such as our <a href="https://apify.com/store?search=Perspective%20API%20alternative%20%E2%80%94%20comments%3Aanalyze%20drop-in">Perspective drop-in on Apify</a>: it takes the same request and returns the same <code>attributeScores</code> JSON for $1 per 1,000 comments, and you change only the host and the key.</p>
 <p>Google&#39;s own words: the API &quot;will no longer be in service after 2026&quot;, usage and quota requests were &quot;addressed until February 2026&quot;, and &quot;we will not be offering direct migration support&quot;. The scores in our replacement come from open models of the same family (Detoxify), so they are <strong>close to Perspective&#39;s but not identical</strong>. See <a href="#how-the-scores-compare">How the scores compare</a>. Planning the switch step by step? Use the <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">Perspective shutdown migration checklist</a>.</p>
 <h2 id="what-changes-on-january-1-2027">What changes on January 1, 2027</h2>
 <p>After December 31, 2026 the service is gone, so these stop working:</p>
 <ul><li>Every request to <code>https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze</code>. That covers REST, Google&#39;s <code>googleapiclient</code>, the <code>perspective-api-client</code> npm package, R&#39;s <code>peRspective</code> and similar.</li><li><code>comments:suggestscore</code> and anything else on that host.</li><li>Plugins that hard-code the host, such as the Discourse plugin and many Discord moderation bots.</li><li>Research and benchmark code that uses Perspective&#39;s TOXICITY score as a metric.</li></ul>
 <p>New keys and quota increases already ended in February 2026, so you cannot get a new Google key to buy time.</p>
 <h2 id="the-minimal-migration-host-and-key-only">The minimal migration: host and key only</h2>
-<p>The new endpoint is the Actor&#39;s Standby URL, <code>https://dropin-apis--perspective-compat.apify.actor</code>. Authenticate with your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, either as <code>Authorization: Bearer …</code> or as <code>?token=…</code>. A leftover Google <code>key=</code> parameter is accepted and ignored. The request body and the response are unchanged.</p>
+<p>The new endpoint is the Actor&#39;s Standby URL, <code>https://YOUR-ACTOR-URL.apify.actor</code>. Authenticate with your <a href="https://console.apify.com/settings/integrations">Apify API token</a>, either as <code>Authorization: Bearer …</code> or as <code>?token=…</code>. A leftover Google <code>key=</code> parameter is accepted and ignored. The request body and the response are unchanged.</p>
 <h3 id="curl">curl</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- curl -s -X POST &quot;https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=$GOOGLE_API_KEY&quot; \
-+ curl -s -X POST &quot;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze&quot; \
++ curl -s -X POST &quot;https://YOUR-ACTOR-URL.apify.actor/v1alpha1/comments:analyze&quot; \
 +   -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
     -H &#39;Content-Type: application/json&#39; \
     -d &#39;{&quot;comment&quot;:{&quot;text&quot;:&quot;You are an idiot&quot;},&quot;requestedAttributes&quot;:{&quot;TOXICITY&quot;:{}}}&#39;</code></pre></div>
 <h3 id="python-requests">Python (<code>requests</code>)</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- URL = &quot;https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=&quot; + GOOGLE_API_KEY
 - HEADERS = {}
-+ URL = &quot;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze&quot;
++ URL = &quot;https://YOUR-ACTOR-URL.apify.actor/v1alpha1/comments:analyze&quot;
 + HEADERS = {&quot;Authorization&quot;: &quot;Bearer &quot; + os.environ[&quot;APIFY_TOKEN&quot;]}
   r = requests.post(URL, headers=HEADERS, json={&quot;comment&quot;: {&quot;text&quot;: text}, &quot;requestedAttributes&quot;: {&quot;TOXICITY&quot;: {}}})
   score = r.json()[&quot;attributeScores&quot;][&quot;TOXICITY&quot;][&quot;summaryScore&quot;][&quot;value&quot;]</code></pre></div>
 <h3 id="nodejs-fetch">Node.js (<code>fetch</code>)</h3>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- const url = `https://commentanalyzer.googleapis.com/v1alpha1/comments:analyze?key=${process.env.GOOGLE_API_KEY}`;
 - const headers = { &#39;Content-Type&#39;: &#39;application/json&#39; };
-+ const url = &#39;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze&#39;;
++ const url = &#39;https://YOUR-ACTOR-URL.apify.actor/v1alpha1/comments:analyze&#39;;
 + const headers = { &#39;Content-Type&#39;: &#39;application/json&#39;, Authorization: `Bearer ${process.env.APIFY_TOKEN}` };
   const res = await fetch(url, { method: &#39;POST&#39;, headers, body: JSON.stringify({ comment: { text }, requestedAttributes: { TOXICITY: {} } }) });
   const score = (await res.json()).attributeScores.TOXICITY.summaryScore.value;</code></pre></div>
@@ -112,7 +113,7 @@
 from googleapiclient import discovery
 from google.oauth2.credentials import Credentials
 
-BASE = &quot;https://dropin-apis--perspective-compat.apify.actor&quot;
+BASE = &quot;https://YOUR-ACTOR-URL.apify.actor&quot;
 APIFY_TOKEN = os.environ[&quot;APIFY_TOKEN&quot;]
 
 client = discovery.build(
@@ -129,7 +130,7 @@ print(response[&quot;attributeScores&quot;][&quot;TOXICITY&quot;][&quot;summaryS
 <h3 id="nodejs-the-perspective-api-client-npm-package">Node.js: the <code>perspective-api-client</code> npm package</h3>
 <p>The package hard-codes Google&#39;s URL and <strong>bundles its own copy of axios</strong>, so an interceptor on your app&#39;s <code>axios</code> has no effect. Attach the redirect to the axios instance the library actually loads, once at startup:</p>
 <div class="codeblock"><span class="code-lang">js</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-js">const libAxios = require(require.resolve(&#39;axios&#39;, { paths: [require.resolve(&#39;perspective-api-client&#39;)] }));
-const BASE = &#39;https://dropin-apis--perspective-compat.apify.actor&#39;;
+const BASE = &#39;https://YOUR-ACTOR-URL.apify.actor&#39;;
 
 libAxios.interceptors.request.use((cfg) =&gt; {
   if (cfg.url &amp;&amp; cfg.url.startsWith(&#39;https://commentanalyzer.googleapis.com&#39;)) {
@@ -178,7 +179,7 @@ perspective.analyze(&#39;You are a complete moron&#39;, { attributes: [&#39;toxi
 <h3 id="how-fast-is-it">How fast is it?</h3>
 <p>About 10–30 ms per comment on a warm instance. After about 5 minutes without traffic the instance sleeps, and the next request waits a few seconds while it starts.</p>
 <h2 id="get-started">Get started</h2>
-<p>Open the Actor on the Apify Store, then copy its Standby URL and your token: <strong><a href="https://apify.com/dropin-apis/perspective-compat">Perspective API drop-in on Apify</a></strong>.</p>
+<p>Open the Actor on the Apify Store, then copy its Standby URL and your token: <strong><a href="https://apify.com/store?search=Perspective%20API%20alternative%20%E2%80%94%20comments%3Aanalyze%20drop-in">Perspective API drop-in on Apify</a></strong>.</p>
 </main>
 <footer class="site-footer">
   <div class="wrap">

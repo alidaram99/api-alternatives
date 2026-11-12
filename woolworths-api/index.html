@@ -91,7 +91,7 @@
 <h2 id="use-cases">Use cases</h2>
 <ul><li><strong>Price monitoring:</strong> track shelf prices and specials for your own or competing products on a schedule.</li><li><strong>Inflation and basket research:</strong> collect unit prices for staples over time.</li><li><strong>Competitive pricing:</strong> compare specials and savings across brands and ranges.</li></ul>
 <h2 id="run-it-in-the-apify-console-no-code">Run it in the Apify Console (no code)</h2>
-<ol><li>Open the <strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Woolworths scraper</a></strong> and click <strong>Try for free</strong>.</li><li>Enter search terms (<code>milk</code>, <code>bread</code>, <code>eggs</code>…), a maximum number of items per term, and a sort order.</li><li>Click <strong>Start</strong>, then download CSV, Excel or JSON. Use Apify&#39;s <strong>Schedules</strong> to repeat the run daily.</li></ol>
+<ol><li>Open the <strong><a href="https://apify.com/store?search=Woolworths%20Australia%20price%20scraper%20%E2%80%94%20specials%2C%20unit%20price">Woolworths scraper</a></strong> and click <strong>Try for free</strong>.</li><li>Enter search terms (<code>milk</code>, <code>bread</code>, <code>eggs</code>…), a maximum number of items per term, and a sort order.</li><li>Click <strong>Start</strong>, then download CSV, Excel or JSON. Use Apify&#39;s <strong>Schedules</strong> to repeat the run daily.</li></ol>
 <h2 id="run-it-from-code">Run it from code</h2>
 <p>Replace <code>&lt;owner&gt;/woolworths-au-products</code> with the Actor id shown on its Store page.</p>
 <h3 id="python-apify-client-3">Python (<code>apify-client</code> ≥ 3)</h3>
@@ -123,7 +123,7 @@ console.log(items.map((p) =&gt; `${p.name}: $${p.price} (${p.cupString})`));</co
 <ul><li><strong>Search terms only.</strong> Category browsing is not implemented yet. <code>categoryUrls</code> is accepted but has no effect.</li><li>Woolworths returns at most 36 items per page. The Actor pages through results up to <code>maxItemsPerSearch</code>.</li><li><code>sortBy</code> is applied by the Actor after collection, because Woolworths&#39; own sort parameter had no effect over this interface.</li><li>Unavailable or out-of-stock items are dropped unless you set <code>includeUnavailable: true</code>.</li><li>If Woolworths starts blocking requests (403/429), enable Apify Proxy in the input.</li></ul>
 <h2 id="pricing">Pricing</h2>
 <p><strong>$1 per 1,000 products</strong> ($0.001 per row), pay per event, with no subscription.</p>
-<p><strong><a href="https://apify.com/dropin-apis/woolworths-au-products">Open the Woolworths scraper on Apify</a></strong></p>
+<p><strong><a href="https://apify.com/store?search=Woolworths%20Australia%20price%20scraper%20%E2%80%94%20specials%2C%20unit%20price">Open the Woolworths scraper on Apify</a></strong></p>
 </main>
 <footer class="site-footer">
   <div class="wrap">

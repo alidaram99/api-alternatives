@@ -66,7 +66,8 @@
   <h1>Content Moderator to Content Safety: what changes before 15 March 2027</h1>
   <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
   <p class="deadline">⏳ 123 days left — the old API shuts down March 15, 2027.</p>
-  <p><strong>Microsoft points Content Moderator customers to Azure AI Content Safety, but it is not a new version of the same API. It uses a different endpoint (<code>text:analyze</code>), a different JSON body and a different taxonomy (Hate, Sexual, Violence and SelfHarm severities). PII, video and human review each move to a different Microsoft product, so every workflow needs its own migration decision</strong> (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator">Microsoft migration guide</a>).</p>
+  <div class="notice">This page's examples show a placeholder Actor URL (<code>https://YOUR-ACTOR-URL.apify.actor</code>) because the real one isn't known at build time yet. Once the owner's Apify account is connected, this page rebuilds automatically with the Actor's real Standby URL — see its Store page in the meantime.</div>
+<p><strong>Microsoft points Content Moderator customers to Azure AI Content Safety, but it is not a new version of the same API. It uses a different endpoint (<code>text:analyze</code>), a different JSON body and a different taxonomy (Hate, Sexual, Violence and SelfHarm severities). PII, video and human review each move to a different Microsoft product, so every workflow needs its own migration decision</strong> (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/content-moderator">Microsoft migration guide</a>).</p>
 <p><em>Facts on this page were checked against the linked Microsoft Learn pages on October 4, 2026.</em></p>
 <p><strong>Which date?</strong> Microsoft gives two retirement dates:</p>
 <ul><li>Content Moderator&#39;s documentation says it &quot;will be retired on March 15, 2027&quot; (<a href="https://learn.microsoft.com/en-us/azure/ai-services/content-moderator/export-delete-data">Microsoft Learn</a>).</li><li>The lifecycle table lists April 1, 2027, 06:59 Pacific time (<a href="https://learn.microsoft.com/en-us/lifecycle/products/azure-ai-content-moderator">lifecycle</a>).</li></ul>
@@ -92,7 +93,7 @@
 <p>The minimal change with the wire-compatible replacement:</p>
 <div class="codeblock"><span class="code-lang">diff</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-diff">- POST https://&lt;region&gt;.api.cognitive.microsoft.com/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True
 - Ocp-Apim-Subscription-Key: $AZURE_KEY
-+ POST https://dropin-apis--content-moderator-compat.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True
++ POST https://YOUR-ACTOR-URL.apify.actor/contentmoderator/moderate/v1.0/ProcessText/Screen?language=eng&amp;classify=True
 + Authorization: Bearer $APIFY_TOKEN</code></pre></div>
 <h2 id="faq">FAQ</h2>
 <h3 id="is-azure-content-safety-the-same-api-as-content-moderator">Is Azure Content Safety the same API as Content Moderator?</h3>
@@ -108,7 +109,7 @@
 <h3 id="what-replaces-content-moderator-video-moderation-and-the-review-tool">What replaces Content Moderator video moderation and the review tool?</h3>
 <p>Video has no direct replacement. Microsoft suggests extracting frames and sending them to the image API. The Review API and human review tool move to Content Safety Studio, which is a different workflow.</p>
 <h2 id="related">Related</h2>
-<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/">all retiring-API guides</a></li><li>Next: <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">Perspective API shutdown checklist</a></li><li><strong><a href="https://apify.com/dropin-apis/content-moderator-compat">Keep ProcessText/Screen on Apify</a></strong> ($1 per 1,000 texts, text screening only)</li></ul>
+<ul><li>Up: <a href="https://alidaram99.github.io/api-alternatives/">all retiring-API guides</a></li><li>Next: <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">Perspective API shutdown checklist</a></li><li><strong><a href="https://apify.com/store?search=Content%20Moderation%20API%20%E2%80%94%20Azure%20Content%20Moderator%20Alternative">Keep ProcessText/Screen on Apify</a></strong> ($1 per 1,000 texts, text screening only)</li></ul>
 </main>
 <footer class="site-footer">
   <div class="wrap">

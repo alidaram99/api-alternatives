@@ -66,12 +66,13 @@
   <h1>Migrate Perspective attributeScores without rewriting your parser</h1>
   <p class="updated">Last updated: <time datetime="2026-10-04">October 4, 2026</time></p>
   <p class="deadline">⏳ 49 days left — the old API shuts down December 31, 2026.</p>
-  <p><strong>Keep <code>POST /v1alpha1/comments:analyze</code> and the <code>attributeScores</code> fields your client consumes by changing the host and authentication to the Perspective-compatible Actor. Its scores are independent Detoxify model probabilities, not Google&#39;s scores, so validate moderation decisions on your own comments before carrying thresholds across.</strong></p>
+  <div class="notice">This page's examples show a placeholder Actor URL (<code>https://YOUR-ACTOR-URL.apify.actor</code>) because the real one isn't known at build time yet. Once the owner's Apify account is connected, this page rebuilds automatically with the Actor's real Standby URL — see its Store page in the meantime.</div>
+<p><strong>Keep <code>POST /v1alpha1/comments:analyze</code> and the <code>attributeScores</code> fields your client consumes by changing the host and authentication to the Perspective-compatible Actor. Its scores are independent Detoxify model probabilities, not Google&#39;s scores, so validate moderation decisions on your own comments before carrying thresholds across.</strong></p>
 <p><em>Verified on October 4, 2026 against Google&#39;s sunset announcement and the Actor&#39;s current handlers, contract tests, README and pricing configuration.</em></p>
 <p>Google says service remains active through December 31, 2026, with no direct migration support; new usage and quota requests stopped after February 2026. Start with the <a href="https://alidaram99.github.io/api-alternatives/perspective-api-shutdown-checklist/">shutdown checklist</a> to inventory callers and plan the switch. <a href="https://perspectiveapi.com/">Google&#39;s announcement</a></p>
 <h2 id="keep-the-request-and-response-contract">Keep the request and response contract</h2>
 <p>The supported path takes a JSON body. Apify authenticates with your Apify token in <code>Authorization: Bearer</code>; an old Google <code>?key=</code> value is accepted but ignored.</p>
-<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl --fail-with-body -X POST &quot;https://dropin-apis--perspective-compat.apify.actor/v1alpha1/comments:analyze&quot; \
+<div class="codeblock"><span class="code-lang">bash</span><button class="copy-btn" type="button" aria-label="Copy code">Copy</button><pre><code class="language-bash">curl --fail-with-body -X POST &quot;https://YOUR-ACTOR-URL.apify.actor/v1alpha1/comments:analyze&quot; \
   -H &quot;Authorization: Bearer $APIFY_TOKEN&quot; \
   -H &quot;Content-Type: application/json&quot; \
   -d &#39;{&quot;comment&quot;:{&quot;text&quot;:&quot;Thanks for the explanation.&quot;,&quot;type&quot;:&quot;PLAIN_TEXT&quot;},&quot;languages&quot;:[&quot;en&quot;],&quot;requestedAttributes&quot;:{&quot;TOXICITY&quot;:{},&quot;INSULT&quot;:{}},&quot;spanAnnotations&quot;:true,&quot;clientToken&quot;:&quot;migration-sample-1&quot;}&#39;</code></pre></div>
@@ -92,7 +93,7 @@ if (typeof score !== &#39;number&#39;) {
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-base = &quot;https://dropin-apis--perspective-compat.apify.actor&quot;
+base = &quot;https://YOUR-ACTOR-URL.apify.actor&quot;
 client = build(
     &quot;commentanalyzer&quot;, &quot;v1alpha1&quot;,
     discoveryServiceUrl=base + &quot;/$discovery/rest?version={apiVersion}&quot;,
@@ -108,7 +109,7 @@ result = client.comments().analyze(body={
 <h2 id="validate-decisions-errors-and-cost">Validate decisions, errors and cost</h2>
 <ol><li>Run a labeled sample with benign, harmful and borderline comments in every language you use. Compare allow, hide and review decisions while Google is still available.</li><li>Test missing scores, empty text, unsupported attributes, UTF-8 byte limits and span offsets containing emoji. Adjust thresholds based on decisions, not numeric similarity.</li><li>Check spending-cap handling: the Actor returns <code>429 RESOURCE_EXHAUSTED</code> when its configured maximum charge is reached. Keep that path separate from a moderation result.</li><li>Save the sample, selected thresholds and results with your deployment. <a href="https://alidaram99.github.io/api-alternatives/ai-coding-agent-done-without-evidence/">DoneLatch&#39;s evidence workflow</a> can help an agent record checks after its final change; the checks themselves still need to cover the migration.</li></ol>
 <p>The published event price is <strong>$0.001 per analyzed comment ($1 per 1,000)</strong>, plus Apify&#39;s run-start charge. Validation failures have no <code>comment-analyzed</code> event. <code>comments:suggestscore</code> acknowledges feedback without storing it or training the model.</p>
-<p><strong><a href="https://apify.com/dropin-apis/perspective-compat">Try the Perspective-compatible Actor on Apify</a></strong> with a test sample before sending production traffic.</p>
+<p><strong><a href="https://apify.com/store?search=Perspective%20API%20alternative%20%E2%80%94%20comments%3Aanalyze%20drop-in">Try the Perspective-compatible Actor on Apify</a></strong> with a test sample before sending production traffic.</p>
 <h2 id="faq">FAQ</h2>
 <h3 id="can-i-keep-reading-attributescorestoxicitysummaryscorevalue">Can I keep reading attributeScores.TOXICITY.summaryScore.value?</h3>
 <p>Yes for a returned supported attribute. The path and PROBABILITY shape remain available, but scoreThreshold can omit an attribute. Check that the key exists and revalidate decisions because the scores come from an independent model.</p>

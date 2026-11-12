@@ -88,7 +88,7 @@
 <p>Public <code>http</code>/<code>https</code> sitemaps only — private hosts (<code>localhost</code>, <code>10.x</code>, <code>192.168.x</code>) are refused outright. A path disallowed for <code>User-agent: *</code> in <code>robots.txt</code> is never fetched, index or not. The run <strong>fails</strong> (not a silent empty success) if every input produces zero URLs across every candidate sitemap tried.</p>
 <h2 id="pricing">Pricing</h2>
 <p>Pay per event — the primary event is <strong>$0.0004 per URL</strong> ($0.40 per 1,000), charged when a row is saved. No monthly fee, and no separate charge for the sitemap-file fetches themselves, only for the page-URL rows that result.</p>
-<p><strong><a href="https://apify.com/dropin-apis/sitemap-url-extractor">Open Sitemap URL Extractor &amp; Scraper on Apify</a></strong></p>
+<p><strong><a href="https://apify.com/store?search=Sitemap%20URL%20Extractor%20%26%20Scraper%20%E2%80%94%20indexes%2C%20gzip%2C%20robots.txt">Open Sitemap URL Extractor &amp; Scraper on Apify</a></strong></p>
 <h2 id="faq">FAQ</h2>
 <h3 id="will-this-follow-a-sitemap-index-recursively-or-only-read-the-top-level-file">Will this follow a sitemap index recursively, or only read the top-level file?</h3>
 <p>Recursively. An index&#39;s child files are queued and fetched one at a time (up to 50 files per run) until <code>maxUrls</code> is reached or the queue empties, not stopped after the first file.</p>
